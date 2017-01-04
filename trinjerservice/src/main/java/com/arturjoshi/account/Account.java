@@ -12,10 +12,19 @@ import javax.persistence.*;
 @Data
 @Entity
 public class Account {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
+    @Column(nullable = false, unique = true)
+    private String email;
     @Embedded
-    private AccountCredentials accountCredentials;
+    private AccountCredentials credentials = new AccountCredentials();
+
+    public Account(Account account) {
+        this.id = account.id;
+        this.username = account.username;
+        this.email = account.email;
+        this.credentials.setPassword(account.getCredentials().getPassword());
+    }
 }

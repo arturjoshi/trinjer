@@ -1,8 +1,10 @@
 package com.arturjoshi.account;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
@@ -12,6 +14,7 @@ import javax.persistence.Embeddable;
 @Data
 @Embeddable
 public class AccountCredentials {
-    private String email;
+    @JsonIgnore
+    @Column(nullable = false)
     private String password;
 }
