@@ -1,10 +1,9 @@
 package com.arturjoshi.controller;
 
-import com.arturjoshi.authentication.TokenAuthenticationFilter;
+import com.arturjoshi.authentication.RequestHeaderFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,16 +21,14 @@ public class CheckController {
     private RestTemplate restTemplate;
 
     @Autowired
-    private TokenAuthenticationFilter authenticationFilter;
+    private RequestHeaderFilter authenticationFilter;
 
     @RequestMapping(method = RequestMethod.GET, value = "/check")
     public String check() {
         ParameterizedTypeReference<String> ptr = new ParameterizedTypeReference<String>() {};
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(TokenAuthenticationFilter.getAuthHeaderName(), authenticationFilter.getToken());
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        HttpEntity<String> entity = new HttpEntity<>(authenticationFilter.getHttpHeaders());
         ResponseEntity<String> result = restTemplate
-                .exchange("http://localhost:8081/check", HttpMethod.GET, entity, ptr);
+                .exchange("http://trinjer-service/check", HttpMethod.GET, entity, ptr);
         return result.getBody();
     }
 }
