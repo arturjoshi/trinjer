@@ -57,4 +57,10 @@ public class AuthenticationController {
 
         return tokenHandler.createTokenForUser((AccountDetails) authentication.getPrincipal());
     }
+
+    @RequestMapping(value = "check", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public String check() {
+        return "OK";
+    }
 }
