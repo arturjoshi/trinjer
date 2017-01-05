@@ -1,0 +1,35 @@
+{
+  "name": "trinjer",
+  "version": "0.0.1",
+  "description": "Front end for trinjer",
+  "scripts": {
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "app": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
+    "lite": "lite-server"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@angular/core": "2.4.1",
+    "@angular/common": "2.4.1",
+    "@angular/compiler": "2.4.1",
+    "@angular/platform-browser": "2.4.1",
+    "@angular/platform-browser-dynamic": "2.4.1",
+    "@angular/http": "2.4.1",
+    "@angular/router": "3.4.1",
+    "@angular/upgrade": "2.4.1",
+
+    "core-js": "2.4.1",
+    "es6-shim": "0.35.2",
+    "reflect-metadata": "0.1.2",
+    "rxjs": "5.0.1",
+    "systemjs": "0.19.41",
+    "zone.js": "0.7.2"
+  },
+  "devDependencies": {
+    "concurrently": "^3.1.0",
+    "lite-server": "^2.2.2",
+    "typescript": "~2.0.10"
+  }
+}
