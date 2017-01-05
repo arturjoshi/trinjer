@@ -1,8 +1,6 @@
 package com.arturjoshi.authentication;
 
-import com.arturjoshi.account.Account;
 import com.arturjoshi.account.repository.AccountRepository;
-import com.arturjoshi.authentication.AccountDetails;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
 import com.arturjoshi.authentication.token.TokenHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +29,9 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private ShaPasswordEncoder passwordEncoder;
+
     @RequestMapping(method = RequestMethod.GET, value = "/securitycontext")
     @ResponseBody
     public Object getContext() {
@@ -48,6 +50,7 @@ public class AuthenticationController {
     public String authenticate(@RequestParam String username, @RequestParam String password)
             throws BadCredentialsException {
 
+        password = passwordEncoder.encodePassword(password, null);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
