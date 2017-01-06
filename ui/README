@@ -1,2 +1,4 @@
-For initialize ui
-    1.
+For quickstart ui
+    1. Install npm dependencies 'npm install' (for production 'npm install --production')
+    2. Check installation with 'npm run test-one' (karma-test)
+    3. Start develop server with 'npm run start'
