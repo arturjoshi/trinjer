@@ -40,7 +40,7 @@ public class AuthenticationController {
         accountRepository.save(accountRegistrationDto.getAccountFromDto());
     }
 
-    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, value = "/authenticate")
     @ResponseStatus(HttpStatus.OK)
     public String authenticate(@RequestParam String username, @RequestParam String password)
             throws BadCredentialsException {
