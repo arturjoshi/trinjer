@@ -27,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/securitycontext", "/register", "/authenticate")
+                .antMatchers("/api/register", "/api/authenticate")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and().addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

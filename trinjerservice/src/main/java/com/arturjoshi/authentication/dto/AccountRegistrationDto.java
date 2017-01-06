@@ -11,6 +11,7 @@ import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 @NoArgsConstructor
 @Data
 public class AccountRegistrationDto {
+
     private String username;
     private String email;
     private String password;

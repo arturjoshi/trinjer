@@ -1,6 +1,7 @@
-package com.arturjoshi.authentication;
+package com.arturjoshi.authentication.controllers;
 
 import com.arturjoshi.account.repository.AccountRepository;
+import com.arturjoshi.authentication.AccountDetails;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
 import com.arturjoshi.authentication.token.TokenHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by arturjoshi on 04-Jan-17.
  */
 @RestController
+@RequestMapping(value = "/api")
 public class AuthenticationController {
 
     @Autowired
@@ -32,16 +34,9 @@ public class AuthenticationController {
     @Autowired
     private ShaPasswordEncoder passwordEncoder;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/securitycontext")
-    @ResponseBody
-    public Object getContext() {
-        SecurityContext ctx = SecurityContextHolder.getContext();
-        Authentication authentication = ctx.getAuthentication();
-        return authentication == null ? null : authentication.getPrincipal();
-    }
-
     @RequestMapping(method = RequestMethod.POST, value = "/register")
-    public void registerUser(@RequestBody AccountRegistrationDto accountRegistrationDto) {
+    @ResponseStatus(HttpStatus.OK)
+    public void registerAccount(@RequestBody AccountRegistrationDto accountRegistrationDto) {
         accountRepository.save(accountRegistrationDto.getAccountFromDto());
     }
 
@@ -56,11 +51,5 @@ public class AuthenticationController {
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         return tokenHandler.createTokenForUser((AccountDetails) authentication.getPrincipal());
-    }
-
-    @RequestMapping(value = "check", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public String check() {
-        return "OK";
     }
 }

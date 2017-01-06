@@ -18,9 +18,9 @@ import java.util.Arrays;
  */
 @Component
 public class TokenHandler {
+
     @Value("${server.secretKey}")
     private String secretKey;
-
     @Value("${server.expirationTime}")
     private String expirationTime;
 
