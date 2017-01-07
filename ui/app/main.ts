@@ -3,6 +3,6 @@
  */
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
-import { TrinjerAppModule } from './trinjer-app.module';
+import { TrinjerModule } from './trinjer.module';
 
-platformBrowserDynamic().bootstrapModule(TrinjerAppModule);
+platformBrowserDynamic().bootstrapModule(TrinjerModule);
