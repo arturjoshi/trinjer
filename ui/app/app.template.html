@@ -1,3 +1,14 @@
-<h1>{{title}}</h1>
+<nav class="">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <span class="title">
+                {{ title }}
+            </span>
+        </div>
+        <a routerLink="/dashboard">Dashboard</a>
+        <a routerLink="/login">Login</a>
+        <a routerLink="/registration">Registration</a>
+    </div>
+</nav>
 
 <router-outlet></router-outlet>
