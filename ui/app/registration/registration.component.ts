@@ -3,19 +3,21 @@
  */
 import {Component} from "@angular/core";
 import {RegistrationUser} from "./registration-user.model";
+import {UserService} from "../services/user.service";
 
 @Component({
     selector: 'registration',
-    templateUrl: 'app/registration/registration.template.html'
+    templateUrl: 'app/registration/registration.template.html',
+    providers: [UserService]
 })
 export class RegistrationComponent{
     user: RegistrationUser;
 
-    constructor(){
+    constructor(private userService: UserService){
         this.user = RegistrationUser.getNewRegistrationUser();
     }
 
     onSubmit(){
-        console.log(this.user);
+        this.userService.registrationAndLogin(this.user);
     }
 }

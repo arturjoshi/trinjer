@@ -9,13 +9,20 @@ export class UserService{
     private localStorageKey: string = 'user';
 
     login(user: UserDTO){
-        if(!this.isAuth(user)){
-            localStorage.setItem(this.localStorageKey, JSON.stringify(user));
-        }
+        localStorage.setItem(this.localStorageKey, JSON.stringify(user));
     }
 
     logout(){
         localStorage.removeItem(this.localStorageKey);
+    }
+
+    registration(user: UserDTO){
+        console.log("Registration user " + JSON.stringify(user));
+    }
+
+    registrationAndLogin(user: UserDTO){
+        this.registration(user);
+        this.login(user);
     }
 
     isAuth(user: UserDTO){

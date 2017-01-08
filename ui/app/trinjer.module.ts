@@ -10,6 +10,7 @@ import {RegistrationComponent} from "./registration/registration.component";
 import {DashboarComponent} from "./dashboard/dashboard.component";
 import {FormsModule} from "@angular/forms"
 import {AuthGuard} from "./services/auth-guard.service";
+import {EqualValidatorDirective} from "./registration/equal-validator.directive";
 
 @NgModule({
     imports: [
@@ -21,7 +22,8 @@ import {AuthGuard} from "./services/auth-guard.service";
         AppComponent,
         LoginComponent,
         RegistrationComponent,
-        DashboarComponent
+        DashboarComponent,
+        EqualValidatorDirective
     ],
     providers: [ AuthGuard],
     bootstrap: [AppComponent]
