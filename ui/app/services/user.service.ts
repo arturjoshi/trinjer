@@ -25,8 +25,13 @@ export class UserService{
         this.login(user);
     }
 
-    isAuth(user: UserDTO){
+    isUserAuth(user: UserDTO){
         let localUser = localStorage.getItem(this.localStorageKey);
         return localUser == JSON.stringify(user);
+    }
+
+    isAuth(){
+        let localUser = localStorage.getItem(this.localStorageKey);
+        return localUser !== null;
     }
 }

@@ -11,6 +11,7 @@ import {DashboarComponent} from "./dashboard/dashboard.component";
 import {FormsModule} from "@angular/forms"
 import {AuthGuard} from "./services/auth-guard.service";
 import {EqualValidatorDirective} from "./registration/equal-validator.directive";
+import {UserService} from "./services/user.service";
 
 @NgModule({
     imports: [
@@ -25,7 +26,7 @@ import {EqualValidatorDirective} from "./registration/equal-validator.directive"
         DashboarComponent,
         EqualValidatorDirective
     ],
-    providers: [ AuthGuard],
+    providers: [ AuthGuard, UserService],
     bootstrap: [AppComponent]
 })
 export class TrinjerModule{

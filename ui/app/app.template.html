@@ -6,8 +6,9 @@
             </span>
         </div>
         <a routerLink="/dashboard">Dashboard</a>
-        <a routerLink="/login">Login</a>
-        <a routerLink="/registration">Registration</a>
+        <a *ngIf="!isAuth()" routerLink="/login">Log in</a>
+        <a *ngIf="!isAuth()" routerLink="/registration">Registration</a>
+        <a *ngIf="isAuth()" (click)="logout()">Log out</a>
     </div>
 </nav>
 
