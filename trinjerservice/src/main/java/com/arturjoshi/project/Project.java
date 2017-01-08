@@ -20,6 +20,8 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private String name;
+    @ManyToOne
+    private Account projectOwner;
     @ManyToMany
     private Set<Account> members;
     @ManyToMany

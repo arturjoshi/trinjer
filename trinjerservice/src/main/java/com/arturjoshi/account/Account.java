@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -24,16 +25,20 @@ public class Account {
     private String email;
     @Embedded
     private AccountCredentials credentials = new AccountCredentials();
+    @OneToMany(mappedBy = "projectOwner")
+    private Set<Project> projectOwned = new HashSet<>();
     @ManyToMany(mappedBy = "members")
-    private Set<Project> projects;
+    private Set<Project> projects = new HashSet<>();
     @ManyToMany(mappedBy = "invitations")
-    private Set<Project> projectInvitations;
+    private Set<Project> projectInvitations = new HashSet<>();
     private String createdTime = LocalDateTime.now().toString();
+    private Boolean isActive = false;
 
     public Account(Account account) {
         this.id = account.id;
         this.username = account.username;
         this.email = account.email;
         this.credentials.setPassword(account.getCredentials().getPassword());
+        this.isActive = account.isActive;
     }
 }

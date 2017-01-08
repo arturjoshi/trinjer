@@ -1,7 +1,7 @@
 package com.arturjoshi.config;
 
 import com.arturjoshi.project.ProjectRole;
-import com.arturjoshi.project.ProjectRoleRepository;
+import com.arturjoshi.project.repository.ProjectRoleRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
