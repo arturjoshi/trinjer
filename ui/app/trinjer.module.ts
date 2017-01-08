@@ -8,11 +8,13 @@ import {TrinjerRoutingModule} from "./trinjer-routing.module";
 import {LoginComponent} from "./login/login.component";
 import {RegistrationComponent} from "./registration/registration.component";
 import {DashboarComponent} from "./dashboard/dashboard.component";
+import {FormsModule} from "@angular/forms"
 import {AuthGuard} from "./services/auth-guard.service";
 
 @NgModule({
     imports: [
         BrowserModule,
+        FormsModule,
         TrinjerRoutingModule
     ],
     declarations: [
