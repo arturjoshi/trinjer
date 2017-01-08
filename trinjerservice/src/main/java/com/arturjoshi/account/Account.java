@@ -2,6 +2,7 @@ package com.arturjoshi.account;
 
 import com.arturjoshi.project.Project;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Entity
+@EqualsAndHashCode(exclude = {"id", "projectOwned", "projects", "projectInvitations"})
 public class Account {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -32,13 +34,15 @@ public class Account {
     @ManyToMany(mappedBy = "invitations")
     private Set<Project> projectInvitations = new HashSet<>();
     private String createdTime = LocalDateTime.now().toString();
-    private Boolean isActive = false;
+    private Boolean isConfirmed = false;
+    private Boolean isTemp = false;
 
     public Account(Account account) {
         this.id = account.id;
         this.username = account.username;
         this.email = account.email;
         this.credentials.setPassword(account.getCredentials().getPassword());
-        this.isActive = account.isActive;
+        this.isConfirmed = account.isConfirmed;
+        this.isTemp = account.isTemp;
     }
 }
