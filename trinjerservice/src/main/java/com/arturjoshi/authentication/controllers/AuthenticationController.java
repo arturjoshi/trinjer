@@ -5,6 +5,7 @@ import com.arturjoshi.authentication.AccountDetails;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
 import com.arturjoshi.authentication.token.TokenHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Created by arturjoshi on 04-Jan-17.
  */
+@ControllerAdvice
 @RestController
 @RequestMapping(value = "/api")
 public class AuthenticationController {
@@ -51,5 +53,11 @@ public class AuthenticationController {
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         return tokenHandler.createTokenForUser((AccountDetails) authentication.getPrincipal());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    public String handleBaseException(DataIntegrityViolationException e){
+        return "Account with such username or email is already exists";
     }
 }
