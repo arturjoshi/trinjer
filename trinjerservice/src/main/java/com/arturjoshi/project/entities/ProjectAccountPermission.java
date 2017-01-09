@@ -14,13 +14,17 @@ import javax.persistence.*;
 @Data
 @Entity
 public class ProjectAccountPermission {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Account account;
+
     @Enumerated(EnumType.STRING)
     private ProjectPermission projectPermission;
 

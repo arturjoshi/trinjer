@@ -10,6 +10,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class ProjectAccountPermissionDto {
+
     private String project;
     private String username;
     private ProjectAccountPermission.ProjectPermission permission;

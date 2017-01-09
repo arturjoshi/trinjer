@@ -23,24 +23,31 @@ public class Account {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     @Column(unique = true)
     private String username;
+
     @Column(nullable = false, unique = true)
     private String email;
+
     @Embedded
     private AccountCredentials credentials = new AccountCredentials();
     private String createdTime = LocalDateTime.now().toString();
     private Boolean isConfirmed = false;
     private Boolean isTemp = false;
+
     @OneToMany(mappedBy = "projectOwner")
     @JsonIgnore
     private Set<Project> projectOwned = new HashSet<>();
+
     @ManyToMany(mappedBy = "members")
     @JsonIgnore
     private Set<Project> projects = new HashSet<>();
+
     @ManyToMany(mappedBy = "invitations")
     @JsonIgnore
     private Set<Project> projectInvitations = new HashSet<>();
+
     @OneToMany(mappedBy = "account")
     @JsonIgnore
     private Set<ProjectAccountPermission> projectAccountPermissions = new HashSet<>();

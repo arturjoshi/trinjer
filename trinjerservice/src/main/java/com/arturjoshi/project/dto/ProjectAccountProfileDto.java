@@ -10,6 +10,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class ProjectAccountProfileDto {
+
     private String project;
     private String username;
     private ProjectAccountProfile.ProjectProfile profile;

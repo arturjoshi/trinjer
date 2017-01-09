@@ -14,12 +14,16 @@ import javax.persistence.*;
 @Data
 @Entity
 public class ProjectAccountProfile {
+
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     @ManyToOne
     private Project project;
+
     @ManyToOne
     private Account account;
+
     @Enumerated
     private ProjectProfile projectProfile;
 
