@@ -20,21 +20,28 @@ import java.util.Set;
 @Entity
 @EqualsAndHashCode(exclude = {"members", "invitations", "projectAccountProfiles", "projectAccountPermissions"})
 public class Project {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
     private String name;
+
     @ManyToOne
     private Account projectOwner;
+
     @ManyToMany
     @JsonIgnore
     private Set<Account> members = new HashSet<>();
+
     @ManyToMany
     @JsonIgnore
     private Set<Account> invitations = new HashSet<>();
+
     @OneToMany(mappedBy = "project")
     @JsonIgnore
     private Set<ProjectAccountProfile> projectAccountProfiles = new HashSet<>();
+
     @OneToMany(mappedBy = "project")
     @JsonIgnore
     private Set<ProjectAccountPermission> projectAccountPermissions = new HashSet<>();
