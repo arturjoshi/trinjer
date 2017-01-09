@@ -32,8 +32,11 @@ public class Account {
 
     @Embedded
     private AccountCredentials credentials = new AccountCredentials();
+
     private String createdTime = LocalDateTime.now().toString();
+
     private Boolean isConfirmed = false;
+
     private Boolean isTemp = false;
 
     @OneToMany(mappedBy = "projectOwner")
