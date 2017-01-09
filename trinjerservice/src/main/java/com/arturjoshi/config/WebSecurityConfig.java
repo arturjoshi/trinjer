@@ -27,8 +27,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/api/register", "/api/authenticate")
+                .antMatchers("/api/register",
+                        "/api/authenticate",
+                        "/api/accounts/**",
+                        "/api/projects/**",
+                        "/api/projectAccountPermissions/**",
+                        "/api/projectAccountProfiles/**")
                 .permitAll()
+                .antMatchers("/api/{accountId}/**").access(
+                        "#accountId.toString().equals(principal.id.toString())")
                 .anyRequest().authenticated()
                 .and().addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();

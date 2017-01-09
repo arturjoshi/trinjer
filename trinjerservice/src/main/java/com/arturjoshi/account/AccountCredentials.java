@@ -16,6 +16,5 @@ import javax.persistence.Embeddable;
 public class AccountCredentials {
 
     @JsonIgnore
-    @Column(nullable = false)
     private String password;
 }
