@@ -17,7 +17,12 @@ export class AuthenticateService{
     ){}
 
     public authenticate(user: LoginUser): Observable<any>{
-        return this.httpUtils.makePostWithoutToken("authenticate", user)
+        let body = {
+            username: user.username,
+            password: user.password
+        };
+
+        return this.httpUtils.makePostWithoutToken("authenticate", JSON.stringify(body))
             .map(AuthenticateService.extractData)
             .catch(AuthenticateService.handleError);
     }
@@ -28,7 +33,7 @@ export class AuthenticateService{
         return body;
     }
 
-    private static handleError(error: Response){
+    private static handleError(error: any){
         console.log(error);
         return error;
     }

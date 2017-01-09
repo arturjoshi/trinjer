@@ -13,8 +13,8 @@ export class HttpUtils implements OnInit{
     private optionsWithoutToken: RequestOptions;
     private options: RequestOptions;
 
-    makePostWithoutToken(prefix: string, body: Object, params: Object = {}): Observable<any>{
-        let result = this.http.post(this.baseUrl + prefix, body, Object.assign(params, this.optionsWithoutToken))
+    makePostWithoutToken(prefix: string, body: string, params: Object = {}): Observable<any>{
+        return this.http.post(this.baseUrl + prefix, body)
             .map(response => {
                 console.log(response);
                 return response;
@@ -23,12 +23,10 @@ export class HttpUtils implements OnInit{
                 console.log(error);
                 return error;
             });
-
-        return result;
     }
 
     ngOnInit(): void {
-        let defaultHeaders: Headers = new Headers({'Content-Type': 'application/json'});
+        let defaultHeaders: Headers = new Headers({'Content-Type': ' x-www-url-encoded'});
         this.optionsWithoutToken = new RequestOptions({headers: defaultHeaders});
 
         if(this.tokenService.isTokenPresent()){
