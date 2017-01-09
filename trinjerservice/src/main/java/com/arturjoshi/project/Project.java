@@ -18,14 +18,18 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Entity
-@EqualsAndHashCode(exclude = {"members", "invitations", "projectAccountProfiles", "projectAccountPermissions"})
+@EqualsAndHashCode(of = {"name", "isVisible"})
 public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private Boolean isVisible = true;
 
     @ManyToOne
     private Account projectOwner;
