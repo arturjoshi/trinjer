@@ -1,12 +1,15 @@
 package com.arturjoshi.project;
 
 import com.arturjoshi.account.Account;
+import com.arturjoshi.project.entities.ProjectAccountPermission;
+import com.arturjoshi.project.entities.ProjectAccountProfile;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -15,21 +18,39 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Entity
+@EqualsAndHashCode(of = {"name", "isVisible"})
 public class Project {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private Boolean isVisible = true;
+
     @ManyToOne
     private Account projectOwner;
+
     @ManyToMany
-    private Set<Account> members;
+    @JsonIgnore
+    private Set<Account> members = new HashSet<>();
+
     @ManyToMany
-    private Set<Account> invitations;
+    @JsonIgnore
+    private Set<Account> outboxInvitations = new HashSet<>();
+
     @ManyToMany
-    @MapKeyJoinColumn(name = "account_id")
-    @JoinTable(name = "project_account",
-            joinColumns = {@JoinColumn(name = "project_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private Map<Account, ProjectRole> accountsRoles = new HashMap<>();
+    @JsonIgnore
+    private Set<Account> inboxInvitations = new HashSet<>();
+
+    @OneToMany(mappedBy = "project")
+    @JsonIgnore
+    private Set<ProjectAccountProfile> projectAccountProfiles = new HashSet<>();
+
+    @OneToMany(mappedBy = "project")
+    @JsonIgnore
+    private Set<ProjectAccountPermission> projectAccountPermissions = new HashSet<>();
 }
