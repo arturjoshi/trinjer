@@ -11,12 +11,15 @@ import {DashboarComponent} from "./dashboard/dashboard.component";
 import {FormsModule} from "@angular/forms"
 import {AuthGuard} from "./services/auth-guard.service";
 import {EqualValidatorDirective} from "./registration/equal-validator.directive";
-import {UserService} from "./services/user.service";
+import {TokenService} from "./services/token.service";
+import {HttpUtils} from "./services/http-utils.service";
+import {HttpModule} from "@angular/http";
 
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
+        HttpModule,
         TrinjerRoutingModule
     ],
     declarations: [
@@ -26,7 +29,10 @@ import {UserService} from "./services/user.service";
         DashboarComponent,
         EqualValidatorDirective
     ],
-    providers: [ AuthGuard, UserService],
+    providers: [
+        AuthGuard,
+        TokenService,
+        HttpUtils],
     bootstrap: [AppComponent]
 })
 export class TrinjerModule{

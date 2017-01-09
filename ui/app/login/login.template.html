@@ -1,1 +1,24 @@
-<h1>{{ title }}</h1>
+<div class="container login-wrp">
+    <form novalidate #loginForm="ngForm">
+        <div class="form-group">
+            <label for="username">Name</label>
+            <input type="text" id="username" class="form-control"
+                   [(ngModel)]="user.username" #name="ngModel" name="username" required>
+
+            <span class="alert alert-danger" [hidden]="name.valid || name.pristine">
+                Name is require
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input class="form-control" type="password" id="password"
+                   [(ngModel)]="user.password" name="password" #password="ngModel" required>
+
+            <span class="alert alert-danger" [hidden]="password.valid || password.pristine">
+                Password is require
+            </span>
+        </div>
+        <button type="submit" class="btn btn-default" (click)="onSubmit()" [disabled]="!loginForm.form.valid">Submit</button>
+    </form>
+</div>
