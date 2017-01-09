@@ -1,6 +1,8 @@
 package com.arturjoshi.account;
 
 import com.arturjoshi.project.Project;
+import com.arturjoshi.project.entities.ProjectAccountPermission;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -16,7 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Entity
-@EqualsAndHashCode(exclude = {"id", "projectOwned", "projects", "projectInvitations"})
+@EqualsAndHashCode(of = {"username", "email", "credentials", "createdTime", "isConfirmed", "isTemp"})
 public class Account {
 
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -27,15 +29,21 @@ public class Account {
     private String email;
     @Embedded
     private AccountCredentials credentials = new AccountCredentials();
-    @OneToMany(mappedBy = "projectOwner")
-    private Set<Project> projectOwned = new HashSet<>();
-    @ManyToMany(mappedBy = "members")
-    private Set<Project> projects = new HashSet<>();
-    @ManyToMany(mappedBy = "invitations")
-    private Set<Project> projectInvitations = new HashSet<>();
     private String createdTime = LocalDateTime.now().toString();
     private Boolean isConfirmed = false;
     private Boolean isTemp = false;
+    @OneToMany(mappedBy = "projectOwner")
+    @JsonIgnore
+    private Set<Project> projectOwned = new HashSet<>();
+    @ManyToMany(mappedBy = "members")
+    @JsonIgnore
+    private Set<Project> projects = new HashSet<>();
+    @ManyToMany(mappedBy = "invitations")
+    @JsonIgnore
+    private Set<Project> projectInvitations = new HashSet<>();
+    @OneToMany(mappedBy = "account")
+    @JsonIgnore
+    private Set<ProjectAccountPermission> projectAccountPermissions = new HashSet<>();
 
     public Account(Account account) {
         this.id = account.id;

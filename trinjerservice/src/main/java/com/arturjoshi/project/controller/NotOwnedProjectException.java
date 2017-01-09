@@ -1,4 +1,4 @@
-package com.arturjoshi.account.controllers;
+package com.arturjoshi.project.controller;
 
 /**
  * Created by arturjoshi on 08-Jan-17.

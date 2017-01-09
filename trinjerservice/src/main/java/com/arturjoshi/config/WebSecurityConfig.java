@@ -31,7 +31,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/authenticate",
                         "/api/accounts/**",
                         "/api/projects/**",
-                        "/api/projectAccountPermissions/**")
+                        "/api/projectAccountPermissions/**",
+                        "/api/projectAccountProfiles/**")
                 .permitAll()
                 .antMatchers("/api/{accountId}/**").access(
                         "#accountId.toString().equals(principal.id.toString())")

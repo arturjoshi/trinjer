@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.integration.annotation.IntegrationComponentScan;
 
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 @IntegrationComponentScan
 @SpringBootApplication
 public class TrinjerServiceApplication {

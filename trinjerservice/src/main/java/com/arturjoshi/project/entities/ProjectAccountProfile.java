@@ -1,4 +1,4 @@
-package com.arturjoshi.project.entity.accountpermission;
+package com.arturjoshi.project.entities;
 
 import com.arturjoshi.account.Account;
 import com.arturjoshi.project.Project;
@@ -13,13 +13,19 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-public class ProjectAccountPermission {
+public class ProjectAccountProfile {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Project project;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Account account;
     @Enumerated
-    private ProjectPermission projectPermission;
+    private ProjectProfile projectProfile;
+
+    public enum ProjectProfile {
+        QA,
+        DEVELOPER,
+        MANAGER
+    }
 }

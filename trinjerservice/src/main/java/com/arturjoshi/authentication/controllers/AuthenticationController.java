@@ -28,16 +28,12 @@ public class AuthenticationController {
 
     @Autowired
     private AccountRepository accountRepository;
-
     @Autowired
     private TokenHandler tokenHandler;
-
     @Autowired
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private ShaPasswordEncoder passwordEncoder;
-
     @Autowired
     private RegistrationService registrationService;
 

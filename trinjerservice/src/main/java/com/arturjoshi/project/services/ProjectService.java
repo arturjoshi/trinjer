@@ -1,4 +1,4 @@
-package com.arturjoshi.account.services;
+package com.arturjoshi.project.services;
 
 import com.arturjoshi.account.Account;
 import com.arturjoshi.account.repository.AccountRepository;
@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
  * Created by arturjoshi on 08-Jan-17.
  */
 @Service
-public class AccountService {
+public class ProjectService {
+
     @Autowired
     private AccountRepository accountRepository;
 

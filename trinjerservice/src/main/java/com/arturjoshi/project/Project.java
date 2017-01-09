@@ -1,16 +1,15 @@
 package com.arturjoshi.project;
 
 import com.arturjoshi.account.Account;
-import com.arturjoshi.project.entity.accountpermission.ProjectAccountPermission;
-import com.arturjoshi.project.entity.accountprofile.ProjectAccountProfile;
+import com.arturjoshi.project.entities.ProjectAccountPermission;
+import com.arturjoshi.project.entities.ProjectAccountProfile;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -28,11 +27,15 @@ public class Project {
     @ManyToOne
     private Account projectOwner;
     @ManyToMany
+    @JsonIgnore
     private Set<Account> members = new HashSet<>();
     @ManyToMany
+    @JsonIgnore
     private Set<Account> invitations = new HashSet<>();
     @OneToMany(mappedBy = "project")
+    @JsonIgnore
     private Set<ProjectAccountProfile> projectAccountProfiles = new HashSet<>();
     @OneToMany(mappedBy = "project")
+    @JsonIgnore
     private Set<ProjectAccountPermission> projectAccountPermissions = new HashSet<>();
 }
