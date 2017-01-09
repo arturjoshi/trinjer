@@ -1,10 +1,13 @@
 package com.arturjoshi.authentication.controllers;
 
+import com.arturjoshi.account.Account;
 import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.authentication.AccountDetails;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
+import com.arturjoshi.authentication.services.RegistrationService;
 import com.arturjoshi.authentication.token.TokenHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * Created by arturjoshi on 04-Jan-17.
  */
+@ControllerAdvice
 @RestController
 @RequestMapping(value = "/api")
 public class AuthenticationController {
@@ -34,10 +38,15 @@ public class AuthenticationController {
     @Autowired
     private ShaPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RegistrationService registrationService;
+
     @RequestMapping(method = RequestMethod.POST, value = "/register")
     @ResponseStatus(HttpStatus.OK)
-    public void registerAccount(@RequestBody AccountRegistrationDto accountRegistrationDto) {
-        accountRepository.save(accountRegistrationDto.getAccountFromDto());
+    public Account registerAccount(@RequestBody AccountRegistrationDto accountRegistrationDto) {
+        Account founded = accountRepository.findByEmail(accountRegistrationDto.getEmail());
+        return founded == null ? registrationService.createNewAccount(accountRegistrationDto.getAccountFromDto()):
+            registrationService.activateExistingAccount(founded, accountRegistrationDto);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/authenticate")
@@ -51,5 +60,11 @@ public class AuthenticationController {
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         return tokenHandler.createTokenForUser((AccountDetails) authentication.getPrincipal());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    public String handleBaseException(DataIntegrityViolationException e){
+        return "Account with such username or email is already exists";
     }
 }
