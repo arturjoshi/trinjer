@@ -1,12 +1,16 @@
 package com.arturjoshi.project;
 
 import com.arturjoshi.account.Account;
+import com.arturjoshi.project.entity.accountpermission.ProjectAccountPermission;
+import com.arturjoshi.project.entity.accountprofile.ProjectAccountProfile;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,6 +19,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Entity
+@EqualsAndHashCode(exclude = {"members", "invitations", "projectAccountProfiles", "projectAccountPermissions"})
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -23,13 +28,11 @@ public class Project {
     @ManyToOne
     private Account projectOwner;
     @ManyToMany
-    private Set<Account> members;
+    private Set<Account> members = new HashSet<>();
     @ManyToMany
-    private Set<Account> invitations;
-    @ManyToMany
-    @MapKeyJoinColumn(name = "account_id")
-    @JoinTable(name = "project_account",
-            joinColumns = {@JoinColumn(name = "project_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private Map<Account, ProjectRole> accountsRoles = new HashMap<>();
+    private Set<Account> invitations = new HashSet<>();
+    @OneToMany(mappedBy = "project")
+    private Set<ProjectAccountProfile> projectAccountProfiles = new HashSet<>();
+    @OneToMany(mappedBy = "project")
+    private Set<ProjectAccountPermission> projectAccountPermissions = new HashSet<>();
 }
