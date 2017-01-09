@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,8 +39,6 @@ public class ProjectController {
         Account account = accountRepository.findOne(accountId);
         Project project = projectDto.convertFromDto();
         project.setProjectOwner(account);
-        account.getProjectOwned().add(project);
-        accountRepository.save(account);
         return projectRepository.save(project);
     }
 
@@ -54,6 +53,15 @@ public class ProjectController {
                 projectService.inviteExistingAccount(invitee, project);
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/joinProject/{projectId}")
+    public Project joinProjectRequest(@PathVariable Long accountId, @PathVariable Long projectId)
+            throws NotOwnedProjectException, ProjectIsNotVisibleException {
+        Project project = projectRepository.findOne(projectId);
+        if(!project.getIsVisible()) throw new ProjectIsNotVisibleException();
+        Account account = accountRepository.findOne(accountId);
+        project.getInboxInvitations().add(account);
+        return projectRepository.save(project);
+    }
 
     @RequestMapping(method = RequestMethod.GET,
             value = "/projectAccountPermissions/search/findByProjectName")
@@ -91,5 +99,11 @@ public class ProjectController {
     @ExceptionHandler(value = NotOwnedProjectException.class)
     public String handleBaseException(NotOwnedProjectException e){
         return "It's not this users project";
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = ProjectIsNotVisibleException.class)
+    public String handleBaseException(ProjectIsNotVisibleException e){
+        return "Project is not visible";
     }
 }

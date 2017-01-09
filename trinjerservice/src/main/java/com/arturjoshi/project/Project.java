@@ -40,7 +40,11 @@ public class Project {
 
     @ManyToMany
     @JsonIgnore
-    private Set<Account> invitations = new HashSet<>();
+    private Set<Account> outboxInvitations = new HashSet<>();
+
+    @ManyToMany
+    @JsonIgnore
+    private Set<Account> inboxInvitations = new HashSet<>();
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore

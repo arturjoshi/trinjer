@@ -23,16 +23,13 @@ public class ProjectService {
         Account account = new Account();
         account.setEmail(email);
         account.setIsTemp(true);
-        account.getProjectInvitations().add(project);
-        project.getInvitations().add(account);
         accountRepository.save(account);
+        project.getOutboxInvitations().add(account);
         return projectRepository.save(project);
     }
 
     public Project inviteExistingAccount(Account account, Project project) {
-        account.getProjectInvitations().add(project);
-        accountRepository.save(account);
-        project.getInvitations().add(account);
+        project.getOutboxInvitations().add(account);
         return projectRepository.save(project);
     }
 }

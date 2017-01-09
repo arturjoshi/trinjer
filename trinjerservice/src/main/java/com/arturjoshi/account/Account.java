@@ -47,9 +47,13 @@ public class Account {
     @JsonIgnore
     private Set<Project> projects = new HashSet<>();
 
-    @ManyToMany(mappedBy = "invitations")
+    @ManyToMany(mappedBy = "outboxInvitations")
     @JsonIgnore
     private Set<Project> projectInvitations = new HashSet<>();
+
+    @ManyToMany(mappedBy = "inboxInvitations")
+    @JsonIgnore
+    private Set<Project> projectRequests = new HashSet<>();
 
     @OneToMany(mappedBy = "account")
     @JsonIgnore
