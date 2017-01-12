@@ -1,5 +1,5 @@
 import {Injectable, Inject} from "@angular/core";
-import {CanActivate} from "@angular/router";
+import {CanActivate, Router} from "@angular/router";
 import {TokenService} from "./token.service";
 /**
  * Created by xoll on 08.01.2017.
@@ -7,7 +7,10 @@ import {TokenService} from "./token.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate{
-    constructor(private tokenService: TokenService){}
+    constructor(
+        private tokenService: TokenService,
+        private router: Router
+    ){}
 
     canActivate(): boolean {
         return this.isAuthenticated();
@@ -17,7 +20,9 @@ export class AuthGuard implements CanActivate{
         return this.tokenService.isTokenPresent();
     }
 
+    //TODO: Move to other service
     logout(){
         this.tokenService.deleteToken();
+        this.router.navigateByUrl('/');
     }
 }

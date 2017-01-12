@@ -5,6 +5,7 @@ import {HttpUtils} from "../services/http-utils.service";
 import {LoginUser} from "../models/login-user.model";
 import "rxjs/Rx";
 import {Observable} from "rxjs";
+import {Router} from "@angular/router";
 /**
  * Created by Andrew Zelenskiy on 09.01.2017.
  */
@@ -13,6 +14,7 @@ import {Observable} from "rxjs";
 export class AuthenticateService{
     constructor(
         private tokenService: TokenService,
+        private router: Router,
         private httpUtils: HttpUtils
     ){}
 
@@ -27,8 +29,10 @@ export class AuthenticateService{
             .map(AuthenticateService.extractData)
             .catch(AuthenticateService.handleError);
 
+        //TODO: Go to success auth handler
         request.subscribe((token) => {
             this.tokenService.saveToken(token);
+            this.router.navigate(['Dashboard'])
         });
 
         return request;
