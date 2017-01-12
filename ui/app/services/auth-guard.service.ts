@@ -20,7 +20,6 @@ export class AuthGuard implements CanActivate{
         return this.tokenService.isTokenPresent();
     }
 
-    //TODO: Move to other service
     logout(){
         this.tokenService.deleteToken();
         this.router.navigateByUrl('/');
