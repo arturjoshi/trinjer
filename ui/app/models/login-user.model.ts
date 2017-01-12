@@ -1,29 +1,15 @@
+import {UserDTO} from "./user.interface";
 /**
  * Created by Andrew Zelenskiy on 09.01.2017.
  */
 
-export class LoginUser{
+export class LoginUser implements UserDTO{
     private constructor(
-        private _username: string,
-        private _password: string){}
-
-    get username(): string {
-        return this._username;
-    }
-
-    set username(value: string) {
-        this._username = value;
-    }
-
-    get password(): string {
-        return this._password;
-    }
-
-    set password(value: string) {
-        this._password = value;
-    }
-
+        public username: string,
+        public email: string,
+        public password: string
+    ){}
     public static getNewLoginUser(): LoginUser{
-        return new LoginUser('', '');
+        return new LoginUser('', '', '');
     }
 }

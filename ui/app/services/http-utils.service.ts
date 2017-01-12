@@ -3,6 +3,7 @@ import {Http, RequestOptions, Headers} from "@angular/http";
 import {TokenService} from "./token.service";
 import "rxjs/Rx";
 import {Observable} from "rxjs/Rx";
+import {UserDTO} from "../models/user.interface";
 /**
  * Created by Andrew Zelenskiy on 09.01.2017.
  */
@@ -13,10 +14,9 @@ export class HttpUtils implements OnInit{
     private optionsWithoutToken: RequestOptions;
     private options: RequestOptions;
 
-    makePostWithoutToken(prefix: string, body: string, params: Object = {}): Observable<any>{
+    makePostWithoutToken(prefix: string, body: UserDTO, params: Object = {}): Observable<any>{
         return this.http.post(this.baseUrl + prefix, body)
             .map(response => {
-                console.log(response);
                 return response;
             })
             .catch(error => {

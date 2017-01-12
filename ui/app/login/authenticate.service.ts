@@ -19,18 +19,23 @@ export class AuthenticateService{
     public authenticate(user: LoginUser): Observable<any>{
         let body = {
             username: user.username,
-            password: user.password
+            password: user.password,
+            email: ""
         };
 
-        return this.httpUtils.makePostWithoutToken("authenticate", JSON.stringify(body))
+        let request = this.httpUtils.makePostWithoutToken("authenticate", body)
             .map(AuthenticateService.extractData)
             .catch(AuthenticateService.handleError);
+
+        request.subscribe((token) => {
+            this.tokenService.saveToken(token);
+        });
+
+        return request;
     }
 
     private static extractData(res: Response){
-        let body = res.json();
-        console.log(body);
-        return body;
+        return res;
     }
 
     private static handleError(error: any){

@@ -16,9 +16,6 @@ export class LoginComponent{
     constructor(private authenticateService: AuthenticateService){}
 
     onSubmit(){
-        this.authenticateService.authenticate(this.user).subscribe(
-            console.log,
-            console.log
-        );
+        this.authenticateService.authenticate(this.user);
     }
 }

@@ -19,4 +19,8 @@ export class AppComponent{
     isAuth(){
         return this.authGuard.isAuthenticated();
     }
+
+    logout(){
+        this.authGuard.logout();
+    }
 }
