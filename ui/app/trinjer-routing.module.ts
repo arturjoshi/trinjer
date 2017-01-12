@@ -15,7 +15,7 @@ const appRoutes: Routes = [
     //TODO: Move routing component to another component
     // { path: '', component: AppComponent, name: 'Home'},
 
-    { path: 'dashboard', component: DashboarComponent, canActivate: [AuthGuard], name: 'Dashboard'}
+    { path: 'dashboard', name: 'Dashboard', component: DashboarComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

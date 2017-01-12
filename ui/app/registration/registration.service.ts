@@ -21,19 +21,20 @@ export class RegistrationService{
         let request = this.httpUtils.makePostWithoutToken(this.baseUrl, user)
             .map(RegistrationService.extractData)
             .catch(RegistrationService.handleError);
-        request.subscribe(() => {
-            this.authenticateService.authenticate(user);
-        });
+        request.subscribe(this.successRegistrationHandler);
 
         return request;
     }
 
+    private successRegistrationHandler(user: UserDTO){
+        this.authenticateService.authenticate(user);
+    }
+
     private static extractData(res: Response){
-        return res;
+        console.log(res);
     }
 
     private static handleError(error: any){
-        console.log(error);
-        return error;
+        console.error(error);
     }
 }
