@@ -14,8 +14,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -51,12 +49,12 @@ public class AuthenticationController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/authenticate")
     @ResponseStatus(HttpStatus.OK)
-    public String authenticate(@RequestParam String username, @RequestParam String password)
+    public String authenticate(@RequestBody AccountRegistrationDto accountRegistrationDto)
             throws BadCredentialsException {
 
-        password = passwordEncoder.encodePassword(password, null);
+        String password = passwordEncoder.encodePassword(accountRegistrationDto.getPassword(), null);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(username, password);
+                new UsernamePasswordAuthenticationToken(accountRegistrationDto.getUsername(), password);
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
         return tokenHandler.createTokenForUser((AccountDetails) authentication.getPrincipal());
