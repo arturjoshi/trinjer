@@ -31,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/authenticate/",
                         "/api/accounts/**",
                         "/api/projects/**",
+                        "/api/milestones/**",
                         "/api/projectAccountPermissions/**",
                         "/api/projectAccountProfiles/**")
                 .permitAll()
