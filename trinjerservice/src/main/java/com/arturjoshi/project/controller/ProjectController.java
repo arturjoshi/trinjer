@@ -8,6 +8,8 @@ import com.arturjoshi.project.dto.ProjectAccountProfileDto;
 import com.arturjoshi.project.dto.ProjectDto;
 import com.arturjoshi.project.entities.ProjectAccountPermission;
 import com.arturjoshi.project.entities.ProjectAccountProfile;
+import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
+import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
 import com.arturjoshi.project.repository.ProjectRepository;
 import com.arturjoshi.project.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +35,22 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private ProjectAccountPermissionRepository projectAccountPermissionRepository;
+
+    @Autowired
+    private ProjectAccountProfileRepository projectAccountProfileRepository;
+
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/createProject")
     public Project createProjectForUser(@RequestBody ProjectDto projectDto, @PathVariable Long accountId) {
         Account account = accountRepository.findOne(accountId);
         Project project = projectDto.convertFromDto();
         project.setProjectOwner(account);
-        return projectRepository.save(project);
+        projectRepository.save(project);
+
+        projectAccountPermissionRepository.save(projectService.initDefaultProjectOwnerPermissions(account, project));
+        projectAccountProfileRepository.save(projectService.initDefaultProjectOwnerProfile(account, project));
+        return project;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/inviteProjectEmail/{projectId}")
@@ -126,12 +138,12 @@ public class ProjectController {
     }
 
     @RequestMapping(method = RequestMethod.GET,
-            value = "/projectAccountPermissions/search/findByProjectName")
+            value = "/projectAccountPermissions/search/findByProjectId")
     public List<ProjectAccountPermissionDto> findProjectAccountPermissionsByProjectName(
-            @RequestParam String projectName) {
+            @RequestParam Long projectId) {
         List<ProjectAccountPermissionDto> permissions = new ArrayList<>();
 
-        for (Object[] projectAccountPermissionArray : projectRepository.findPermissionsByProjectName(projectName)) {
+        for (Object[] projectAccountPermissionArray : projectRepository.findPermissionsByProjectId(projectId)) {
             permissions.add(new ProjectAccountPermissionDto(
                     projectAccountPermissionArray[0].toString(),
                     projectAccountPermissionArray[1].toString(),
@@ -142,12 +154,12 @@ public class ProjectController {
     }
 
     @RequestMapping(method = RequestMethod.GET,
-            value = "/projectAccountProfiles/search/findByProjectName")
+            value = "/projectAccountProfiles/search/findByProjectId")
     public List<ProjectAccountProfileDto> findProjectAccountProfilesByProjectName(
-            @RequestParam String projectName) {
+            @RequestParam Long projectId) {
         List<ProjectAccountProfileDto> profiles = new ArrayList<>();
 
-        for (Object[] projectAccountPermissionArray : projectRepository.findProfilesByProjectName(projectName)) {
+        for (Object[] projectAccountPermissionArray : projectRepository.findProfilesByProjectId(projectId)) {
             profiles.add(new ProjectAccountProfileDto(
                     projectAccountPermissionArray[0].toString(),
                     projectAccountPermissionArray[1].toString(),
