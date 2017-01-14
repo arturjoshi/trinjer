@@ -58,7 +58,7 @@ public class ProjectController {
             throws NotOwnedProjectException {
         Account owner = accountRepository.findOne(accountId);
         Project project = projectRepository.findOne(projectId);
-        if (!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
+        if(!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
         Account invitee = accountRepository.findByEmail(email);
         return invitee == null ? projectService.inviteNewAccount(email, project) :
                 projectService.inviteExistingAccount(invitee, project);
