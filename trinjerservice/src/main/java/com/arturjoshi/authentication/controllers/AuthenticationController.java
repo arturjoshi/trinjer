@@ -51,7 +51,10 @@ public class AuthenticationController {
     @RequestMapping(method = RequestMethod.POST, value = "/authenticate")
     @ResponseStatus(HttpStatus.OK)
     public String authenticate(@RequestBody AccountRegistrationDto accountRegistrationDto)
-            throws BadCredentialsException {
+            throws BadCredentialsException, NoSuchUserException {
+
+        Account founded = accountRepository.findByUsername(accountRegistrationDto.getUsername());
+        if(founded == null) throw new NoSuchUserException();
 
         String password = passwordEncoder.encodePassword(accountRegistrationDto.getPassword(), null);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
@@ -71,5 +74,17 @@ public class AuthenticationController {
     @ExceptionHandler(value = UserExistsException.class)
     public String handleBaseException(UserExistsException e){
         return "Account with such email is already exists";
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = NoSuchUserException.class)
+    public String handleBaseException(NoSuchUserException e){
+        return "No such account";
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = BadCredentialsException.class)
+    public String handleBaseException(BadCredentialsException e){
+        return "Bad credentials";
     }
 }
