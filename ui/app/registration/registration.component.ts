@@ -29,6 +29,8 @@ export class RegistrationComponent{
 
     onSubmit(){
         this.registrationService.registration(this.user)
-            .subscribe(() => {this.router.navigate(['/dashboard'])});
+            .subscribe(() => {
+                this.router.navigate(['dashboard'])
+            });
     }
 }
