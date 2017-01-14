@@ -1,7 +1,6 @@
 package com.arturjoshi.project;
 
 import com.arturjoshi.account.Account;
-import com.arturjoshi.milestone.Milestone;
 import com.arturjoshi.project.entities.ProjectAccountPermission;
 import com.arturjoshi.project.entities.ProjectAccountProfile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -12,7 +11,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -56,8 +54,4 @@ public class Project {
     @OneToMany(mappedBy = "project")
     @JsonIgnore
     private Set<ProjectAccountPermission> projectAccountPermissions = new HashSet<>();
-
-    @OneToMany(mappedBy = "project")
-    @JsonIgnore
-    private List<Milestone> milestones = new ArrayList<>();
 }
