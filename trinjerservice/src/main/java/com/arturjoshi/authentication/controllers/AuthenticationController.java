@@ -89,10 +89,10 @@ public class AuthenticationController {
     }
 
     public static class AuthenticationControllerConstants {
-        static String ACCOUNT_USERNAME_EXISTS = "Account with such username is already exists";
-        static String ACCOUNT_EMAIL_EXISTS = "Account with such email is already exists";
-        static String NO_SUCH_ACCOUNT = "No such account";
-        static String BAD_CREDENTIALS = "Bad credentials";
+        public static String ACCOUNT_USERNAME_EXISTS = "Account with such username is already exists";
+        public static String ACCOUNT_EMAIL_EXISTS = "Account with such email is already exists";
+        public static String NO_SUCH_ACCOUNT = "No such account";
+        public static String BAD_CREDENTIALS = "Bad credentials";
 
         private AuthenticationControllerConstants() {}
     }
