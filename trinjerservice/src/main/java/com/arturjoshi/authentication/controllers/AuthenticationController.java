@@ -5,6 +5,7 @@ import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.authentication.AccountDetails;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
 import com.arturjoshi.authentication.services.RegistrationService;
+import com.arturjoshi.authentication.services.UserExistsException;
 import com.arturjoshi.authentication.token.TokenHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -41,7 +42,7 @@ public class AuthenticationController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/register")
     @ResponseStatus(HttpStatus.OK)
-    public Account registerAccount(@RequestBody AccountRegistrationDto accountRegistrationDto) {
+    public Account registerAccount(@RequestBody AccountRegistrationDto accountRegistrationDto) throws UserExistsException {
         Account founded = accountRepository.findByEmail(accountRegistrationDto.getEmail());
         return founded == null ? registrationService.createNewAccount(accountRegistrationDto.getAccountFromDto()):
             registrationService.activateExistingAccount(founded, accountRegistrationDto);
@@ -63,6 +64,12 @@ public class AuthenticationController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = DataIntegrityViolationException.class)
     public String handleBaseException(DataIntegrityViolationException e){
-        return "Account with such username or email is already exists";
+        return "Account with such username is already exists";
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = UserExistsException.class)
+    public String handleBaseException(UserExistsException e){
+        return "Account with such email is already exists";
     }
 }
