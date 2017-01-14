@@ -21,13 +21,14 @@ export class RegistrationComponent{
     user: RegistrationUser;
 
     constructor(
-        private registrationService: RegistrationService
+        private registrationService: RegistrationService,
+        private router: Router
     ){
         this.user = RegistrationUser.getNewRegistrationUser();
     }
 
     onSubmit(){
-        this.registrationService.registration(this.user);
-            // .subscribe(() => {this.router.navigate(['Dashboard'])});
+        this.registrationService.registration(this.user)
+            .subscribe(() => {this.router.navigate(['/dashboard'])});
     }
 }
