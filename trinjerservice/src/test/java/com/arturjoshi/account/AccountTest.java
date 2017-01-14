@@ -3,6 +3,8 @@ package com.arturjoshi.account;
 import com.arturjoshi.AbstractTest;
 import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.authentication.controllers.AuthenticationController;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,16 +27,17 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringBootTest
 public class AccountTest extends AbstractTest {
 
-    private final String ACCOUNT_PASSWORD = "testpassword";
-    private final String ACCOUNT_USERNAME = "testusername";
-    private final String ACCOUNT_EMAIL = "testemail";
-
     @Autowired
     private AccountRepository accountRepository;
 
     @Before
     public void setup() {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
+        accountRepository.deleteAll();
+    }
+
+    @After
+    public void clean() {
         accountRepository.deleteAll();
     }
 
@@ -145,15 +148,5 @@ public class AccountTest extends AbstractTest {
                 .andExpect(jsonPath("$",
                         is(AuthenticationController.AuthenticationControllerConstants.NO_SUCH_ACCOUNT)))
                 .andExpect(status().is5xxServerError());
-    }
-
-    private Account getDefaultTestAccount() {
-        Account account = new Account();
-        AccountCredentials accountCredentials = new AccountCredentials();
-        accountCredentials.setPassword(ACCOUNT_PASSWORD);
-        account.setCredentials(accountCredentials);
-        account.setUsername(ACCOUNT_USERNAME);
-        account.setEmail(ACCOUNT_EMAIL);
-        return account;
     }
 }

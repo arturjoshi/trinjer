@@ -2,6 +2,7 @@ package com.arturjoshi;
 
 import com.arturjoshi.account.Account;
 import com.arturjoshi.account.AccountCredentials;
+import com.arturjoshi.project.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -36,4 +37,32 @@ public abstract class AbstractTest {
 
     @Autowired
     protected WebApplicationContext webApplicationContext;
+
+    protected final String X_AUTH_TOKEN_HEADER = "X-Auth-Token";
+
+    protected final String ACCOUNT_PASSWORD = "testpassword";
+    protected final String ACCOUNT_USERNAME = "testusername";
+    protected final String ACCOUNT_EMAIL = "testemail";
+
+    protected final String PROJECT_NAME = "testprojectname";
+    protected final boolean VISIBLE_PROJECT = true;
+    protected final boolean NON_VISIBLE_PROJECT = false;
+    protected final String INVITEE_EMAIL = "testinviteeemail";
+
+    protected Account getDefaultTestAccount() {
+        Account account = new Account();
+        AccountCredentials accountCredentials = new AccountCredentials();
+        accountCredentials.setPassword(ACCOUNT_PASSWORD);
+        account.setCredentials(accountCredentials);
+        account.setUsername(ACCOUNT_USERNAME);
+        account.setEmail(ACCOUNT_EMAIL);
+        return account;
+    }
+
+    protected Project getDefaultProject() {
+        Project project = new Project();
+        project.setName(PROJECT_NAME);
+        project.setIsVisible(VISIBLE_PROJECT);
+        return project;
+    }
 }
