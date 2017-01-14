@@ -57,7 +57,7 @@ public class TokenHandler {
         }
     }
 
-    public String   createTokenForUser(UserDetails user) {
+    public String createTokenForUser(UserDetails user) {
         MessageDigest md5 = null;
         try {
             md5 = MessageDigest.getInstance("MD5");

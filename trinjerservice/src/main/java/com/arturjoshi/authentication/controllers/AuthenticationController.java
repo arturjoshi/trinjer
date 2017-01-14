@@ -67,24 +67,33 @@ public class AuthenticationController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = DataIntegrityViolationException.class)
     public String handleBaseException(DataIntegrityViolationException e){
-        return "Account with such username is already exists";
+        return AuthenticationControllerConstants.ACCOUNT_USERNAME_EXISTS;
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = UserExistsException.class)
     public String handleBaseException(UserExistsException e){
-        return "Account with such email is already exists";
+        return AuthenticationControllerConstants.ACCOUNT_EMAIL_EXISTS;
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = NoSuchUserException.class)
     public String handleBaseException(NoSuchUserException e){
-        return "No such account";
+        return AuthenticationControllerConstants.NO_SUCH_ACCOUNT;
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = BadCredentialsException.class)
     public String handleBaseException(BadCredentialsException e){
-        return "Bad credentials";
+        return AuthenticationControllerConstants.BAD_CREDENTIALS;
+    }
+
+    public static class AuthenticationControllerConstants {
+        static String ACCOUNT_USERNAME_EXISTS = "Account with such username is already exists";
+        static String ACCOUNT_EMAIL_EXISTS = "Account with such email is already exists";
+        static String NO_SUCH_ACCOUNT = "No such account";
+        static String BAD_CREDENTIALS = "Bad credentials";
+
+        private AuthenticationControllerConstants() {}
     }
 }

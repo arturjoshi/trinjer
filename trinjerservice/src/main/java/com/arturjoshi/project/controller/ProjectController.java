@@ -58,7 +58,7 @@ public class ProjectController {
             throws NotOwnedProjectException {
         Account owner = accountRepository.findOne(accountId);
         Project project = projectRepository.findOne(projectId);
-        if(!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
+        if (!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
         Account invitee = accountRepository.findByEmail(email);
         return invitee == null ? projectService.inviteNewAccount(email, project) :
                 projectService.inviteExistingAccount(invitee, project);
@@ -68,7 +68,7 @@ public class ProjectController {
     public Project joinProjectRequest(@PathVariable Long accountId, @PathVariable Long projectId)
             throws NotOwnedProjectException, ProjectIsNotVisibleException {
         Project project = projectRepository.findOne(projectId);
-        if(!project.getIsVisible()) throw new ProjectIsNotVisibleException();
+        if (!project.getIsVisible()) throw new ProjectIsNotVisibleException();
         Account account = accountRepository.findOne(accountId);
         project.getInboxInvitations().add(account);
         return projectRepository.save(project);
@@ -78,7 +78,7 @@ public class ProjectController {
     public Project acceptInboxProjectInvitation(@PathVariable Long accountId, @PathVariable Long projectId) throws NotInProjectInvitationsException {
         Account account = accountRepository.findOne(accountId);
         Project project = projectRepository.findOne(projectId);
-        if(!account.getProjectInvitations().contains(project)) throw new NotInProjectInvitationsException();
+        if (!account.getProjectInvitations().contains(project)) throw new NotInProjectInvitationsException();
 
         project.getOutboxInvitations().remove(account);
         project.getMembers().add(account);
@@ -89,7 +89,7 @@ public class ProjectController {
     public Project refuseInboxProjectInvitation(@PathVariable Long accountId, @PathVariable Long projectId) throws NotInProjectInvitationsException {
         Account account = accountRepository.findOne(accountId);
         Project project = projectRepository.findOne(projectId);
-        if(!account.getProjectInvitations().contains(project)) throw new NotInProjectInvitationsException();
+        if (!account.getProjectInvitations().contains(project)) throw new NotInProjectInvitationsException();
 
         project.getOutboxInvitations().remove(account);
         return projectRepository.save(project);
@@ -100,10 +100,10 @@ public class ProjectController {
             throws NotOwnedProjectException, NotInProjectInvitationsException {
         Account owner = accountRepository.findOne(ownerId);
         Project project = projectRepository.findOne(projectId);
-        if(!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
+        if (!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
 
         Account account = accountRepository.findOne(accountId);
-        if(!project.getInboxInvitations().contains(account)) throw new NotInProjectInvitationsException();
+        if (!project.getInboxInvitations().contains(account)) throw new NotInProjectInvitationsException();
 
         project.getInboxInvitations().remove(account);
         project.getMembers().add(account);
@@ -115,10 +115,10 @@ public class ProjectController {
             throws NotOwnedProjectException, NotInProjectInvitationsException {
         Account owner = accountRepository.findOne(ownerId);
         Project project = projectRepository.findOne(projectId);
-        if(!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
+        if (!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
 
         Account account = accountRepository.findOne(accountId);
-        if(!project.getInboxInvitations().contains(account)) throw new NotInProjectInvitationsException();
+        if (!project.getInboxInvitations().contains(account)) throw new NotInProjectInvitationsException();
 
         project.getInboxInvitations().remove(account);
         return projectRepository.save(project);
@@ -129,7 +129,7 @@ public class ProjectController {
             throws NotOwnedProjectException, NotInProjectInvitationsException {
         Account owner = accountRepository.findOne(ownerId);
         Project project = projectRepository.findOne(projectId);
-        if(!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
+        if (!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
 
         Account account = accountRepository.findOne(accountId);
 
@@ -171,17 +171,28 @@ public class ProjectController {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = NotOwnedProjectException.class)
-    public String handleBaseException(NotOwnedProjectException e){
-        return "It's not this users project";
+    public String handleBaseException(NotOwnedProjectException e) {
+        return ProjectControllerConstants.NOT_USERS_PROJECT;
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = ProjectIsNotVisibleException.class)
-    public String handleBaseException(ProjectIsNotVisibleException e){
-        return "Project is not visible";
+    public String handleBaseException(ProjectIsNotVisibleException e) {
+        return ProjectControllerConstants.NOT_VISIBLE_PROJECT;
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = NotInProjectInvitationsException.class)
-    public String handleBaseException(NotInProjectInvitationsException e){ return "No such project invitation"; }
+    public String handleBaseException(NotInProjectInvitationsException e) {
+        return ProjectControllerConstants.NOT_SUCH_INVITATION;
+    }
+
+    public static class ProjectControllerConstants {
+        static String NOT_USERS_PROJECT = "It's not this users project";
+        static String NOT_VISIBLE_PROJECT = "Project is not visible";
+        static String NOT_SUCH_INVITATION = "No such project invitation";
+
+        private ProjectControllerConstants() {
+        }
+    }
 }
