@@ -10,12 +10,12 @@ import {AuthGuard} from "./services/auth-guard.service";
 import {AppComponent} from "./app.component";
 
 const appRoutes: Routes = [
-    { path: 'login', component: LoginComponent, name: 'Login'},
-    { path: 'registration', component: RegistrationComponent, name: 'Registration'},
+    { path: 'login', component: LoginComponent},
+    { path: 'registration', component: RegistrationComponent},
     //TODO: Move routing component to another component
     // { path: '', component: AppComponent, name: 'Home'},
 
-    { path: 'dashboard', name: 'Dashboard', component: DashboarComponent, canActivate: [AuthGuard]}
+    { path: 'dashboard', component: DashboarComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

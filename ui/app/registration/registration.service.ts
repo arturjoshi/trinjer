@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import { Response} from "@angular/http";
+import {Response} from "@angular/http";
 import {UserDTO} from "../models/user.interface";
 import {AuthenticateService} from "../login/authenticate.service";
 import {HttpUtils} from "../services/http-utils.service";
@@ -18,11 +18,11 @@ export class RegistrationService{
     ){}
 
     registration(user: UserDTO): Observable<any>{
-        return Observable.create(observer => {
+        return Observable.create((observer: any) => {
             this.httpUtils.makePostWithoutToken(this.baseUrl, user)
                 .map(RegistrationService.extractData)
                 .catch(RegistrationService.handleError)
-                .subscribe((response) => {
+                .subscribe((response: Response) => {
                     this.authenticateService.authenticate(user).subscribe((user: UserDTO) => {
                         observer.next(response);
                         observer.complete();
@@ -35,7 +35,8 @@ export class RegistrationService{
         return res.json();
     }
 
-    private static handleError(error: any){
+    private static handleError(error: any): any{
         console.error(error);
+        return error;
     }
 }
