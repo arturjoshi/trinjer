@@ -19,7 +19,9 @@ public class RegistrationService {
         return accountRepository.save(account);
     }
 
-    public Account activateExistingAccount(Account account, AccountRegistrationDto accountRegistrationDto) {
+    public Account activateExistingAccount(Account account, AccountRegistrationDto accountRegistrationDto) throws UserExistsException {
+        if (!account.getUsername().isEmpty()) throw new UserExistsException();
+
         account.setUsername(accountRegistrationDto.getUsername());
         account.setIsTemp(false);
         account.setCredentials(accountRegistrationDto.getAccountFromDto().getCredentials());

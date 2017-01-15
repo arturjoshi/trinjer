@@ -53,9 +53,9 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
                     "on project_account_permission.account_id = account.id " +
                     "inner join project " +
                     "on project_account_permission.project_id = project.id " +
-                    "where project.name = ?1"
+                    "where project.id = ?1"
     )
-    List<Object[]> findPermissionsByProjectName(@Param("projectName") String projectName);
+    List<Object[]> findPermissionsByProjectId(@Param("projectId") Long projectId);
 
     @Query(nativeQuery = true,
             value = "select project.name, account.username, project_account_profile.project_profile " +
@@ -64,7 +64,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long> {
                     "on project_account_profile.account_id = account.id " +
                     "inner join project " +
                     "on project_account_profile.project_id = project.id " +
-                    "where project.name = ?1"
+                    "where project.id = ?1"
     )
-    List<Object[]> findProfilesByProjectName(@Param("projectName") String projectName);
+    List<Object[]> findProfilesByProjectId(@Param("projectId") Long projectId);
 }
