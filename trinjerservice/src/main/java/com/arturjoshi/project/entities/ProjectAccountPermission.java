@@ -15,8 +15,7 @@ import javax.persistence.*;
 @Entity
 public class ProjectAccountPermission {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
