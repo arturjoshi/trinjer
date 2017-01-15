@@ -10,7 +10,7 @@ import {Observable} from "rxjs/Rx";
 
 @Injectable()
 export class RegistrationService{
-    private baseUrl: string = 'register';
+    private baseUrl: string = 'register/';
 
     constructor(
         private authenticateService: AuthenticateService,

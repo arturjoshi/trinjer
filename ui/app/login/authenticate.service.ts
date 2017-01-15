@@ -3,7 +3,6 @@ import {TokenService} from "../services/token.service";
 import {HttpUtils} from "../services/http-utils.service";
 import "rxjs/Rx";
 import {UserDTO} from "../models/user.interface";
-import any = jasmine.any;
 import {Observable} from "rxjs/Rx";
 /**
  * Created by Andrew Zelenskiy on 09.01.2017.
@@ -11,7 +10,7 @@ import {Observable} from "rxjs/Rx";
 
 @Injectable()
 export class AuthenticateService{
-    private baseUrl: string = 'authenticate';
+    private baseUrl: string = 'authenticate/';
 
     constructor(
         private tokenService: TokenService,
