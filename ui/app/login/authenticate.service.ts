@@ -2,8 +2,11 @@ import {Injectable} from "@angular/core";
 import {TokenService} from "../services/token.service";
 import {HttpUtils} from "../services/http-utils.service";
 import "rxjs/Rx";
+import {Observable, Observer} from "rxjs/Rx";
+import {AccountService} from "../services/account.service";
+import {IAccount} from "../models/account.interface";
+import {Response} from "@angular/http";
 import {UserDTO} from "../models/user.dto.interface";
-import {Observable} from "rxjs/Rx";
 /**
  * Created by Andrew Zelenskiy on 09.01.2017.
  */
@@ -14,16 +17,22 @@ export class AuthenticateService{
 
     constructor(
         private tokenService: TokenService,
+        private accountService: AccountService,
         private httpUtils: HttpUtils
     ){}
 
-    public authenticate(user: UserDTO): Observable<any>{
-        return Observable.create((observer: any) => {
+    public authenticate(user: UserDTO): Observable<IAccount>{
+        return Observable.create((observer: Observer<IAccount>) => {
             this.httpUtils.makePostWithoutToken(this.baseUrl, user)
                 .catch(AuthenticateService.handleError)
-                .subscribe((token: string) => {
+                .subscribe((response: Response) => {
+                    let token = response['token'] || null;
+                    let account = response['account'] || null;
+
                     this.tokenService.saveToken(token);
-                    observer.next(user);
+                    this.accountService.saveAccount(account);
+
+                    observer.next(account);
                     observer.complete();
                 });
         });

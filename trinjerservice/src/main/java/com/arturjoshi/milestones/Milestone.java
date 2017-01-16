@@ -1,16 +1,18 @@
-package com.arturjoshi.milestone;
+package com.arturjoshi.milestones;
 
 import com.arturjoshi.project.Project;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Created by ajoshi on 13-Jan-17.
+ * Created by ajoshi on 16-Jan-17.
  */
 @NoArgsConstructor
 @Data
@@ -23,24 +25,31 @@ public class Milestone {
     private String description;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
     @ManyToOne(optional = false)
     private Project project;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MilestoneType type;
 
     @ManyToOne
     private Milestone parentMilestone;
 
     @OneToMany(mappedBy = "parentMilestone")
     @JsonIgnore
-    private List<Milestone> childrenMilestones;
+    private Set<Milestone> children = new HashSet<>();
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private MilestoneType type;
+    public void addChildMilestone(Milestone milestone) {
+        this.children.add(milestone);
+        milestone.setParentMilestone(this);
+    }
 
     public enum MilestoneType {
         MILESTONE,
