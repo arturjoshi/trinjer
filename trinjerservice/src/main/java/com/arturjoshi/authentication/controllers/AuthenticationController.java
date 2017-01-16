@@ -3,6 +3,7 @@ package com.arturjoshi.authentication.controllers;
 import com.arturjoshi.account.Account;
 import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.authentication.AccountDetails;
+import com.arturjoshi.authentication.dto.AccountAuthenticationDto;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
 import com.arturjoshi.authentication.services.RegistrationService;
 import com.arturjoshi.authentication.services.UserExistsException;
@@ -50,7 +51,7 @@ public class AuthenticationController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/authenticate")
     @ResponseStatus(HttpStatus.OK)
-    public String authenticate(@RequestBody AccountRegistrationDto accountRegistrationDto)
+    public AccountAuthenticationDto authenticate(@RequestBody AccountRegistrationDto accountRegistrationDto)
             throws BadCredentialsException, NoSuchUserException {
 
         Account founded = accountRepository.findByUsername(accountRegistrationDto.getUsername());
@@ -61,7 +62,8 @@ public class AuthenticationController {
                 new UsernamePasswordAuthenticationToken(accountRegistrationDto.getUsername(), password);
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
-        return tokenHandler.createTokenForUser((AccountDetails) authentication.getPrincipal());
+        return new AccountAuthenticationDto(founded,
+                tokenHandler.createTokenForUser((AccountDetails) authentication.getPrincipal()));
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
