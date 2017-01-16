@@ -36,7 +36,9 @@ export class ProjectService implements OnInit{
 
 
     refreshAllProjects(){
-        this.getProjectsByClientFromBackend();
+        this.getProjectsByClientFromBackend().subscribe(() => {
+            this._projects.next(Object.assign({}, this._projectsList));
+        });
     }
 
     //noinspection JSUnusedGlobalSymbols
