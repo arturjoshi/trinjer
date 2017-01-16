@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {UserDTO} from "../models/user.interface";
+import {UserDTO} from "../models/user.dto.interface";
 /**
  * Created by xoll on 08.01.2017.
  */

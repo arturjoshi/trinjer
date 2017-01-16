@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {TokenService} from "../services/token.service";
 import {HttpUtils} from "../services/http-utils.service";
 import "rxjs/Rx";
-import {UserDTO} from "../models/user.interface";
+import {UserDTO} from "../models/user.dto.interface";
 import {Observable} from "rxjs/Rx";
 /**
  * Created by Andrew Zelenskiy on 09.01.2017.

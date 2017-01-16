@@ -1,4 +1,4 @@
-import {UserDTO} from "./user.interface";
+import {UserDTO} from "./user.dto.interface";
 import {RegistrationUserDTO} from "./registration-user.interface";
 /**
  * Created by xoll on 08.01.2017.

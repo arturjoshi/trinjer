@@ -3,7 +3,7 @@ import {Http, RequestOptions, Headers} from "@angular/http";
 import {TokenService} from "./token.service";
 import "rxjs/Rx";
 import {Observable} from "rxjs/Rx";
-import {UserDTO} from "../models/user.interface";
+import {UserDTO} from "../models/user.dto.interface";
 /**
  * Created by Andrew Zelenskiy on 09.01.2017.
  */
@@ -14,16 +14,23 @@ export class HttpUtils implements OnInit{
     private optionsWithoutToken: RequestOptions;
     private options: RequestOptions;
 
-    makePostWithoutToken(prefix: string, body: UserDTO, params: Object = {}): Observable<any>{
-        return this.http.post(this.baseUrl + prefix, body)
-            .map(response => {
-                return response;
-            })
-            .catch(error => {
-                console.log(error);
-                return error;
-            });
+
+    makePost(prefix: string, body: Object, params: Object = {}): Observable<any> {
+        if(this.options === null)throw new Error("Options are not exist!");
+
+        return this.http.post(this.baseUrl + prefix, body, this.getOptions(params));
     }
+
+
+    makeGet(prefix: string, options: Object = {}) {
+        this.http.get(this.baseUrl + prefix, this.getOptions(options));
+    }
+
+
+    makePostWithoutToken(prefix: string, body: Object, params: Object = {}): Observable<any>{
+        return this.http.post(this.baseUrl + prefix, body, this.getOptions(params));
+    }
+
 
     ngOnInit(): void {
         let defaultHeaders: Headers = new Headers({'Content-Type': ' x-www-url-encoded'});
@@ -36,6 +43,15 @@ export class HttpUtils implements OnInit{
         }
     }
 
+
+    private getOptions(options: Object): RequestOptions{
+        let result = new RequestOptions();
+        Object.assign(result, this.options, options);
+
+        return result;
+    }
+
+
     private initializeTokenOptions(){
         let tokenHeaders: Headers = new Headers({
             'Content-Type': 'application/json',
@@ -46,8 +62,10 @@ export class HttpUtils implements OnInit{
         });
     }
 
+
     constructor(
         private http: Http,
         private tokenService: TokenService
     ){}
+
 }

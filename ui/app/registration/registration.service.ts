@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Response} from "@angular/http";
-import {UserDTO} from "../models/user.interface";
+import {UserDTO} from "../models/user.dto.interface";
 import {AuthenticateService} from "../login/authenticate.service";
 import {HttpUtils} from "../services/http-utils.service";
 import {Observable} from "rxjs/Rx";
