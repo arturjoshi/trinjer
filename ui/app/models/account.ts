@@ -1,4 +1,4 @@
-import {IAccount, IAccount} from "./account.interface";
+import {IAccount} from "./account.interface";
 /**
  * Created by Andrew Zelenskiy on 16.01.2017.
  */

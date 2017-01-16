@@ -1,9 +1,10 @@
 import {Injectable, OnInit} from "@angular/core";
-import {Http, RequestOptions, Headers} from "@angular/http";
+import {Http, RequestOptions, Headers, Response} from "@angular/http";
 import {TokenService} from "./token.service";
 import "rxjs/Rx";
 import {Observable} from "rxjs/Rx";
 import {UserDTO} from "../models/user.dto.interface";
+import {IProject} from "../project/project.interface";
 /**
  * Created by Andrew Zelenskiy on 09.01.2017.
  */
@@ -22,8 +23,8 @@ export class HttpUtils implements OnInit{
     }
 
 
-    makeGet(prefix: string, options: Object = {}) {
-        this.http.get(this.baseUrl + prefix, this.getOptions(options));
+    makeGet(prefix: string, options: Object = {}):Observable<Response> {
+        return this.http.get(this.baseUrl + prefix, this.getOptions(options));
     }
 
 

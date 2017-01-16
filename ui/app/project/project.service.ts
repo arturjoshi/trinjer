@@ -5,6 +5,7 @@ import {IAccount} from "../models/account.interface";
 import {Observable, Observer, BehaviorSubject} from "rxjs";
 import {AccountService} from "../services/account.service";
 import {IProject} from "./project.interface";
+import {Response} from "@angular/http";
 /**
  * Created by Andrew Zelenskiy on 16.01.2017.
  */
@@ -49,6 +50,8 @@ export class ProjectService implements OnInit{
 
     private getProjectFromHttp(): Observable<IProject[]>{
         let prefix = "accounts/" + this.account.id.toString() + "/projects";
-        return this.httpUtils.makeGet(prefix);
+        return this.httpUtils.makeGet(prefix).map((response: Response): IProject[] => {
+            return <IProject[]>response;
+        })
     }
 }
