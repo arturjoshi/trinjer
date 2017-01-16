@@ -35,11 +35,6 @@ export class ProjectService implements OnInit{
     }
 
 
-    getProjects(){
-        return this.projects;
-    }
-
-
     refreshAllProjects(){
         this.getProjectsByClientFromBackend();
     }
