@@ -44,9 +44,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/register/",
                         "/api/authenticate/")
                 .permitAll()
+                .anyRequest().authenticated()
                 .antMatchers("/api/{accountId}/**").access(
                         "#accountId.toString().equals(principal.id.toString())")
-                .anyRequest().authenticated()
                 .and().addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();
     }
