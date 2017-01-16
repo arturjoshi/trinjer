@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 import {Injectable} from "@angular/core";
 import {IAccount} from "../models/account.interface";
 import {Account} from "../models/account";
-=======
-import {IAccount} from "../models/account.interface";
-import {Injectable} from "@angular/core";
->>>>>>> ui
 /**
  * Created by Andrew Zelenskiy on 16.01.2017.
  */
