@@ -42,12 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/api/register/",
-                        "/api/authenticate/",
-                        "/api/accounts/**",
-                        "/api/projects/**",
-                        "/api/milestones/**",
-                        "/api/projectAccountPermissions/**",
-                        "/api/projectAccountProfiles/**")
+                        "/api/authenticate/")
                 .permitAll()
                 .antMatchers("/api/{accountId}/**").access(
                         "#accountId.toString().equals(principal.id.toString())")
