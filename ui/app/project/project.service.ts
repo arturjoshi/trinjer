@@ -2,53 +2,70 @@ import {Injectable, OnInit} from "@angular/core";
 import {HttpUtils} from "../services/http-utils.service";
 import {ProjectDTO} from "./project-dto.interface";
 import {IAccount} from "../models/account.interface";
-import {Observable, Observer, BehaviorSubject} from "rxjs";
+import {Observable, BehaviorSubject} from "rxjs";
 import {AccountService} from "../services/account.service";
 import {IProject} from "./project.interface";
+import {Response} from "@angular/http";
 /**
  * Created by Andrew Zelenskiy on 16.01.2017.
  */
 
 @Injectable()
 export class ProjectService implements OnInit{
-    private projectObserver: BehaviorSubject<IProject[]>;
-    private _projects: IProject[];
+    private _projectsList: IProject[];
+
+    //Observable items
+    private _projects: BehaviorSubject<IProject[]>;
+    projects: Observable<IProject[]>;
+
     private account: IAccount;
 
+
     createProject(project: ProjectDTO): Observable<IProject[]>{
-        let prefix = this.account.id.toString() + "/createProject";
+        let postfix = this.account.id.toString() + "/createProject/";
 
-        this.httpUtils.makePost(prefix, project)
-            .subscribe((fullProject: IProject) => {
-                this._projects.push(fullProject);
-                this.projectObserver.next(Object.assign({}, this._projects));
-        });
+        this.httpUtils.makePost(postfix, project)
+            //map
+            .subscribe((project: IProject) => {
+                this._projectsList.push(project);
+                this._projects.next(Object.assign({}, this._projects));
+            });
 
-        return this.projectObserver.asObservable();
-    }
-
-    getProjects(): Observable<IProject[]>{
-        return this.projectObserver.asObservable();
+        return this.projects;
     }
 
 
-    constructor(
-        private httpUtils: HttpUtils,
-        private accountService: AccountService){}
+    getProjects(){
+        return this.projects;
+    }
 
+
+    refreshAllProjects(){
+        this.getProjectsByClientFromBackend();
+    }
 
     //noinspection JSUnusedGlobalSymbols
-    ngOnInit(){
+    ngOnInit(): void{
         this.account = this.accountService.getAccount();
+        if(this.account === null)
+            throw new Error("Account does not exist!");
 
-        this.getProjectFromHttp()
-            .subscribe((projects: IProject[]) => {
-                this._projects = projects;
-            });
+        this.getProjectsByClientFromBackend().subscribe((projects: IProject[]) => {
+            this._projectsList = projects;
+        });
     }
 
-    private getProjectFromHttp(): Observable<IProject[]>{
-        let prefix = "accounts/" + this.account.id.toString() + "/projects";
-        return this.httpUtils.makeGet(prefix);
+
+    constructor(private httpUtils: HttpUtils, private accountService: AccountService){
+        this._projects = new BehaviorSubject([]);
+        this.projects = this._projects.asObservable();
+    }
+
+
+    private getProjectsByClientFromBackend(): Observable<IProject[]>{
+        let prefix = "/accounts/" + this.account.id.toString() + "/projects/";
+        return this.httpUtils.makeGet(prefix).map((response: Response) => {
+            return response;
+        });
     }
 }
