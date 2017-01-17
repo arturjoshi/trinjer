@@ -5,7 +5,8 @@ import {Component} from "@angular/core";
 
 @Component({
     selector: 'projects',
-    template: `<h1>Projects component!</h1>`
+    templateUrl: 'app/project/projects.template.html',
+
 })
 export class ProjectsComponent{
 

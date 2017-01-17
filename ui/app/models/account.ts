@@ -11,4 +11,12 @@ export class AccountDTO implements IAccount{
     isConfirmed: boolean;
     isTemp: boolean;
 
+    constructor(){
+        this.id = 0;
+        this.username = '';
+        this.email = '';
+        this.createdTime = '';
+        this.isConfirmed = false;
+        this.isTemp = false;
+    }
 }

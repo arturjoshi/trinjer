@@ -16,6 +16,7 @@ import {HttpUtils} from "./services/http-utils.service";
 import {HttpModule} from "@angular/http";
 import {AccountService} from "./services/account.service";
 import {ProjectsComponent} from "./project/projects.component";
+import {ProjectsListComponent} from "./project/projects-list/projects-list.component";
 
 @NgModule({
     imports: [
@@ -30,6 +31,7 @@ import {ProjectsComponent} from "./project/projects.component";
         RegistrationComponent,
         DashboarComponent,
         ProjectsComponent,
+        ProjectsListComponent,
         EqualValidatorDirective
     ],
     providers: [

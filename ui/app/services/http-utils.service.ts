@@ -10,7 +10,7 @@ import {IProject} from "../project/project.interface";
  */
 
 @Injectable()
-export class HttpUtils implements OnInit{
+export class HttpUtils{
     private baseUrl: string = "http://localhost:8080/api/";
     private optionsWithoutToken: RequestOptions;
     private options: RequestOptions;
@@ -33,31 +33,23 @@ export class HttpUtils implements OnInit{
     }
 
 
-    ngOnInit(): void {
-        let defaultHeaders: Headers = new Headers({'Content-Type': ' x-www-url-encoded'});
-        this.optionsWithoutToken = new RequestOptions({headers: defaultHeaders});
-
-        if(this.tokenService.isTokenPresent()){
-            this.initializeTokenOptions();
-        }else{
-            //TODO: Subscribe on token
-        }
-    }
-
-
     private getOptions(options: Object): RequestOptions{
-        let result = new RequestOptions();
+        let result = {};
         Object.assign(result, this.options, options);
 
+        //noinspection TypeScriptValidateTypes
         return result;
     }
 
 
     private initializeTokenOptions(){
-        let tokenHeaders: Headers = new Headers({
-            'Content-Type': 'application/json',
-            'X-Auth-Token': this.tokenService.getToken()
-        });
+        let tokenHeaders: Headers = new Headers();
+        // {
+        //     'Content-Type': 'application/json',
+        //     'X-Auth-Token': this.tokenService.getToken() || ''
+        // }
+        tokenHeaders.append('content-type', 'application/json');
+        tokenHeaders.append('x-auth-token', this.tokenService.getToken());
         this.options = new RequestOptions({
             headers: tokenHeaders
         });
@@ -67,6 +59,11 @@ export class HttpUtils implements OnInit{
     constructor(
         private http: Http,
         private tokenService: TokenService
-    ){}
+    ){
+        let defaultHeaders: Headers = new Headers({'Content-Type': ' x-www-url-encoded'});
+        this.optionsWithoutToken = new RequestOptions({headers: defaultHeaders});
+
+        this.initializeTokenOptions();
+    }
 
 }

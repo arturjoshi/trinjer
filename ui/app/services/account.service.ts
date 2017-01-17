@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {IAccount} from "../models/account.interface";
-import {Account} from "../models/account";
+import {AccountDTO} from "../models/account";
 /**
  * Created by Andrew Zelenskiy on 16.01.2017.
  */
@@ -10,8 +10,14 @@ export class AccountService{
     private key: string = "account";
 
     getAccount(): IAccount{
-        let result = localStorage.getItem(this.key) || null;
-        return Account.createFromObject(result);
+        let result = JSON.parse(localStorage.getItem(this.key) || null);
+        let dto = new AccountDTO();
+
+        dto.username = result.username;
+        dto.email = result.email;
+        dto.id = result.id;
+
+        return dto;
     }
 
     saveAccount(account: IAccount): void{

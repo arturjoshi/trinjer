@@ -2,7 +2,7 @@ import {Injectable, OnInit} from "@angular/core";
 import {HttpUtils} from "../services/http-utils.service";
 import {ProjectDTO} from "./project-dto.interface";
 import {IAccount} from "../models/account.interface";
-import {Observable, BehaviorSubject} from "rxjs";
+import {Observable, BehaviorSubject} from "rxjs/Rx";
 import {AccountService} from "../services/account.service";
 import {IProject} from "./project.interface";
 import {Response} from "@angular/http";
@@ -11,7 +11,7 @@ import {Response} from "@angular/http";
  */
 
 @Injectable()
-export class ProjectService implements OnInit{
+export class ProjectService{
     private _projectsList: IProject[];
 
     //Observable items
@@ -41,21 +41,25 @@ export class ProjectService implements OnInit{
         });
     }
 
-    //noinspection JSUnusedGlobalSymbols
-    ngOnInit(): void{
-        this.account = this.accountService.getAccount();
-        if(this.account === null)
-            throw new Error("Account does not exist!");
 
-        this.getProjectsByClientFromBackend().subscribe((projects: IProject[]) => {
-            this._projectsList = projects;
-        });
+    getProjects(): Observable<IProject[]>{
+        return this.getProjectsByClientFromBackend();
     }
 
 
     constructor(private httpUtils: HttpUtils, private accountService: AccountService){
         this._projects = new BehaviorSubject([]);
         this.projects = this._projects.asObservable();
+
+        this.account = this.accountService.getAccount();
+        console.log(this.account.id);
+        if(this.account === null)
+            throw new Error("Account does not exist!");
+
+        this.getProjectsByClientFromBackend().subscribe((projects: IProject[]) => {
+            this._projectsList = projects;
+        });
+
     }
 
 
