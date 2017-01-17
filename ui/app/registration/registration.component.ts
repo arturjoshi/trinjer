@@ -7,6 +7,7 @@ import {TokenService} from "../services/token.service";
 import {RegistrationService} from "./registration.service";
 import {AuthenticateService} from "../login/authenticate.service";
 import {Router, ActivatedRoute} from "@angular/router";
+import {AccountService} from "../services/account.service";
 
 //TODO: Go to reactive forms
 @Component({
@@ -14,7 +15,8 @@ import {Router, ActivatedRoute} from "@angular/router";
     templateUrl: 'app/registration/registration.template.html',
     providers: [
         RegistrationService,
-        AuthenticateService
+        AuthenticateService,
+        AccountService
     ]
 })
 export class RegistrationComponent{
