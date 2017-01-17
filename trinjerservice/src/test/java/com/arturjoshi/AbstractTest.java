@@ -3,6 +3,7 @@ package com.arturjoshi;
 import com.arturjoshi.account.Account;
 import com.arturjoshi.account.AccountCredentials;
 import com.arturjoshi.project.Project;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -13,12 +14,16 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractTest {
 
     protected MockMvc mockMvc;
 
     protected HttpMessageConverter mappingJackson2HttpMessageConverter;
+
+    protected ObjectMapper objectMapper = new ObjectMapper();
 
     protected String json(Object o) throws IOException {
         MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
@@ -64,5 +69,10 @@ public abstract class AbstractTest {
         project.setName(PROJECT_NAME);
         project.setIsVisible(VISIBLE_PROJECT);
         return project;
+    }
+
+    protected Integer getIdFromJson(String json) throws IOException {
+        Map<String, Integer> map = objectMapper.readValue(json, HashMap.class);
+        return map.get("id");
     }
 }
