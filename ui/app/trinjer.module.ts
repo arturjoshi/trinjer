@@ -14,6 +14,7 @@ import {EqualValidatorDirective} from "./registration/equal-validator.directive"
 import {TokenService} from "./services/token.service";
 import {HttpUtils} from "./services/http-utils.service";
 import {HttpModule} from "@angular/http";
+import {AccountService} from "./services/account.service";
 
 @NgModule({
     imports: [
@@ -32,6 +33,7 @@ import {HttpModule} from "@angular/http";
     providers: [
         AuthGuard,
         TokenService,
+        AccountService,
         HttpUtils],
     bootstrap: [AppComponent]
 })
