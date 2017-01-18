@@ -28,7 +28,7 @@ export class ProjectService{
             //map
             .subscribe((project: IProject) => {
                 this._projectsList.push(project);
-                this._projects.next(Object.assign({}, this._projects));
+                this._projects.next(Object.assign({}, this._projectsList));
             });
 
         return this.projects;
@@ -63,7 +63,7 @@ export class ProjectService{
     }
 
 
-    private getProjectsByClientFromBackend(): Observable<IProject[]>{
+    private getProjectsByClientFromBackend(): any{
         let prefix = "/accounts/" + this.account.id.toString() + "/projects/";
         return this.httpUtils.makeGet(prefix).map((response: Response) => {
             return response;

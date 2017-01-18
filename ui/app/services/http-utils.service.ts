@@ -34,7 +34,7 @@ export class HttpUtils{
 
 
     private getOptions(options: Object): RequestOptions{
-        let result = {};
+        let result = new RequestOptions();
         Object.assign(result, this.options, options);
 
         //noinspection TypeScriptValidateTypes

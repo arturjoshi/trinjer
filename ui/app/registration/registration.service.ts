@@ -4,6 +4,7 @@ import {UserDTO} from "../models/user.dto.interface";
 import {AuthenticateService} from "../login/authenticate.service";
 import {HttpUtils} from "../services/http-utils.service";
 import {Observable} from "rxjs/Rx";
+import {AccountTokenDTO} from "../models/account-token.dto";
 /**
  * Created by Andrew Zelenskiy on 09.01.2017.
  */
@@ -23,7 +24,7 @@ export class RegistrationService{
                 .map(RegistrationService.extractData)
                 .catch(RegistrationService.handleError)
                 .subscribe((response: Response) => {
-                    this.authenticateService.authenticate(user).subscribe((user: UserDTO) => {
+                    this.authenticateService.authenticate(user).subscribe((user: AccountTokenDTO) => {
                         observer.next(response);
                         observer.complete();
                     });
