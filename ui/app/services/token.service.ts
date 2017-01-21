@@ -26,7 +26,7 @@ export class TokenService{
     }
 
     isTokenPresent(): boolean{
-        return localStorage.getItem(this.key) === null;
+        return localStorage.getItem(this.key) !== null;
     }
 
     removeToken(): void{
