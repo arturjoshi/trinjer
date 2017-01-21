@@ -13,29 +13,29 @@ import {IProject} from "../project/project.interface";
 export class HttpUtils{
     private baseUrl: string = "http://localhost:8080/api/";
     private optionsWithoutToken: RequestOptions;
-    private options: RequestOptions;
+    private options: RequestOptions = null;
 
 
     makePost(prefix: string, body: Object, params: Object = {}): Observable<any> {
         if(this.options === null)throw new Error("Options are not exist!");
 
-        return this.http.post(this.baseUrl + prefix, body, this.getOptions(params));
+        return this.http.post(this.baseUrl + prefix, body, HttpUtils.appendOptions(params, this.options));
     }
 
 
     makeGet(prefix: string, options: Object = {}):Observable<Response> {
-        return this.http.get(this.baseUrl + prefix, this.getOptions(options));
+        return this.http.get(this.baseUrl + prefix, HttpUtils.appendOptions(options, this.options));
     }
 
 
     makePostWithoutToken(prefix: string, body: Object, params: Object = {}): Observable<any>{
-        return this.http.post(this.baseUrl + prefix, body, this.getOptions(params));
+        return this.http.post(this.baseUrl + prefix, body, HttpUtils.appendOptions(params, this.optionsWithoutToken));
     }
 
 
-    private getOptions(options: Object): RequestOptions{
+    private static appendOptions(options: Object, defaultOptions: RequestOptions): RequestOptions{
         let result = new RequestOptions();
-        Object.assign(result, this.options, options);
+        Object.assign(result, defaultOptions, options);
 
         //noinspection TypeScriptValidateTypes
         return result;
@@ -48,8 +48,11 @@ export class HttpUtils{
     ){
         let defaultHeaders: Headers = new Headers({'Content-Type': ' x-www-url-encoded'});
         this.optionsWithoutToken = new RequestOptions({headers: defaultHeaders});
+        this.options = null;
 
-        this.tokenService.token.subscribe(this.initializeTokenOptions);
+        this.tokenService.token.subscribe((token: string) => {
+            this.initializeTokenOptions(token);
+        });
     }
 
     initializeTokenOptions(token: string){

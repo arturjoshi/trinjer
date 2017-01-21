@@ -60,7 +60,7 @@ describe('HttpUtilsService', ()=>{
         });
     });
 
-    describe('Without token', () => {
+    describe('Http request', () => {
         let httpUtils: HttpUtils;
         let tokenService: TokenService;
         let mockBackend: MockBackend;
@@ -90,6 +90,23 @@ describe('HttpUtilsService', ()=>{
             tokenService.removeToken();
 
             httpUtils.makePostWithoutToken('/test', {}).subscribe();
+        }));
+
+        it('Post with token', async(() => {
+            mockBackend.connections.subscribe((connection: MockConnection) => {
+                expect(connection.request.method).toEqual(RequestMethod.Post);
+                expect(connection.request.headers.get(tokenHeaderName)).toEqual(token);
+
+                let jsonBody = JSON.parse(connection.request.getBody());
+
+                expect(jsonBody).toEqual({});
+
+                connection.mockRespond(new Response(new ResponseOptions()));
+            });
+
+            tokenService.setToken(token);
+
+            httpUtils.makePost('/test', {}).subscribe()
         }));
     });
 });
