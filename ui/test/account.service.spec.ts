@@ -7,6 +7,16 @@ import {IAccount} from "../app/models/account.interface";
  */
 describe('AccountService test', () => {
     let accountService: AccountService;
+    let account = AccountDTO.getFromJson({
+        id: 122,
+        username: 'Testusername',
+        email: 'test@email.com',
+        //TODO: Go to real date
+        createdDate: 'testCreatedDate',
+        isTemp: false,
+        isConfirm: false
+    });
+
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -31,16 +41,7 @@ describe('AccountService test', () => {
         });
     });
 
-    it('Save account', async(() => {
-        let account = AccountDTO.getFromJson({
-            id: 122,
-            username: 'Testusername',
-            email: 'test@email.com',
-            //TODO: Go to real date
-            createdDate: 'testCreatedDate',
-            isTemp: false,
-            isConfirm: false
-        });
+    it('Save and get account', async(() => {
         let isFirst = true;
 
         accountService.account.subscribe((account: IAccount) => {
@@ -53,5 +54,24 @@ describe('AccountService test', () => {
         });
 
         accountService.saveAccount(account);
+        expect(isFirst).toBeFalsy();
+    }));
+
+    it('Remove account', async(() => {
+        let isFirst = true;
+
+        accountService.saveAccount(account);
+
+        accountService.account.subscribe((ac: IAccount) => {
+            if(isFirst){
+                expect(ac).toEqual(account);
+                isFirst = false;
+            }else{
+                expect(ac).toBeNull();
+            }
+        });
+
+        accountService.removeAccount();
+        expect(isFirst).toBeFalsy();
     }));
 });
