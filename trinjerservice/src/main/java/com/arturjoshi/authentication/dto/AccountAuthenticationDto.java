@@ -9,16 +9,11 @@ import lombok.Data;
 @Data
 public class AccountAuthenticationDto {
 
-    private Long id;
-    private String username;
-    private String email;
+    private Account account;
     private String token;
 
     public AccountAuthenticationDto(Account account, String token) {
-        this.id = account.getId();
-        this.username = account.getUsername();
-        this.email = account.getEmail();
+        this.account = account;
         this.token = token;
     }
-
 }
