@@ -23,21 +23,21 @@ export class AuthenticateService{
         private httpUtils: HttpUtils
     ){}
 
-    public authenticate(user: UserDTO): Observable<AccountTokenDTO>{
-        return Observable.create((observer: Observer<AccountTokenDTO>) => {
+    public authenticate(user: UserDTO): Observable<AccountDTO>{
+        return Observable.create((observer: Observer<AccountDTO>) => {
             this.httpUtils.makePostWithoutToken(this.baseUrl, user)
                 .subscribe((response: Response) => {
-                    let dto = AccountTokenDTO.getFromJSON(response.json());
+                    let json = response.json();
 
-                    let account = new AccountDTO();
-                    account.email = dto.email;
-                    account.username = dto.username;
-                    account.id = dto.id;
+                    let account = AccountDTO.getFromJson(json['account']);
+                    let token = json['token'];
 
-                    this.tokenService.saveToken(dto.token);
+                    console.log(account);
+
                     this.accountService.saveAccount(account);
+                    this.tokenService.saveToken(token);
 
-                    observer.next(dto);
+                    observer.next(account);
                     observer.complete();
                 });
         });

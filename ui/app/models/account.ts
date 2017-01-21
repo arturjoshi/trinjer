@@ -19,4 +19,17 @@ export class AccountDTO implements IAccount{
         this.isConfirmed = false;
         this.isTemp = false;
     }
+
+    public static getFromJson(json: Object): AccountDTO{
+        let account = new AccountDTO();
+
+        account.id = json['id'] || null;
+        account.username = json['username'] || null;
+        account.email = json['email'] || null;
+        account.createdTime = json['createdTime'] || null;
+        account.isTemp = json['isTemp'] || null;
+        account.isConfirmed = json['isConfirmed'] || null;
+
+        return account;
+    }
 }
