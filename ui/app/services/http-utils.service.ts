@@ -48,6 +48,18 @@ export class HttpUtils{
     ){
         let defaultHeaders: Headers = new Headers({'Content-Type': ' x-www-url-encoded'});
         this.optionsWithoutToken = new RequestOptions({headers: defaultHeaders});
+
+        this.tokenService.token.subscribe(this.initializeTokenOptions);
     }
 
+    initializeTokenOptions(token: string){
+        let headers = new Headers();
+
+        headers.append('content-type', 'x-www-url-encoded');
+        headers.append('x-auth-token', token);
+
+        this.options = new RequestOptions({
+            headers: headers
+        });
+    }
 }

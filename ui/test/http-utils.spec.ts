@@ -9,6 +9,7 @@ import {TokenService} from "../app/services/token.service";
 
 describe('HttpUtilsService', ()=>{
     let token = 'testtoken';
+    let tokenHeaderName = 'x-auth-token';
 
     let httpProvider = {
         provide: Http,
@@ -32,57 +33,63 @@ describe('HttpUtilsService', ()=>{
         ]
     };
 
-    TestBed.configureTestingModule({
-        imports: [HttpModule],
-        providers: [
-            httpProvider,
-            MockBackend,
-            HttpUtils,
-            TokenService,
-            BaseRequestOptions
-        ]
-    });
 
     beforeEach(() => {
-
         let storage = {'token': token};
-
         spyOn(localStorage, 'getItem').and.callFake((key: string, value: string) => {
             return storage[key] || null;
         });
-
+        spyOn(localStorage, 'setItem').and.callFake((key: string, value: string) => {
+            storage[key] = value;
+        });
+        spyOn(localStorage, 'removeItem').and.callFake((key: string) => {
+            delete storage[key];
+        });
     });
 
-    describe('withoutToken', () => {
-        it('post', async(() => {
-            inject(
-                [HttpUtils, MockBackend],
-                (httpUtils: HttpUtils, mockBackend: MockBackend) => {
-                    let testObj = {
-                        test: 'test'
-                    };
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [HttpModule],
+            providers: [
+                httpProvider,
+                MockBackend,
+                HttpUtils,
+                TokenService,
+                BaseRequestOptions
+            ]
+        });
+    });
 
-                    mockBackend.connections.subscribe((connection: MockConnection) => {
-                        expect(connection.request.method).toEqual(RequestMethod.Post);
-                        expect(connection.request.headers.get('X-Auth-Token')).toBeUndefined();
+    describe('Without token', () => {
+        let httpUtils: HttpUtils;
+        let tokenService: TokenService;
+        let mockBackend: MockBackend;
 
-                        expect(connection.request.getBody()).toEqual(testObj);
+        beforeEach(inject(
+            [HttpUtils, TokenService, MockBackend],
+            (httpUtilsInput: HttpUtils, tokenServiceInput: TokenService, mockBackendInput: MockBackend) => {
+                httpUtils = httpUtilsInput;
+                tokenService = tokenServiceInput;
+                mockBackend = mockBackendInput;
+            })
+        );
 
-                        connection.mockRespond(new Response(new ResponseOptions()));
-                    });
+        it('post without token', async(() => {
+            //Check request options
+            mockBackend.connections.subscribe((connection: MockConnection) => {
+                expect(connection.request.method).toEqual(RequestMethod.Post);
+                expect(connection.request.headers.get(tokenHeaderName)).toBeNull();
 
-                    httpUtils.makePostWithoutToken('/test', testObj).subscribe(() => {});
+                let jsonBody = JSON.parse(connection.request.getBody());
 
-                });
-        }));
+                expect(jsonBody).toEqual({});
 
-        it('get', async(() => {
-            inject([HttpUtils, MockBackend], (httpUtils: HttpUtils, mockBackend: MockBackend) => {
-                mockBackend.connections.subscribe((connection: MockConnection) => {
-                    expect(connection.request.method).toEqual(RequestMethod.Get);
-                });
-
-                httpUtils.makeGet('/test');
+                connection.mockRespond(new Response(new ResponseOptions()));
             });
-        }))
-})});
+
+            tokenService.removeToken();
+
+            httpUtils.makePostWithoutToken('/test', {}).subscribe();
+        }));
+    });
+});
