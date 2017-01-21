@@ -12,10 +12,12 @@ import lombok.NoArgsConstructor;
 public class ProjectDto {
 
     private String name;
+    private Boolean isVisible = true;
 
     public Project convertFromDto() {
         Project project = new Project();
         project.setName(this.name);
+        project.setIsVisible(this.isVisible);
         return project;
     }
 }

@@ -3,6 +3,8 @@ package com.arturjoshi.project.services;
 import com.arturjoshi.account.Account;
 import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.project.Project;
+import com.arturjoshi.project.entities.ProjectAccountPermission;
+import com.arturjoshi.project.entities.ProjectAccountProfile;
 import com.arturjoshi.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,16 +25,29 @@ public class ProjectService {
         Account account = new Account();
         account.setEmail(email);
         account.setIsTemp(true);
-        account.getProjectInvitations().add(project);
-        project.getInvitations().add(account);
         accountRepository.save(account);
+        project.getOutboxInvitations().add(account);
         return projectRepository.save(project);
     }
 
     public Project inviteExistingAccount(Account account, Project project) {
-        account.getProjectInvitations().add(project);
-        accountRepository.save(account);
-        project.getInvitations().add(account);
+        project.getOutboxInvitations().add(account);
         return projectRepository.save(project);
+    }
+
+    public ProjectAccountPermission initDefaultProjectOwnerPermissions(Account owner, Project project) {
+        ProjectAccountPermission permission = new ProjectAccountPermission();
+        permission.setAccount(owner);
+        permission.setProject(project);
+        permission.setProjectPermission(ProjectAccountPermission.ProjectPermission.OWNER);
+        return permission;
+    }
+
+    public ProjectAccountProfile initDefaultProjectOwnerProfile(Account owner, Project project) {
+        ProjectAccountProfile profile = new ProjectAccountProfile();
+        profile.setAccount(owner);
+        profile.setProject(project);
+        profile.setProjectProfile(ProjectAccountProfile.ProjectProfile.MANAGER);
+        return profile;
     }
 }

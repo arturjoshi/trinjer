@@ -18,13 +18,13 @@ public class ProjectAccountProfile {
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Account account;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private ProjectProfile projectProfile;
 
     public enum ProjectProfile {

@@ -3,8 +3,10 @@ package com.arturjoshi.authentication.controllers;
 import com.arturjoshi.account.Account;
 import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.authentication.AccountDetails;
+import com.arturjoshi.authentication.dto.AccountAuthenticationDto;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
 import com.arturjoshi.authentication.services.RegistrationService;
+import com.arturjoshi.authentication.services.UserExistsException;
 import com.arturjoshi.authentication.token.TokenHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,8 +16,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -43,7 +43,7 @@ public class AuthenticationController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/register")
     @ResponseStatus(HttpStatus.OK)
-    public Account registerAccount(@RequestBody AccountRegistrationDto accountRegistrationDto) {
+    public Account registerAccount(@RequestBody AccountRegistrationDto accountRegistrationDto) throws UserExistsException {
         Account founded = accountRepository.findByEmail(accountRegistrationDto.getEmail());
         return founded == null ? registrationService.createNewAccount(accountRegistrationDto.getAccountFromDto()):
             registrationService.activateExistingAccount(founded, accountRegistrationDto);
@@ -51,20 +51,51 @@ public class AuthenticationController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/authenticate")
     @ResponseStatus(HttpStatus.OK)
-    public String authenticate(@RequestParam String username, @RequestParam String password)
-            throws BadCredentialsException {
+    public AccountAuthenticationDto authenticate(@RequestBody AccountRegistrationDto accountRegistrationDto)
+            throws BadCredentialsException, NoSuchUserException {
 
-        password = passwordEncoder.encodePassword(password, null);
+        Account founded = accountRepository.findByUsername(accountRegistrationDto.getUsername());
+        if(founded == null) throw new NoSuchUserException();
+
+        String password = passwordEncoder.encodePassword(accountRegistrationDto.getPassword(), null);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(username, password);
+                new UsernamePasswordAuthenticationToken(accountRegistrationDto.getUsername(), password);
         Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
-        return tokenHandler.createTokenForUser((AccountDetails) authentication.getPrincipal());
+        return new AccountAuthenticationDto(founded,
+                tokenHandler.createTokenForUser((AccountDetails) authentication.getPrincipal()));
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = DataIntegrityViolationException.class)
     public String handleBaseException(DataIntegrityViolationException e){
-        return "Account with such username or email is already exists";
+        return AuthenticationControllerConstants.ACCOUNT_USERNAME_EXISTS;
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = UserExistsException.class)
+    public String handleBaseException(UserExistsException e){
+        return AuthenticationControllerConstants.ACCOUNT_EMAIL_EXISTS;
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = NoSuchUserException.class)
+    public String handleBaseException(NoSuchUserException e){
+        return AuthenticationControllerConstants.NO_SUCH_ACCOUNT;
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = BadCredentialsException.class)
+    public String handleBaseException(BadCredentialsException e){
+        return AuthenticationControllerConstants.BAD_CREDENTIALS;
+    }
+
+    public static class AuthenticationControllerConstants {
+        public static String ACCOUNT_USERNAME_EXISTS = "Account with such username is already exists";
+        public static String ACCOUNT_EMAIL_EXISTS = "Account with such email is already exists";
+        public static String NO_SUCH_ACCOUNT = "No such account";
+        public static String BAD_CREDENTIALS = "Bad credentials";
+
+        private AuthenticationControllerConstants() {}
     }
 }

@@ -1,6 +1,7 @@
 package com.arturjoshi.project;
 
 import com.arturjoshi.account.Account;
+import com.arturjoshi.milestones.Milestone;
 import com.arturjoshi.project.entities.ProjectAccountPermission;
 import com.arturjoshi.project.entities.ProjectAccountProfile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,14 +19,18 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Entity
-@EqualsAndHashCode(exclude = {"members", "invitations", "projectAccountProfiles", "projectAccountPermissions"})
+@EqualsAndHashCode(of = {"name", "isVisible"})
 public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private Boolean isVisible = true;
 
     @ManyToOne
     private Account projectOwner;
@@ -36,7 +41,11 @@ public class Project {
 
     @ManyToMany
     @JsonIgnore
-    private Set<Account> invitations = new HashSet<>();
+    private Set<Account> outboxInvitations = new HashSet<>();
+
+    @ManyToMany
+    @JsonIgnore
+    private Set<Account> inboxInvitations = new HashSet<>();
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore
@@ -45,4 +54,8 @@ public class Project {
     @OneToMany(mappedBy = "project")
     @JsonIgnore
     private Set<ProjectAccountPermission> projectAccountPermissions = new HashSet<>();
+
+    @OneToMany(mappedBy = "project")
+    @JsonIgnore
+    private Set<Milestone> milestones = new HashSet<>();
 }
