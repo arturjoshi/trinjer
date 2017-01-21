@@ -42,28 +42,12 @@ export class HttpUtils{
     }
 
 
-    private initializeTokenOptions(){
-        let tokenHeaders: Headers = new Headers();
-        // {
-        //     'Content-Type': 'application/json',
-        //     'X-Auth-Token': this.tokenService.getToken() || ''
-        // }
-        tokenHeaders.append('content-type', 'application/json');
-        tokenHeaders.append('x-auth-token', this.tokenService.getToken());
-        this.options = new RequestOptions({
-            headers: tokenHeaders
-        });
-    }
-
-
     constructor(
         private http: Http,
         private tokenService: TokenService
     ){
         let defaultHeaders: Headers = new Headers({'Content-Type': ' x-www-url-encoded'});
         this.optionsWithoutToken = new RequestOptions({headers: defaultHeaders});
-
-        this.initializeTokenOptions();
     }
 
 }
