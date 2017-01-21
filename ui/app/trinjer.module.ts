@@ -30,8 +30,6 @@ import {ProjectsListComponent} from "./project/projects-list/projects-list.compo
         LoginComponent,
         RegistrationComponent,
         DashboarComponent,
-        ProjectsComponent,
-        ProjectsListComponent,
         EqualValidatorDirective
     ],
     providers: [
