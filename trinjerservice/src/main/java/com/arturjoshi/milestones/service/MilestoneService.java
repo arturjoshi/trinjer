@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 public class MilestoneService {
 
     public Milestone addChildMilestone(Milestone parent, Milestone child) {
+        if(!parent.getType().equals(Milestone.MilestoneType.MILESTONE) ||
+                !child.getType().equals(Milestone.MilestoneType.SPRINT)) {
+            throw new IllegalArgumentException();
+        }
         parent.getChildren().add(child);
         child.setParentMilestone(parent);
         return parent;
