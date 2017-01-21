@@ -7,7 +7,6 @@ import {LoginComponent} from "./login/login.component";
 import {RegistrationComponent} from "./registration/registration.component";
 import {DashboarComponent} from "./dashboard/dashboard.component";
 import {AuthGuard} from "./services/auth-guard.service";
-import {ProjectsComponent} from "./project/projects.component";
 
 //TODO: Move routing component to another component
 const appRoutes: Routes = [

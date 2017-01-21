@@ -3,8 +3,6 @@ import {Http, RequestOptions, Headers, Response} from "@angular/http";
 import {TokenService} from "./token.service";
 import "rxjs/Rx";
 import {Observable} from "rxjs/Rx";
-import {UserDTO} from "../models/user.dto.interface";
-import {IProject} from "../project/project.interface";
 /**
  * Created by Andrew Zelenskiy on 09.01.2017.
  */
