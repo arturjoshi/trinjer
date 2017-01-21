@@ -51,17 +51,22 @@ export class ProjectService{
         this._projects = new BehaviorSubject([]);
         this.projects = this._projects.asObservable();
 
-        this.account = this.accountService.getAccount();
-        console.log(this.account.id);
-        if(this.account === null)
-            throw new Error("Account does not exist!");
-
-        this.getProjectsByClientFromBackend().subscribe((projects: IProject[]) => {
-            this._projectsList = projects;
+        this.accountService.account.subscribe((account: IAccount) => {
+            this.accountHandler(account);
         });
-
     }
 
+    private accountHandler(account: IAccount){
+        this.account = account;
+        if(account === null){
+            this._projectsList = [];
+            console.log("Account is not exist!");
+        }else{
+            this.getProjectsByClientFromBackend().subscribe((projects: IProject[]) => {
+                this._projectsList = projects;
+            });
+        }
+    }
 
     private getProjectsByClientFromBackend(): any{
         let prefix = "/accounts/" + this.account.id.toString() + "/projects/";
