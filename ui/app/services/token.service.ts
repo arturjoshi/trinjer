@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {BehaviorSubject} from "rxjs/Rx";
+import {Observable, BehaviorSubject} from "rxjs/Rx";
 /**
  * Created by xoll on 08.01.2017.
  */
@@ -7,16 +7,29 @@ import {BehaviorSubject} from "rxjs/Rx";
 @Injectable()
 export class TokenService{
     private key: string;
+    private tokenBehavior: BehaviorSubject<string>;
 
-    getToken(): string{
-        return null;
+    constructor(){
+        this.key = 'token';
+        let token = localStorage.getItem(this.key);
+        this.tokenBehavior = new BehaviorSubject<string>(token);
     }
 
-    saveToken(token: string): void{
-        console.log(token);
+    get token(): Observable<string>{
+        this.tokenBehavior.next(localStorage.getItem(this.key));
+        return this.tokenBehavior.asObservable();
+    }
+
+    setToken(token: string){
+        localStorage.setItem(this.key, token);
+        this.tokenBehavior.next(token);
+    }
+
+    isTokenPresent(): boolean{
+        return localStorage.getItem(this.key) === null;
     }
 
     removeToken(): void{
-        console.log("Delete token");
+        localStorage.removeItem(this.key);
     }
 }

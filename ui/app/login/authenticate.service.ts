@@ -35,7 +35,7 @@ export class AuthenticateService{
                     console.log(account);
 
                     this.accountService.saveAccount(account);
-                    this.tokenService.saveToken(token);
+                    this.tokenService.setToken(token);
 
                     observer.next(account);
                     observer.complete();

@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate{
     }
 
     logout(){
-        this.tokenService.deleteToken();
+        this.tokenService.removeToken();
         this.accountService.removeAccount();
 
         this.router.navigateByUrl('/');
