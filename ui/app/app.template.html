@@ -1,14 +1,14 @@
-<md-toolbar color="primary" layout="row" layout-wrap layout-sm="column">
-    <section  layout-align="start" >
+<md-toolbar color="primary" class="navigation-toolbar">
+    <div class="primary-buttons">
         <button *ngIf="isAuth()" md-button class="md-primary" routerLink="/dashboard">Dashboard</button>
-    </section>
+    </div>
 
-    <section layout-align="end">
+    <div class="secondary-buttons">
         <button *ngIf="!isAuth()" md-button routerLink="/login">Login</button>
         <button *ngIf="!isAuth()" md-button routerLink="/registration">Registration</button>
         <button *ngIf="isAuth()" md-button (click)="logout()">Log out</button>
-    </section>
+    </div>
 </md-toolbar>
-<div class="container-fluid">
+<div>
     <router-outlet></router-outlet>
 </div>
