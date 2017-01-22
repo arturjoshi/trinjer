@@ -1,26 +1,14 @@
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <span class="navbar-brand">
-                {{ title }}
-            </span>
-        </div>
+<md-toolbar color="primary" layout="row" layout-wrap layout-sm="column">
+    <section  layout-align="start" >
+        <button *ngIf="isAuth()" md-button class="md-primary" routerLink="/dashboard">Dashboard</button>
+    </section>
 
-        <!-- Main components -->
-        <ul class="nav navbar-nav">
-            <li><a *ngIf="isAuth()" routerLink="/dashboard">Dashboard</a></li>
-            <!--<li><a *ngIf="isAuth()" routerLink="/projects">Projects</a></li>-->
-        </ul>
-
-        <!-- Some shit stuff -->
-        <ul class="nav navbar-nav navbar-right">
-            <li><a *ngIf="!isAuth()" routerLink="/login">Log in</a></li>
-            <li><a *ngIf="!isAuth()" routerLink="/registration">Registration</a></li>
-            <li><a *ngIf="isAuth()" (click)="logout()">Log out</a></li>
-        </ul>
-    </div>
-</nav>
-
+    <section layout-align="end">
+        <button *ngIf="!isAuth()" md-button routerLink="/login">Login</button>
+        <button *ngIf="!isAuth()" md-button routerLink="/registration">Registration</button>
+        <button *ngIf="isAuth()" md-button (click)="logout()">Log out</button>
+    </section>
+</md-toolbar>
 <div class="container-fluid">
     <router-outlet></router-outlet>
 </div>

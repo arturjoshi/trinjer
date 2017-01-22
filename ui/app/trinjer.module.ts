@@ -15,11 +15,14 @@ import {TokenService} from "./services/token.service";
 import {HttpUtils} from "./services/http-utils.service";
 import {HttpModule} from "@angular/http";
 import {AccountService} from "./services/account.service";
+import {MaterialModule} from "@angular/material";
+import 'node_modules/hammerjs/hammer.min.js';
 
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
+        MaterialModule.forRoot(),
         HttpModule,
         TrinjerRoutingModule
     ],
