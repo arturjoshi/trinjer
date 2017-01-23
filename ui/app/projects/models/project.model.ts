@@ -19,8 +19,8 @@ export class Project implements ProjectDTO, Serializable{
     serialize(): string{
         let json = {
             name: this.name,
-            isVisible: this.isVisible;
-        }
+            isVisible: this.isVisible
+        };
 
         return JSON.stringify(json);
     }
