@@ -1,6 +1,8 @@
 import {Injectable} from "@angular/core";
 import {ProjectDTO} from "../models/project.interface";
 import {BehaviorSubject, Observable} from "rxjs/Rx";
+import {AccountService} from "../../services/account.service";
+import {IAccount} from "../../models/account.interface";
 /**
  * Created by Andrew Zelenskiy on 23.01.2017.
  */
@@ -9,10 +11,15 @@ import {BehaviorSubject, Observable} from "rxjs/Rx";
 export class ProjectsService{
     private projectsArray: ProjectDTO[];
     private projectsBehavior: BehaviorSubject<ProjectDTO[]>;
+    account: IAccount;
 
-    constructor(){
+    constructor(private accountService: AccountService){
         this.projectsArray = [];
         this.projectsBehavior = new BehaviorSubject<ProjectDTO[]>(this.projectsArray);
+
+        this.accountService.account.subscribe((account: IAccount) => {
+            this.account = account;
+        });
     }
 
     addProject(project: ProjectDTO): void{
