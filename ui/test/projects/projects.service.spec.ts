@@ -9,6 +9,7 @@ import {BaseRequestOptions, Http, RequestMethod, Response, ResponseOptions} from
 import {MockBackend, MockConnection} from "@angular/http/testing";
 import {HttpUtils} from "../../app/services/http-utils.service";
 import {TokenService} from "../../app/services/token.service";
+import {Serializable} from "../../app/projects/models/serialization.interface";
 /**
  * Created by Andrew Zelenskiy on 23.01.2017.
  */
@@ -61,7 +62,41 @@ describe("Project service", () => {
         expect(isFirst).toBeFalsy();
     });
 
+    it('Get list of projects', () => {
+        let projects: Project[] = [
+            new Project("First project"),
+            new Project("Second project"),
+            new Project("Third project"),
+            new Project("Fours project")
+        ];
+
+        mockBackend.connections.subscribe((connection: MockConnection) => {
+            let expectedUrl = "http://localhost:8080/api/accounts/" + account.id + "/projects";
+
+            expect(connection.request.method).toEqual(RequestMethod.Get);
+            expect(connection.request.headers.get("x-auth-token")).toEqual(token);
+            expect(connection.request.url).toEqual(expectedUrl);
+
+            let serializableProjects = serializeList(projects);
+
+            connection.mockRespond(new Response(new ResponseOptions({
+                body: serializableProjects
+            })));
+        });
+
+        projectsService.getNewProjects().subscribe((p: Project[]) => {
+            expect(serializeList(p)).toEqual(serializeList(projects))
+        });
+    })
 });
+
+function serializeList(list: Serializable[]){
+    let result: string[] = [];
+    for(let item of list){
+        result.push(item.serialize());
+    }
+    return result;
+}
 
 function configureModule(){
     let httpProvider = {

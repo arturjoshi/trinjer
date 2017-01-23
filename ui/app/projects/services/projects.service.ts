@@ -5,6 +5,7 @@ import {AccountService} from "../../services/account.service";
 import {IAccount} from "../../models/account.interface";
 import {HttpUtils} from "../../services/http-utils.service";
 import {Response} from "@angular/http";
+import {Project} from "../models/project.model";
 /**
  * Created by Andrew Zelenskiy on 23.01.2017.
  */
@@ -15,10 +16,7 @@ export class ProjectsService{
     private projectsBehavior: BehaviorSubject<ProjectDTO[]>;
     private account: IAccount;
 
-    constructor(
-        private accountService: AccountService,
-        private httpUtils: HttpUtils
-    ){
+    constructor(private accountService: AccountService, private httpUtils: HttpUtils){
         this.projectsArray = [];
         this.projectsBehavior = new BehaviorSubject<ProjectDTO[]>(this.projectsArray);
 
@@ -33,7 +31,7 @@ export class ProjectsService{
 
         return Observable.create((observer: Observer<ProjectDTO[]>) => {
             this.httpUtils.makeGet(url)
-                .map((response: Response): ProjectDTO[] => <ProjectDTO[]>response.json())
+                .map((res: Response) => ProjectsService.extractData(res))
                 .subscribe((projects: ProjectDTO[]) => {
                     this.projectsArray = projects;
 
@@ -41,6 +39,27 @@ export class ProjectsService{
                     observer.complete();
                 });
         });
+    }
+
+    private static extractData(response: Response): Project[]{
+        let json = response.json();
+
+        let projects: Project[] = [];
+
+        for(let item of json){
+            item = JSON.parse(item);
+            let project = new Project(item['name'], item['isVisible']);
+            projects.push(project);
+        }
+
+        return projects;
+    }
+
+    getNewProjects(): Observable<ProjectDTO[]>{
+        this.getProjectsFromBackend().subscribe(() => {
+            this.projectsBehavior.next(this.projectsArray);
+        });
+        return this.projectsBehavior.asObservable();
     }
 
     addProject(project: ProjectDTO): void{
