@@ -5,40 +5,48 @@ import {IAccount} from "../../app/models/account.interface";
 import {AccountDTO} from "../../app/models/account";
 import {ProjectDTO} from "../../app/projects/models/project.interface";
 import {Project} from "../../app/projects/models/project.model";
+import {BaseRequestOptions, Http, RequestMethod, Response, ResponseOptions} from "@angular/http";
+import {MockBackend, MockConnection} from "@angular/http/testing";
+import {HttpUtils} from "../../app/services/http-utils.service";
+import {TokenService} from "../../app/services/token.service";
 /**
  * Created by Andrew Zelenskiy on 23.01.2017.
  */
 
 describe("Project service", () => {
     let projectsService: ProjectsService;
-    let account: IAccount = AccountDTO.getFromJson({
-        id: 12,
-        username: "testuser",
-        email: "test@email.com",
-        createdTime: null,
-        isConfirmed: false,
-        isTemp: false
-    });
+    let account: IAccount = getAccount();
+    let token = "testoken";
+    let mockBackend: MockBackend;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            providers: [
-                ProjectsService,
-                AccountService
-            ]
-        });
-    });
+    beforeEach(configureModule);
 
     beforeEach(() => {
         spyOnLocalStorage();
         localStorage.setItem('account', JSON.stringify(account));
+        localStorage.setItem('token', token);
     });
 
-    beforeEach(inject([ProjectsService], (ps: ProjectsService) => {
+    beforeEach(inject([ProjectsService, MockBackend], (ps: ProjectsService, mb: MockBackend) => {
         projectsService = ps;
+        mockBackend = mb;
     }));
 
     it('Add projects', () => {
+        let projects: ProjectDTO[] = [];
+
+        mockBackend.connections.subscribe((connection: MockConnection) => {
+            let expectedUrl = "http://localhost:8080/api/accounts/" + account.id + "/projects";
+
+            expect(connection.request.method).toEqual(RequestMethod.Get);
+            expect(connection.request.headers.get('x-auth-token')).toEqual(token);
+            expect(connection.request.url).toEqual(expectedUrl);
+
+            connection.mockRespond(new Response(new ResponseOptions({
+                body: JSON.stringify(projects)
+            })));
+        });
+
         let isFirst = false;
         let length = 0;
 
@@ -54,6 +62,42 @@ describe("Project service", () => {
     });
 
 });
+
+function configureModule(){
+    let httpProvider = {
+        provide: Http,
+        useFactory: (mockBackend: MockBackend, baseRequestOptions: BaseRequestOptions) => {
+            return new Http(mockBackend, baseRequestOptions);
+        },
+        deps: [
+            MockBackend,
+            BaseRequestOptions
+        ]
+    };
+
+    TestBed.configureTestingModule({
+        providers: [
+            ProjectsService,
+            AccountService,
+            HttpUtils,
+            TokenService,
+            httpProvider,
+            MockBackend,
+            BaseRequestOptions
+        ]
+    });
+}
+
+function getAccount(){
+    return AccountDTO.getFromJson({
+        id: 12,
+        username: "testuser",
+        email: "test@email.com",
+        createdTime: null,
+        isConfirmed: false,
+        isTemp: false
+    });
+}
 
 function spyOnLocalStorage(){
     let storage = {};
