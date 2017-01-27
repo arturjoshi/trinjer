@@ -15,7 +15,7 @@
         map: {
             // our app is within the app folder
             //compile from build directory
-            app: 'build',
+            app: '',
 
             // angular bundles
             '@angular/core': 'npm:@angular/core/bundles/core.umd.js',

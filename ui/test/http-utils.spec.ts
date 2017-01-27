@@ -1,8 +1,8 @@
 import {Http, BaseRequestOptions, HttpModule, RequestMethod, Response, ResponseOptions} from "@angular/http";
 import {MockBackend, MockConnection} from "@angular/http/testing";
 import {TestBed, inject, async} from "@angular/core/testing";
-import {HttpUtils} from "../app/services/http-utils.service";
-import {TokenService} from "../app/services/token.service";
+import {HttpUtils} from "../src/app/services/http-utils.service";
+import {TokenService} from "../src/app/services/token.service";
 /**
  * Created by Andrew Zelenskiy on 18.01.2017.
  */
