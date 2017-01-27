@@ -8,12 +8,10 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "lib": ["es2015", "dom"],
-        "suppressImplicitAnyIndexErrors": true,
-
-        "outDir": "build"
+        "suppressImplicitAnyIndexErrors": true
     },
     "compileOnSave": true,
     "exclude": [
-        "node_modules"
+        "."
     ]
 }
