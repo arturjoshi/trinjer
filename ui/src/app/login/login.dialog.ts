@@ -3,6 +3,7 @@ import {AuthenticateService} from "./authenticate.service";
 import {LoginUser} from "../models/login-user.model";
 import {AccountService} from "../services/account.service";
 import {MdDialogRef} from "@angular/material";
+import {NgForm} from "@angular/forms";
 /**
  * Created by xoll on 08.01.2017.
  */
@@ -35,7 +36,14 @@ export class LoginDialog{
                 },
                 (error: any): void => {
                     this.isLoginProcessed = false;
-                    console.log("Authenticate error!" + error);
+                    if(error == "No such account"){
+                        console.log("Username failed");
+                    }else if(error == "Bad credentials"){
+                        console.log("Credentials");
+                    }else{
+                        // Handle connection error
+                        // console.log(error);
+                    }
                 });
     }
 
