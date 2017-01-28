@@ -21,6 +21,18 @@ export class LoginDialog{
     user: LoginUser = LoginUser.getNewLoginUser();
     isLoginProcessed: boolean = false;
     loginForm: FormGroup;
+    formErrors = {
+        'username': '',
+        'password': '',
+    };
+    validationMessages = {
+        'username': {
+            'required': 'Username in require'
+        },
+        'password': {
+            'required': 'Password is require'
+        }
+    };
 
     constructor(
         private dialogRef: MdDialogRef<LoginDialog>,
@@ -31,30 +43,56 @@ export class LoginDialog{
             'username': [this.user.username, [Validators.required]],
             'password': [this.user.password, [Validators.required]]
         });
+        this.loginForm.valueChanges.subscribe((data: any) => {
+            this.onFormChange(data);
+        })
     }
 
     login(){
-        this.isLoginProcessed = true;
-        this.authenticateService.authenticate(this.user)
-            .subscribe(
-                () => {
-                    this.isLoginProcessed = false;
-                    this.close();
-                },
-                (error: any): void => {
-                    this.isLoginProcessed = false;
-                    if(error == "No such account"){
-                        console.log("Username failed");
-                    }else if(error == "Bad credentials"){
-                        console.log("Credentials");
-                    }else{
-                        // Handle connection error
-                        // console.log(error);
-                    }
-                });
+        //If form valid
+        if(this.loginForm._status != "INVALID") {
+            this.isLoginProcessed = true;
+            this.authenticateService.authenticate(this.user)
+                .subscribe(
+                    () => {
+                        this.isLoginProcessed = false;
+                        this.close();
+                    },
+                    (error: any): void => {
+                        this.isLoginProcessed = false;
+                        if (error == "No such account") {
+                            console.log("Username failed");
+                        } else if (error == "Bad credentials") {
+                            console.log("Credentials");
+                        } else {
+                            // Handle connection error
+                            // console.log(error);
+                        }
+                    });
+        }else{
+            this.formErrors.password = this.validationMessages.password.required;
+            this.formErrors.username = this.validationMessages.username.required;
+        }
     }
 
     close(){
         this.dialogRef.close('Cancel');
+    }
+
+    private onFormChange(data? : any){
+        if(!this.loginForm) return ;
+        const form = this.loginForm;
+
+        for(const field in this.formErrors){
+            this.formErrors[field] = '';
+            const control = form.get(field);
+
+            if(control && control.dirty && !control.valid){
+                const messages = this.validationMessages[field];
+                for(const key in control.errors){
+                    this.formErrors[field] += messages[key] + " ";
+                }
+            }
+        }
     }
 }

@@ -1,15 +1,17 @@
 <div class="dialog-wrp">
     <p class="dialog-title" md-dialog-title>Login</p>
 
-    <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <form [formGroup]="loginForm" novalidate>
         <md-input
                 [(ngModel)]="user.username"
                 formControlName="username"
                 placeholder="Username"
-                dividerColor="{{ !formErrors.username.valid ? 'warn' : 'primary' }}"
+                dividerColor="{{ formErrors.username ? 'warn' : 'primary' }}"
                 autocomplete="off">
-            <md-hint [hidden]="formErrors.username.valid">
-                <span class="alert-danger" [hidden]="!loginForm.username.errors?.required || loginForm.username.untouched">Username is required</span>
+            <md-hint>
+                <span class="alert-danger" *ngIf="formErrors.username">
+                    {{formErrors.username}}
+                </span>
             </md-hint>
         </md-input>
 
@@ -18,20 +20,24 @@
                   type="password"
                   placeholder="Password"
                   name="password"
-                  dividerColor="{{ !formErrors.password.valid ? 'warn' : 'primary' }}"
+                  dividerColor="{{ formErrors.password ? 'warn' : 'primary' }}"
                   autocomplete="off">
 
-            <md-hint [hidden]="password.valid">
-                <span class="alert-danger" [hidden]="!loginForm.password.errors?.required || loginForm.password.untouched">Password is required</span>
+            <md-hint>
+                <span class="alert-danger" *ngIf="formErrors.password">
+                    {{formErrors.password}}
+                </span>
             </md-hint>
         </md-input>
 
         <md-dialog-actions>
-            <button type="submit" md-button>
+            <button type="button" (click)="login()" md-button [disabled]="isLoginProcessed">
                 Login
                 <md-spinner *ngIf="isLoginProcessed"></md-spinner>
             </button>
-            <button md-button (click)="close()">Cancel</button>
+            <button md-button [disabled]="isLoginProcessed" (click)="close()">
+                Cancel
+            </button>
         </md-dialog-actions>
     </form>
 </div>
