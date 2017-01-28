@@ -1,5 +1,6 @@
 package com.arturjoshi.milestones;
 
+import com.arturjoshi.issues.Issue;
 import com.arturjoshi.project.Project;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -48,10 +49,9 @@ public class Milestone {
     @JsonIgnore
     private Set<Milestone> children = new HashSet<>();
 
-    public void addChildMilestone(Milestone milestone) {
-        this.children.add(milestone);
-        milestone.setParentMilestone(this);
-    }
+    @OneToMany(mappedBy = "milestone")
+    @JsonIgnore
+    private Set<Issue> issues = new HashSet<>();
 
     public enum MilestoneType {
         MILESTONE,
