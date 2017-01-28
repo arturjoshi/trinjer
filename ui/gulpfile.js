@@ -56,6 +56,7 @@ gulp.task('build-scss', function(){
 });
 
 gulp.task('build-src', ['clean'],function(){
+    //noinspection JSUnresolvedFunction
     gulp.start(['build-ts', 'build-html', 'build-scss', 'copy-config']);
 });
 
