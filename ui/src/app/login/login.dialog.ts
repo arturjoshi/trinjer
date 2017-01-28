@@ -10,6 +10,7 @@ import {MdDialogRef} from "@angular/material";
 @Component({
     selector: 'login',
     templateUrl: 'app/login/login.template.html',
+    styleUrls: ['app/login/login.css'],
     providers: [
         AuthenticateService,
         AccountService
