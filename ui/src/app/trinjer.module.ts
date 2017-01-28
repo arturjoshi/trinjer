@@ -8,7 +8,7 @@ import {TrinjerRoutingModule} from "./trinjer-routing.module";
 import {LoginDialog} from "./login/login.dialog";
 import {RegistrationComponent} from "./registration/registration.component";
 import {DashboarComponent} from "./dashboard/dashboard.component";
-import {FormsModule} from "@angular/forms"
+import {FormsModule, ReactiveFormsModule} from "@angular/forms"
 import {AuthGuard} from "./services/auth-guard.service";
 import {EqualValidatorDirective} from "./registration/equal-validator.directive";
 import {TokenService} from "./services/token.service";
@@ -22,6 +22,7 @@ import 'node_modules/hammerjs/hammer.min.js';
     imports: [
         BrowserModule,
         FormsModule,
+        ReactiveFormsModule,
         MaterialModule.forRoot(),
         HttpModule,
         TrinjerRoutingModule

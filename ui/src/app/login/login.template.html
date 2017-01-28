@@ -1,30 +1,28 @@
 <div class="dialog-wrp">
     <p class="dialog-title" md-dialog-title>Login</p>
 
-    <form #f="ngForm" name="loginForm" (ngSubmit)="login()">
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
         <md-input
                 [(ngModel)]="user.username"
-                #username="ngModel"
+                formControlName="username"
                 placeholder="Username"
-                name="username"
-                required="true"
-                dividerColor="{{ !username.valid ? 'warn' : 'primary' }}"
+                dividerColor="{{ !formErrors.username.valid ? 'warn' : 'primary' }}"
                 autocomplete="off">
-            <md-hint [hidden]="username.valid">
-                <span class="alert-danger" [hidden]="!username.errors?.required || username.untouched">Username is required</span>
+            <md-hint [hidden]="formErrors.username.valid">
+                <span class="alert-danger" [hidden]="!loginForm.username.errors?.required || loginForm.username.untouched">Username is required</span>
             </md-hint>
         </md-input>
 
         <md-input [(ngModel)]="user.password"
+                  formControlName="password"
                   type="password"
-                  #password="ngModel"
                   placeholder="Password"
-                  name="password" required="true"
-                  dividerColor="{{ !password.valid ? 'warn' : 'primary' }}"
+                  name="password"
+                  dividerColor="{{ !formErrors.password.valid ? 'warn' : 'primary' }}"
                   autocomplete="off">
 
             <md-hint [hidden]="password.valid">
-                <span class="alert-danger" [hidden]="!password.errors?.required || password.untouched">Password is required</span>
+                <span class="alert-danger" [hidden]="!loginForm.password.errors?.required || loginForm.password.untouched">Password is required</span>
             </md-hint>
         </md-input>
 

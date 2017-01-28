@@ -3,7 +3,7 @@ import {AuthenticateService} from "./authenticate.service";
 import {LoginUser} from "../models/login-user.model";
 import {AccountService} from "../services/account.service";
 import {MdDialogRef} from "@angular/material";
-import {NgForm} from "@angular/forms";
+import {NgForm, FormBuilder, FormGroup, Validators} from "@angular/forms";
 /**
  * Created by xoll on 08.01.2017.
  */
@@ -20,11 +20,18 @@ import {NgForm} from "@angular/forms";
 export class LoginDialog{
     user: LoginUser = LoginUser.getNewLoginUser();
     isLoginProcessed: boolean = false;
+    loginForm: FormGroup;
 
     constructor(
         private dialogRef: MdDialogRef<LoginDialog>,
-        private authenticateService: AuthenticateService
-    ){}
+        private authenticateService: AuthenticateService,
+        private formBuilder: FormBuilder
+    ){
+        this.loginForm = this.formBuilder.group({
+            'username': [this.user.username, [Validators.required]],
+            'password': [this.user.password, [Validators.required]]
+        });
+    }
 
     login(){
         this.isLoginProcessed = true;
