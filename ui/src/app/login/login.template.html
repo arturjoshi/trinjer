@@ -1,18 +1,39 @@
 <div class="dialog-wrp">
     <p class="dialog-title" md-dialog-title>Login</p>
 
-    <div>
-        <md-input-container class="username-container">
-            <input type="text" md-input placeholder="Username" [(ngModel)]="user.username">
-        </md-input-container>
+    <form #f="ngForm" name="loginForm" (ngSubmit)="login()">
+        <md-input
+                [(ngModel)]="user.username"
+                #username="ngModel"
+                placeholder="Username"
+                name="username"
+                required="true"
+                dividerColor="{{ !username.valid ? 'warn' : 'primary' }}"
+                autocomplete="off">
+            <md-hint [hidden]="username.valid">
+                <span class="alert-danger" [hidden]="!username.errors?.required || username.untouched">Username is required</span>
+            </md-hint>
+        </md-input>
 
-        <md-input-container class="password-container">
-            <input type="password" md-input placeholder="Password" [(ngModel)]="user.password">
-        </md-input-container>
-    </div>
+        <md-input [(ngModel)]="user.password"
+                  type="password"
+                  #password="ngModel"
+                  placeholder="Password"
+                  name="password" required="true"
+                  dividerColor="{{ !password.valid ? 'warn' : 'primary' }}"
+                  autocomplete="off">
 
-    <md-dialog-actions>
-        <button md-button (click)="login()">Login</button>
-        <button md-button (click)="close()">Cancel</button>
-    </md-dialog-actions>
+            <md-hint [hidden]="password.valid">
+                <span class="alert-danger" [hidden]="!password.errors?.required || password.untouched">Password is required</span>
+            </md-hint>
+        </md-input>
+
+        <md-dialog-actions>
+            <button type="submit" md-button>
+                Login
+                <md-spinner *ngIf="isLoginProcessed"></md-spinner>
+            </button>
+            <button md-button (click)="close()">Cancel</button>
+        </md-dialog-actions>
+    </form>
 </div>

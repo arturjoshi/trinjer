@@ -18,6 +18,7 @@ import {MdDialogRef} from "@angular/material";
 })
 export class LoginDialog{
     user: LoginUser = LoginUser.getNewLoginUser();
+    isLoginProcessed: boolean = false;
 
     constructor(
         private dialogRef: MdDialogRef<LoginDialog>,
@@ -25,15 +26,20 @@ export class LoginDialog{
     ){}
 
     login(){
+        this.isLoginProcessed = true;
         this.authenticateService.authenticate(this.user)
             .subscribe(
-                () => {},
+                () => {
+                    this.isLoginProcessed = false;
+                    this.close();
+                },
                 (error: any): void => {
-                    console.log("Authenticate error!");
+                    this.isLoginProcessed = false;
+                    console.log("Authenticate error!" + error);
                 });
     }
 
     close(){
-        this.dialogRef.close('Yes');
+        this.dialogRef.close('Cancel');
     }
 }
