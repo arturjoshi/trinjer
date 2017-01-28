@@ -6,11 +6,16 @@ const gulp = require('gulp');
 const del = require('del');
 const ts = require('gulp-typescript');
 const browserSync = require('browser-sync');
+const scss = require('gulp-scss');
 
 const path = {
     src: 'src/',
     app: 'src/app/',
-    build: 'dist/'
+    build: 'dist/',
+    ts: 'src/app/**/*.ts',
+    html: 'src/**/*.html',
+    scss: 'src/**/*.scss',
+    systemjsConfig: 'src/systemjs.config.js'
 };
 const tsConfig = {
     app: path.app + 'tsconfig.json'
@@ -23,20 +28,20 @@ gulp.task('clean', function(){
 });
 
 gulp.task('build-ts', function(){
-    return gulp.src(path.src + "**/*.ts")
+    return gulp.src(path.ts)
         .pipe(project())
         .pipe(gulp.dest(path.build))
         .pipe(browserSync.stream());
 });
 
 gulp.task('build-html', function(){
-    return gulp.src(path.src + "**/*.html")
+    return gulp.src(path.html)
         .pipe(gulp.dest(path.build))
         .pipe(browserSync.stream());
 });
 
 gulp.task('copy-config', function(){
-    return gulp.src(path.src + "systemjs.config.js")
+    return gulp.src(path.systemjsConfig)
         .pipe(gulp.dest(path.build))
         .pipe(browserSync.stream());
 });
@@ -53,7 +58,7 @@ gulp.task('webserver', function(){
         }
     });
 
-    gulp.watch(path.app + "**/*.ts", ['build-ts']);
-    gulp.watch(path.app + "**/*.html", ['build-html']);
-    gulp.watch(path.src + "systemjs.config.js");
+    gulp.watch(path.ts, ['build-ts']);
+    gulp.watch(path.html, ['build-html']);
+    gulp.watch(path.systemjsConfig);
 });
