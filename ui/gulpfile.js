@@ -25,17 +25,20 @@ gulp.task('clean', function(){
 gulp.task('build-ts', function(){
     return gulp.src(path.src + "**/*.ts")
         .pipe(project())
-        .pipe(gulp.dest(path.build));
+        .pipe(gulp.dest(path.build))
+        .pipe(browserSync.stream());
 });
 
 gulp.task('build-html', function(){
     return gulp.src(path.src + "**/*.html")
-        .pipe(gulp.dest(path.build));
+        .pipe(gulp.dest(path.build))
+        .pipe(browserSync.stream());
 });
 
 gulp.task('copy-config', function(){
     return gulp.src(path.src + "systemjs.config.js")
-        .pipe(gulp.dest(path.build));
+        .pipe(gulp.dest(path.build))
+        .pipe(browserSync.stream());
 });
 
 gulp.task('build-dev', ['build-ts', 'build-html', 'copy-config']);
@@ -48,5 +51,9 @@ gulp.task('webserver', function(){
                 '/node_modules' : './node_modules'
             }
         }
-    })
+    });
+
+    gulp.watch(path.app + "**/*.ts", ['build-ts']);
+    gulp.watch(path.app + "**/*.html", ['build-html']);
+    gulp.watch(path.src + "systemjs.config.js");
 });
