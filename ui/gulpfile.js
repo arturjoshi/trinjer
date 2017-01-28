@@ -52,7 +52,7 @@ gulp.task('build-scss', function(){
             "bundleExec": true
         }))
         .pipe(gulp.dest(path.build))
-        .pipe(browserSync.stream());
+        .pipe(browserSync.stream({match: '**/*.css'}));
 });
 
 gulp.task('build-src', ['clean'],function(){
