@@ -2,8 +2,9 @@
  * Created by xoll on 07.01.2017.
  */
 import {Component} from "@angular/core";
-import {TokenService} from "./services/token.service";
 import {AuthGuard} from "./services/auth-guard.service";
+import {MdDialog, MdDialogRef} from "@angular/material";
+import {LoginDialog} from "./login/login.dialog";
 
 //TODO: Connect material or bootstrap to project
 @Component({
@@ -13,9 +14,11 @@ import {AuthGuard} from "./services/auth-guard.service";
     providers: [AuthGuard]
 })
 export class AppComponent{
+    //noinspection JSUnusedGlobalSymbols
     title = "Trinjer";
+    private dialogRef: MdDialogRef<LoginDialog>;
 
-    constructor(private authGuard: AuthGuard){}
+    constructor(private authGuard: AuthGuard, private dialog: MdDialog){}
 
     isAuth(){
         return this.authGuard.isAuthenticated();
@@ -23,5 +26,14 @@ export class AppComponent{
 
     logout(){
         this.authGuard.logout();
+    }
+
+    openLoginDialog(){
+        this.dialogRef = this.dialog.open(LoginDialog);
+
+        this.dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            this.dialogRef = null;
+        })
     }
 }

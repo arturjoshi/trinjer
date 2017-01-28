@@ -1,9 +1,8 @@
 import {Component} from "@angular/core";
 import {AuthenticateService} from "./authenticate.service";
 import {LoginUser} from "../models/login-user.model";
-import {Router} from "@angular/router";
 import {AccountService} from "../services/account.service";
-import {Response} from "@angular/http";
+import {MdDialogRef} from "@angular/material";
 /**
  * Created by xoll on 08.01.2017.
  */
@@ -16,20 +15,24 @@ import {Response} from "@angular/http";
         AccountService
     ]
 })
-export class LoginComponent{
+export class LoginDialog{
     user: LoginUser = LoginUser.getNewLoginUser();
 
     constructor(
-        private authenticateService: AuthenticateService,
-        private router: Router
+        private dialogRef: MdDialogRef<LoginDialog>,
+        private authenticateService: AuthenticateService
     ){}
 
-    onSubmit(){
+    login(){
         this.authenticateService.authenticate(this.user)
             .subscribe(
-                () => {this.router.navigate(['/dashboard'])},
+                () => {},
                 (error: any): void => {
                     console.log("Authenticate error!");
                 });
+    }
+
+    close(){
+        this.dialogRef.close('Yes');
     }
 }

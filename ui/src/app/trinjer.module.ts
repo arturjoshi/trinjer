@@ -5,7 +5,7 @@ import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {AppComponent} from "./app.component";
 import {TrinjerRoutingModule} from "./trinjer-routing.module";
-import {LoginComponent} from "./login/login.component";
+import {LoginDialog} from "./login/login.dialog";
 import {RegistrationComponent} from "./registration/registration.component";
 import {DashboarComponent} from "./dashboard/dashboard.component";
 import {FormsModule} from "@angular/forms"
@@ -28,7 +28,7 @@ import 'node_modules/hammerjs/hammer.min.js';
     ],
     declarations: [
         AppComponent,
-        LoginComponent,
+        LoginDialog,
         RegistrationComponent,
         DashboarComponent,
         EqualValidatorDirective
@@ -38,6 +38,9 @@ import 'node_modules/hammerjs/hammer.min.js';
         TokenService,
         AccountService,
         HttpUtils],
+    entryComponents: [
+        LoginDialog
+    ],
     bootstrap: [AppComponent]
 })
 export class TrinjerModule{
