@@ -12,11 +12,9 @@
 //        "types": [
 //            "hammerjs"
 //        ],
-
-        "outDir": "build"
     },
     "compileOnSave": true,
     "exclude": [
-        "node_modules"
+        "./"
     ]
 }

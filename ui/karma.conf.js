@@ -58,7 +58,7 @@ module.exports = function(config){
             { pattern: 'node_modules/@angular/**/*.js', included: false, watched: false },
             { pattern: 'node_modules/@angular/**/*.js.map', included: false, watched: false },
 
-            { pattern: 'systemjs.config.js', included: false, watched: false },
+            { pattern: 'src/systemjs.config.js', included: false, watched: false },
             { pattern: 'systemjs.config.extras.js', included: false, watched: false },
             'karma-test-shim.js', // optionally extend SystemJS mapping e.g., with barrels
 
@@ -82,7 +82,7 @@ module.exports = function(config){
         // Proxied base paths for loading assets
         proxies: {
             // required for component assets fetched by Angular's compiler
-            "/app/": appAssets
+            "/src/app/": appAssets
         },
 
         exclude: [],

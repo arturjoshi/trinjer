@@ -9,6 +9,7 @@ import {AuthGuard} from "./services/auth-guard.service";
 @Component({
     selector: 'app',
     templateUrl: 'app/app.template.html',
+    styleUrls: ['app/app.css'],
     providers: [AuthGuard]
 })
 export class AppComponent{
