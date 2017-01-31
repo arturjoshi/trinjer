@@ -20,7 +20,7 @@ public class RegistrationService {
     }
 
     public Account activateExistingAccount(Account account, AccountRegistrationDto accountRegistrationDto) throws UserExistsException {
-        if (!account.getUsername().isEmpty()) throw new UserExistsException();
+        if (account.getUsername() != null && !account.getUsername().isEmpty()) throw new UserExistsException();
 
         account.setUsername(accountRegistrationDto.getUsername());
         account.setIsTemp(false);
