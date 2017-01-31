@@ -73,7 +73,6 @@ export class LoginDialog{
     }
 
     private handleError(error: any): void {
-        this.isLoginProcessed = false;
         if (error == "No such account") {
             this.formErrors.username = this.validationMessages.username.wrong;
         } else if (error == "Bad credentials") {
