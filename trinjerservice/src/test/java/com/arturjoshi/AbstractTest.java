@@ -2,6 +2,8 @@ package com.arturjoshi;
 
 import com.arturjoshi.account.Account;
 import com.arturjoshi.account.AccountCredentials;
+import com.arturjoshi.authentication.AccountDetails;
+import com.arturjoshi.authentication.token.TokenHandler;
 import com.arturjoshi.project.Project;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +19,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractTest {
+public abstract class AbstractTest implements TestConst {
 
+    private HttpMessageConverter mappingJackson2HttpMessageConverter;
+    private ObjectMapper objectMapper = new ObjectMapper();
     protected MockMvc mockMvc;
 
-    protected HttpMessageConverter mappingJackson2HttpMessageConverter;
+    @Autowired
+    protected WebApplicationContext webApplicationContext;
 
-    protected ObjectMapper objectMapper = new ObjectMapper();
-
-    protected String json(Object o) throws IOException {
-        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-        this.mappingJackson2HttpMessageConverter.write(
-                o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
-        return mockHttpOutputMessage.getBodyAsString();
-    }
+    @Autowired
+    private TokenHandler tokenHandler;
 
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
@@ -40,19 +39,17 @@ public abstract class AbstractTest {
                 .orElse(null);
     }
 
-    @Autowired
-    protected WebApplicationContext webApplicationContext;
+    protected String json(Object o) throws IOException {
+        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
+        this.mappingJackson2HttpMessageConverter.write(
+                o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
+        return mockHttpOutputMessage.getBodyAsString();
+    }
 
-    protected final String X_AUTH_TOKEN_HEADER = "X-Auth-Token";
-
-    protected final String ACCOUNT_PASSWORD = "testpassword";
-    protected final String ACCOUNT_USERNAME = "testusername";
-    protected final String ACCOUNT_EMAIL = "testemail";
-
-    protected final String PROJECT_NAME = "testprojectname";
-    protected final boolean VISIBLE_PROJECT = true;
-    protected final boolean NON_VISIBLE_PROJECT = false;
-    protected final String INVITEE_EMAIL = "testinviteeemail";
+    protected Integer getIdFromJson(String json) throws IOException {
+        Map<String, Integer> map = objectMapper.readValue(json, HashMap.class);
+        return map.get("id");
+    }
 
     protected Account getDefaultTestAccount() {
         Account account = new Account();
@@ -71,8 +68,7 @@ public abstract class AbstractTest {
         return project;
     }
 
-    protected Integer getIdFromJson(String json) throws IOException {
-        Map<String, Integer> map = objectMapper.readValue(json, HashMap.class);
-        return map.get("id");
+    protected String createToken(Account account) {
+        return tokenHandler.createTokenForUser(new AccountDetails(account));
     }
 }

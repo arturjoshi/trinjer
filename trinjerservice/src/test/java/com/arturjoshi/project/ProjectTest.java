@@ -3,8 +3,6 @@ package com.arturjoshi.project;
 import com.arturjoshi.AbstractTest;
 import com.arturjoshi.account.Account;
 import com.arturjoshi.account.repository.AccountRepository;
-import com.arturjoshi.authentication.AccountDetails;
-import com.arturjoshi.authentication.token.TokenHandler;
 import com.arturjoshi.milestones.repository.MilestoneRepository;
 import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
 import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
@@ -47,9 +45,6 @@ public class ProjectTest extends AbstractTest {
     @Autowired
     private ProjectAccountProfileRepository projectAccountProfileRepository;
 
-    @Autowired
-    private TokenHandler tokenHandler;
-
     @Before
     public void setup() {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
@@ -75,12 +70,13 @@ public class ProjectTest extends AbstractTest {
     @Test
     public void createProjectTest() throws Exception {
         Account account = getDefaultTestAccount();
-        mockMvc.perform(post("/api/register/")
+        MvcResult accountMvcResult = mockMvc.perform(post("/api/register/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(account)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn();
 
-        Long foundedId = accountRepository.findByUsername(ACCOUNT_USERNAME).getId();
+        Integer foundedId = getIdFromJson(accountMvcResult.getResponse().getContentAsString());
 
         Project project = getDefaultProject();
         mockMvc.perform(post("/api/" + foundedId + "/createProject")
@@ -103,9 +99,9 @@ public class ProjectTest extends AbstractTest {
 
         Long foundedId = accountRepository.findByUsername(ACCOUNT_USERNAME).getId();
 
-        String token = tokenHandler.createTokenForUser(new AccountDetails(account));
+        String token = createToken(account);
         Project project = getDefaultProject();
-        MvcResult mvcResult = mockMvc.perform(post("/api/" + foundedId + "/createProject")
+        MvcResult projectMvcResult = mockMvc.perform(post("/api/" + foundedId + "/createProject")
                 .header(X_AUTH_TOKEN_HEADER, token)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(project)))
@@ -116,7 +112,7 @@ public class ProjectTest extends AbstractTest {
                 .andExpect(jsonPath("$.projectOwner.email", is(ACCOUNT_EMAIL)))
                 .andReturn();
 
-        Integer projectId = getIdFromJson(mvcResult.getResponse().getContentAsString());
+        Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
         mockMvc.perform(post("/api/" + foundedId + "/inviteProjectEmail/" +
                 projectId + "?email=" + INVITEE_EMAIL)
