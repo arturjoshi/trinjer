@@ -3,6 +3,7 @@
 
   md-input{
     width: 100%;
+    margin-bottom: 15px;
   }
 
   md-dialog-actions{
@@ -10,5 +11,9 @@
       width: 49%;
       justify-content: center;
     }
+  }
+  span.alert-danger{
+    color: red;
+    font-style: italic;
   }
 }

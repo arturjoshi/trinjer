@@ -3,21 +3,41 @@
 
     <form [formGroup]="registrationForm" novalidate onsubmit="return false;">
         <md-input formControlName="username" placeholder="Username"
+                  dividerColor="{{formErrors.username ? 'warn' : 'primary'}}"
                   [(ngModel)]="user.username" autocomplete="off">
-
+            <md-hint>
+                <span class="alert-danger" *ngIf="formErrors.username">
+                    {{formErrors.username}}
+                </span>
+            </md-hint>
         </md-input>
 
         <md-input formControlName="email" type="email" placeholder="Email"
+                  dividerColor="{{formErrors.email ? 'warn' : 'primary'}}"
                   [(ngModel)]="user.email" autocomplete="off">
-
+            <md-hint>
+                <span class="alert-danger" *ngIf="formErrors.email">
+                    {{formErrors.email}}
+                </span>
+            </md-hint>
         </md-input>
         <md-input formControlName="password" type="password" placeholder="Password"
+                  dividerColor="{{formErrors.password ? 'warn' : 'primary'}}"
                   [(ngModel)]="user.password" autocomplete="off">
-
+            <md-hint>
+                <span class="alert-danger" *ngIf="formErrors.password">
+                    {{formErrors.password}}
+                </span>
+            </md-hint>
         </md-input>
         <md-input formControlName="confirmPassword" type="password" placeholder="Confirm password"
+                  dividerColor="{{formErrors.confirmPassword ? 'warn' : 'primary'}}"
                   [(ngModel)]="user.passwordConfirm" autocomplete="off">
-
+            <md-hint>
+                <span class="alert-danger" *ngIf="formErrors.confirmPassword">
+                    {{formErrors.confirmPassword}}
+                </span>
+            </md-hint>
         </md-input>
     </form>
 
