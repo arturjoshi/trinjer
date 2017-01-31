@@ -5,7 +5,7 @@
 
     <div class="secondary-buttons">
         <button *ngIf="!isAuth()" md-button (click)="openLoginDialog()">Login</button>
-        <button *ngIf="!isAuth()" md-button routerLink="/registration">Registration</button>
+        <button *ngIf="!isAuth()" md-button (click)="openRegistrationDialog()">Registration</button>
         <button *ngIf="isAuth()" md-button (click)="logout()">Log out</button>
     </div>
 </md-toolbar>

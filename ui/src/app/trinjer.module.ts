@@ -6,7 +6,7 @@ import {BrowserModule} from "@angular/platform-browser";
 import {AppComponent} from "./app.component";
 import {TrinjerRoutingModule} from "./trinjer-routing.module";
 import {LoginDialog} from "./login/login.dialog";
-import {RegistrationComponent} from "./registration/registration.component";
+import {RegistrationDialog} from "./registration/registration.component";
 import {DashboarComponent} from "./dashboard/dashboard.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms"
 import {AuthGuard} from "./services/auth-guard.service";
@@ -30,7 +30,7 @@ import 'node_modules/hammerjs/hammer.min.js';
     declarations: [
         AppComponent,
         LoginDialog,
-        RegistrationComponent,
+        RegistrationDialog,
         DashboarComponent,
         EqualValidatorDirective
     ],

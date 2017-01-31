@@ -5,6 +5,7 @@ import {Component} from "@angular/core";
 import {AuthGuard} from "./services/auth-guard.service";
 import {MdDialog, MdDialogRef} from "@angular/material";
 import {LoginDialog} from "./login/login.dialog";
+import {RegistrationDialog} from "./registration/registration.component";
 
 //TODO: Connect material or bootstrap to project
 @Component({
@@ -16,7 +17,8 @@ import {LoginDialog} from "./login/login.dialog";
 export class AppComponent{
     //noinspection JSUnusedGlobalSymbols
     title = "Trinjer";
-    private dialogRef: MdDialogRef<LoginDialog>;
+    private loginDialog: MdDialogRef<LoginDialog>;
+    private registrationDialog: MdDialogRef<RegistrationDialog>;
 
     constructor(private authGuard: AuthGuard, private dialog: MdDialog){}
 
@@ -29,11 +31,14 @@ export class AppComponent{
     }
 
     openLoginDialog(){
-        this.dialogRef = this.dialog.open(LoginDialog);
+        this.loginDialog = this.dialog.open(LoginDialog);
+        this.loginDialog.afterClosed().subscribe(() => {this.loginDialog = null;});
+    }
 
-        this.dialogRef.afterClosed().subscribe(result => {
-            console.log(result);
-            this.dialogRef = null;
-        })
+    openRegistrationDialog(){
+        this.registrationDialog = this.dialog.open(RegistrationDialog);
+        this.registrationDialog.afterClosed().subscribe(() => {
+            this.registrationDialog = null;
+        });
     }
 }

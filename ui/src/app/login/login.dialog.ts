@@ -46,8 +46,8 @@ export class LoginDialog{
             'username': [this.user.username, [Validators.required]],
             'password': [this.user.password, [Validators.required]]
         });
-        this.loginForm.valueChanges.subscribe((data: any) => {
-            this.onFormChange(data);
+        this.loginForm.valueChanges.subscribe(() => {
+            this.onFormChange();
         })
     }
 

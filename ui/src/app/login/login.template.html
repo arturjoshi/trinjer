@@ -1,7 +1,7 @@
 <div class="dialog-wrp">
     <p class="dialog-title" md-dialog-title>Login</p>
 
-    <form [formGroup]="loginForm" novalidate>
+    <form [formGroup]="loginForm" novalidate onsubmit="return false;">
         <md-input
                 [(ngModel)]="user.username"
                 formControlName="username"

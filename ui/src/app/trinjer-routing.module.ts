@@ -3,13 +3,13 @@
  */
 import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
-import {RegistrationComponent} from "./registration/registration.component";
+import {RegistrationDialog} from "./registration/registration.component";
 import {DashboarComponent} from "./dashboard/dashboard.component";
 import {AuthGuard} from "./services/auth-guard.service";
 
 //TODO: Move routing component to another component
 const appRoutes: Routes = [
-    { path: 'registration', component: RegistrationComponent},
+    { path: 'registration', component: RegistrationDialog},
 
     { path: 'dashboard', component: DashboarComponent, canActivate: [AuthGuard]},
 ];
