@@ -10,6 +10,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 @Component({
     selector: 'registration',
     templateUrl: 'app/registration/registration.template.html',
+    styleUrls: ['app/registration/registration.css']
 })
 export class RegistrationDialog{
     user: RegistrationUserDTO;
