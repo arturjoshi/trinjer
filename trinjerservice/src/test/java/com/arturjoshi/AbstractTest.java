@@ -61,6 +61,16 @@ public abstract class AbstractTest implements TestConst {
         return account;
     }
 
+    protected Account getDefaultTestAccount(String prefix) {
+        Account account = new Account();
+        AccountCredentials accountCredentials = new AccountCredentials();
+        accountCredentials.setPassword(ACCOUNT_PASSWORD + prefix);
+        account.setCredentials(accountCredentials);
+        account.setUsername(ACCOUNT_USERNAME + prefix);
+        account.setEmail(ACCOUNT_EMAIL + prefix);
+        return account;
+    }
+
     protected Project getDefaultProject() {
         Project project = new Project();
         project.setName(PROJECT_NAME);

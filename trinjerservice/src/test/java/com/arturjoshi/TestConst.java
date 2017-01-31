@@ -9,6 +9,7 @@ public interface TestConst {
     String ACCOUNT_PASSWORD = "testpassword";
     String ACCOUNT_USERNAME = "testusername";
     String ACCOUNT_EMAIL = "testemail";
+    String TMP_ACCOUNT_PREFIX = "_tmp";
 
     String PROJECT_NAME = "testprojectname";
     boolean VISIBLE_PROJECT = true;
