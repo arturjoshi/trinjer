@@ -3,7 +3,7 @@ import {AuthenticateService} from "./authenticate.service";
 import {LoginUser} from "../models/login-user.model";
 import {AccountService} from "../services/account.service";
 import {MdDialogRef, MdSnackBar} from "@angular/material";
-import {NgForm, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 /**
  * Created by xoll on 08.01.2017.
  */
@@ -87,7 +87,7 @@ export class LoginDialog{
         this.dialogRef.close('Cancel');
     }
 
-    private onFormChange(data? : any){
+    private onFormChange(){
         if(!this.loginForm) return ;
         const form = this.loginForm;
 
