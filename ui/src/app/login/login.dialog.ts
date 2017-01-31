@@ -2,7 +2,7 @@ import {Component} from "@angular/core";
 import {AuthenticateService} from "./authenticate.service";
 import {LoginUser} from "../models/login-user.model";
 import {AccountService} from "../services/account.service";
-import {MdDialogRef} from "@angular/material";
+import {MdDialogRef, MdSnackBar} from "@angular/material";
 import {NgForm, FormBuilder, FormGroup, Validators} from "@angular/forms";
 /**
  * Created by xoll on 08.01.2017.
@@ -27,17 +27,20 @@ export class LoginDialog{
     };
     validationMessages = {
         'username': {
-            'required': 'Username in require'
+            'required': 'Username in require',
+            'wrong': "Can`t find user with such name"
         },
         'password': {
-            'required': 'Password is require'
+            'required': 'Password is require',
+            'wrong': 'Wrong password'
         }
     };
 
     constructor(
         private dialogRef: MdDialogRef<LoginDialog>,
         private authenticateService: AuthenticateService,
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private snackBar: MdSnackBar
     ){
         this.loginForm = this.formBuilder.group({
             'username': [this.user.username, [Validators.required]],
@@ -50,7 +53,7 @@ export class LoginDialog{
 
     login(){
         //If form valid
-        if(this.loginForm._status != "INVALID") {
+        if(!this.loginForm.invalid) {
             this.isLoginProcessed = true;
             this.authenticateService.authenticate(this.user)
                 .subscribe(
@@ -61,18 +64,23 @@ export class LoginDialog{
                     (error: any): void => {
                         this.isLoginProcessed = false;
                         if (error == "No such account") {
-                            console.log("Username failed");
+                            this.formErrors.username = this.validationMessages.username.wrong;
                         } else if (error == "Bad credentials") {
-                            console.log("Credentials");
+                            this.formErrors.password = this.validationMessages.password.wrong;
                         } else {
-                            // Handle connection error
-                            // console.log(error);
+                            this.showErrorSnack();
                         }
                     });
         }else{
             this.formErrors.password = this.validationMessages.password.required;
             this.formErrors.username = this.validationMessages.username.required;
         }
+    }
+
+    private showErrorSnack(){
+        this.snackBar.open("Server connection error!", "Ok", {
+            duration: 10000
+        });
     }
 
     close(){
