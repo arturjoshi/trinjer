@@ -30,19 +30,22 @@
                 </span>
             </md-hint>
         </md-input>
-        <md-input formControlName="confirmPassword" type="password" placeholder="Confirm password"
-                  dividerColor="{{formErrors.confirmPassword ? 'warn' : 'primary'}}"
+        <md-input formControlName="passwordConfirm" type="password" placeholder="Confirm password"
+                  dividerColor="{{formErrors.passwordConfirm ? 'warn' : 'primary'}}"
                   [(ngModel)]="user.passwordConfirm" autocomplete="off">
             <md-hint>
-                <span class="alert-danger" *ngIf="formErrors.confirmPassword">
-                    {{formErrors.confirmPassword}}
+                <span class="alert-danger" *ngIf="formErrors.passwordConfirm">
+                    {{formErrors.passwordConfirm}}
                 </span>
             </md-hint>
         </md-input>
     </form>
 
     <md-dialog-actions>
-        <button md-button (click)="registration()">Registration</button>
+        <button md-button (click)="registration()" [disabled]="isRegistrationProcessed">
+            Registration
+            <md-spinner *ngIf="isRegistrationProcessed"></md-spinner>
+        </button>
         <button md-button (click)="close()">Cancel</button>
     </md-dialog-actions>
 </div>

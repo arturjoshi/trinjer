@@ -15,11 +15,12 @@ import {FormBuilder, FormGroup, Validators, AbstractControl} from "@angular/form
 export class RegistrationDialog{
     user: RegistrationUserDTO;
     registrationForm: FormGroup;
+    isRegistrationProcessed: boolean = false;
     formErrors = {
         'username': '',
         'email': '',
         'password': '',
-        'confirmPassword': ''
+        'passwordConfirm': ''
     };
     validationMessages = {
         'username': {
@@ -33,7 +34,7 @@ export class RegistrationDialog{
             'required' : 'Password is require',
             'incorrect': 'Passwords are not equal'
         },
-        'confirmPassword': {
+        'passwordConfirm': {
             'required': 'Re-enter password',
             'incorrect': 'Passwords are not equal'
         }
@@ -50,8 +51,19 @@ export class RegistrationDialog{
         })
     }
 
+    //noinspection JSUnusedGlobalSymbols
     registration(){
-        console.log("Current user " + JSON.stringify(this.user));
+        if(!this.registrationForm.invalid){
+            this.isRegistrationProcessed = true;
+            setTimeout(() => {this.isRegistrationProcessed = false}, 4000);
+            console.log("Current user " + JSON.stringify(this.user));
+        }else{
+            for(let prop in this.user){
+                if(this.user[prop] == ''){
+                    this.formErrors[prop] = this.validationMessages[prop].required;
+                }
+            }
+        }
     }
 
     private getFormGroup(){
@@ -60,7 +72,7 @@ export class RegistrationDialog{
             'email': [this.user.email, [Validators.required,
                 Validators.pattern(/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i)]],
             'password': [this.user.password, [Validators.required, passwordValidator]],
-            'confirmPassword': [this.user.passwordConfirm, [Validators.required, passwordValidator]]
+            'passwordConfirm': [this.user.passwordConfirm, [Validators.required, passwordValidator]]
         }
     }
 
@@ -91,7 +103,7 @@ export function passwordValidator(inputControl: AbstractControl): {[key: string]
     if(!parentControl) return null;
 
     let password = parentControl.get('password').value;
-    let confirmation = parentControl.get('confirmPassword').value;
+    let confirmation = parentControl.get('passwordConfirm').value;
 
     if(password == '' || confirmation == '')
         return null;
