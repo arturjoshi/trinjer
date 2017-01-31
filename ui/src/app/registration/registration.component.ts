@@ -30,7 +30,8 @@ export class RegistrationDialog{
             'pattern': 'Incorrect email format'
         },
         'password': {
-            'required' : 'Password is require'
+            'required' : 'Password is require',
+            'incorrect': 'Passwords are not equal'
         },
         'confirmPassword': {
             'required': 'Re-enter password',
@@ -58,7 +59,7 @@ export class RegistrationDialog{
             'username': [this.user.username, [Validators.required]],
             'email': [this.user.email, [Validators.required,
                 Validators.pattern(/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i)]],
-            'password': [this.user.password, [Validators.required]],
+            'password': [this.user.password, [Validators.required, passwordValidator]],
             'confirmPassword': [this.user.passwordConfirm, [Validators.required, passwordValidator]]
         }
     }
@@ -91,6 +92,9 @@ export function passwordValidator(inputControl: AbstractControl): {[key: string]
 
     let password = parentControl.get('password').value;
     let confirmation = parentControl.get('confirmPassword').value;
+
+    if(password == '' || confirmation == '')
+        return null;
 
     return password == confirmation ? null : {'incorrect': true};
 }
