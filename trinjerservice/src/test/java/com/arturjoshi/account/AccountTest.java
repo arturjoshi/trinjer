@@ -4,7 +4,6 @@ import com.arturjoshi.AbstractTest;
 import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.authentication.controllers.AuthenticationController;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -148,5 +147,53 @@ public class AccountTest extends AbstractTest {
                 .andExpect(jsonPath("$",
                         is(AuthenticationController.AuthenticationControllerConstants.NO_SUCH_ACCOUNT)))
                 .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    public void searchByEmailTest() throws Exception {
+        Account account = getDefaultTestAccount();
+
+        mockMvc.perform(post("/api/register/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account)))
+                .andExpect(status().isOk());
+
+        Long foundedId = accountRepository.findByUsername(ACCOUNT_USERNAME).getId();
+
+        mockMvc.perform(get("/api/accounts/" + foundedId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(foundedId.intValue())))
+                .andExpect(jsonPath("$.username", is(ACCOUNT_USERNAME)))
+                .andExpect(jsonPath("$.email", is(ACCOUNT_EMAIL)));
+
+        mockMvc.perform(get("/api/accounts/search/searchByEmail?email=" + ACCOUNT_EMAIL))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.accounts[0].id", is(foundedId.intValue())))
+                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME)))
+                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL)));
+    }
+
+    @Test
+    public void searchByUsernameTest() throws Exception {
+        Account account = getDefaultTestAccount();
+
+        mockMvc.perform(post("/api/register/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account)))
+                .andExpect(status().isOk());
+
+        Long foundedId = accountRepository.findByUsername(ACCOUNT_USERNAME).getId();
+
+        mockMvc.perform(get("/api/accounts/" + foundedId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(foundedId.intValue())))
+                .andExpect(jsonPath("$.username", is(ACCOUNT_USERNAME)))
+                .andExpect(jsonPath("$.email", is(ACCOUNT_EMAIL)));
+
+        mockMvc.perform(get("/api/accounts/search/searchByUsername?username=" + ACCOUNT_USERNAME))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.accounts[0].id", is(foundedId.intValue())))
+                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME)))
+                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL)));
     }
 }
