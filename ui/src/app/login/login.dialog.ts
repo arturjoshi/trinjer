@@ -51,6 +51,7 @@ export class LoginDialog{
         })
     }
 
+    //noinspection JSUnusedGlobalSymbols
     login(){
         if(!this.loginForm.invalid) {
             //Activate spinner

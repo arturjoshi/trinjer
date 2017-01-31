@@ -2,15 +2,23 @@
  * Created by xoll on 08.01.2017.
  */
 import {Component} from "@angular/core";
-import {MdDialogRef} from "@angular/material";
+import {MdDialogRef, MdSnackBar} from "@angular/material";
 import {RegistrationUserDTO} from "../models/registration-user.interface";
 import {RegistrationUser} from "../models/registration-user.model";
 import {FormBuilder, FormGroup, Validators, AbstractControl} from "@angular/forms";
+import {RegistrationService} from "./registration.service";
+import {AuthenticateService} from "../login/authenticate.service";
+import {AccountService} from "../services/account.service";
 
 @Component({
     selector: 'registration',
     templateUrl: 'app/registration/registration.template.html',
-    styleUrls: ['app/registration/registration.css']
+    styleUrls: ['app/registration/registration.css'],
+    providers: [
+        RegistrationService,
+        AuthenticateService,
+        AccountService
+    ]
 })
 export class RegistrationDialog{
     user: RegistrationUserDTO;
@@ -24,11 +32,13 @@ export class RegistrationDialog{
     };
     validationMessages = {
         'username': {
-            'required': 'Username is require'
+            'required': 'Username is require',
+            'exist': "Account with such username is already exists"
         },
         'email': {
             'required': 'Email is require',
-            'pattern': 'Incorrect email format'
+            'pattern': 'Incorrect email format',
+            'exist': "Account with such email is already exists"
         },
         'password': {
             'required' : 'Password is require',
@@ -41,6 +51,8 @@ export class RegistrationDialog{
     };
 
     constructor(private dialogRef: MdDialogRef<RegistrationDialog>,
+                private snackBar: MdSnackBar,
+                private registrationService: RegistrationService,
                 private formBuilder: FormBuilder){
 
         this.user = RegistrationUser.getNewRegistrationUser();
@@ -55,8 +67,13 @@ export class RegistrationDialog{
     registration(){
         if(!this.registrationForm.invalid){
             this.isRegistrationProcessed = true;
-            setTimeout(() => {this.isRegistrationProcessed = false}, 4000);
-            console.log("Current user " + JSON.stringify(this.user));
+            this.registrationService.registration(this.user).subscribe(() => {
+                this.isRegistrationProcessed = false;
+                this.close();
+            }, (error: any) => {
+                this.isRegistrationProcessed = false;
+                this.errorHandler(error);
+            });
         }else{
             for(let prop in this.user){
                 if(this.user[prop] == ''){
@@ -64,6 +81,25 @@ export class RegistrationDialog{
                 }
             }
         }
+    }
+
+    private errorHandler(error: any): void{
+        const EMAIL_EXIST = "Account with such email is already exists";
+        const USERNAME_EXIST = "Account with such username is already exists";
+
+        if(error == USERNAME_EXIST){
+            this.formErrors.username = this.validationMessages.username.exist;
+        }else if(error === EMAIL_EXIST){
+            this.formErrors.email = this.validationMessages.email.exist;
+        }else{
+            this.showErrorSnack();
+        }
+    }
+
+    private showErrorSnack(){
+        this.snackBar.open("Server connection error!", "Ok", {
+            duration: 10000
+        });
     }
 
     private getFormGroup(){
