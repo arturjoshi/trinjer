@@ -52,9 +52,10 @@ export class LoginDialog{
     }
 
     login(){
-        //If form valid
         if(!this.loginForm.invalid) {
+            //Activate spinner
             this.isLoginProcessed = true;
+
             this.authenticateService.authenticate(this.user)
                 .subscribe(
                     () => {
@@ -63,17 +64,22 @@ export class LoginDialog{
                     },
                     (error: any): void => {
                         this.isLoginProcessed = false;
-                        if (error == "No such account") {
-                            this.formErrors.username = this.validationMessages.username.wrong;
-                        } else if (error == "Bad credentials") {
-                            this.formErrors.password = this.validationMessages.password.wrong;
-                        } else {
-                            this.showErrorSnack();
-                        }
+                        this.handleError(error);
                     });
         }else{
             this.formErrors.password = this.validationMessages.password.required;
             this.formErrors.username = this.validationMessages.username.required;
+        }
+    }
+
+    private handleError(error: any): void {
+        this.isLoginProcessed = false;
+        if (error == "No such account") {
+            this.formErrors.username = this.validationMessages.username.wrong;
+        } else if (error == "Bad credentials") {
+            this.formErrors.password = this.validationMessages.password.wrong;
+        } else {
+            this.showErrorSnack();
         }
     }
 
