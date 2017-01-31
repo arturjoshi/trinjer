@@ -5,7 +5,7 @@ import {Component} from "@angular/core";
 import {MdDialogRef} from "@angular/material";
 import {RegistrationUserDTO} from "../models/registration-user.interface";
 import {RegistrationUser} from "../models/registration-user.model";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators, AbstractControl} from "@angular/forms";
 
 @Component({
     selector: 'registration',
@@ -19,7 +19,7 @@ export class RegistrationDialog{
         'username': '',
         'email': '',
         'password': '',
-        'passwordConfirm': ''
+        'confirmPassword': ''
     };
     validationMessages = {
         'username': {
@@ -59,7 +59,7 @@ export class RegistrationDialog{
             'email': [this.user.email, [Validators.required,
                 Validators.pattern(/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i)]],
             'password': [this.user.password, [Validators.required]],
-            'confirmPassword': [this.user.passwordConfirm, [Validators.required]]
+            'confirmPassword': [this.user.passwordConfirm, [Validators.required, passwordValidator]]
         }
     }
 
@@ -83,4 +83,14 @@ export class RegistrationDialog{
     close(){
         this.dialogRef.close('Cancel');
     }
+}
+
+export function passwordValidator(inputControl: AbstractControl): {[key: string]: boolean;} {
+    let parentControl = inputControl.parent;
+    if(!parentControl) return null;
+
+    let password = parentControl.get('password').value;
+    let confirmation = parentControl.get('confirmPassword').value;
+
+    return password == confirmation ? null : {'incorrect': true};
 }
