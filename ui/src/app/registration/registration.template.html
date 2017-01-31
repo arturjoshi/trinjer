@@ -1,7 +1,28 @@
 <div class="dialog-wrp">
     <p class="dialog-title" md-dialog-title>Registration</p>
 
+    <form [formGroup]="registrationForm" novalidate onsubmit="return false;">
+        <md-input formControlName="username" placeholder="Username"
+                  [(ngModel)]="user.username" autocomplete="off">
+
+        </md-input>
+
+        <md-input formControlName="email" type="email" placeholder="Email"
+                  [(ngModel)]="user.email" autocomplete="off">
+
+        </md-input>
+        <md-input formControlName="password" type="password" placeholder="Password"
+                  [(ngModel)]="user.password" autocomplete="off">
+
+        </md-input>
+        <md-input formControlName="confirmPassword" type="password" placeholder="Confirm password"
+                  [(ngModel)]="user.passwordConfirm" autocomplete="off">
+
+        </md-input>
+    </form>
+
     <md-dialog-actions>
+        <button md-button (click)="registration()">Registration</button>
         <button md-button (click)="close()">Cancel</button>
     </md-dialog-actions>
 </div>
