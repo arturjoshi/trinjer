@@ -11,9 +11,9 @@ const scss = require('gulp-sass');
 const path = {
     src: 'src/',
     app: 'src/app/',
-    build: 'build/',
+    build: 'dist/',
     test: 'test/',
-    buildSrc: 'build/src/',
+    buildSrc: 'dist/src/',
     ts: 'src/**/*.ts',
     html: 'src/**/*.html',
     scss: 'src/**/*.scss',

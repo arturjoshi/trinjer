@@ -1,5 +1,5 @@
 import {TestBed, inject, async} from "@angular/core/testing";
-import {TokenService} from "../../app/services/token.service";
+import {TokenService} from "../../src/app/services/token.service";
 /**
  * Created by Andrew Zelenskiy on 21.01.2017.
  */

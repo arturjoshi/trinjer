@@ -1,7 +1,7 @@
-import {AccountService} from "../../app/services/account.service";
+import {AccountService} from "../../src/app/services/account.service";
 import {TestBed, inject, async} from "@angular/core/testing";
-import {AccountDTO} from "../../app/models/account";
-import {IAccount} from "../../app/models/account.interface";
+import {AccountDTO} from "../../src/app/models/account";
+import {IAccount} from "../../src/app/models/account.interface";
 /**
  * Created by Andrew Zelenskiy on 21.01.2017.
  */

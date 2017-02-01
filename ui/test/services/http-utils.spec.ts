@@ -1,8 +1,8 @@
 import {Http, BaseRequestOptions, HttpModule, RequestMethod, Response, ResponseOptions} from "@angular/http";
 import {MockBackend, MockConnection} from "@angular/http/testing";
 import {TestBed, inject, async} from "@angular/core/testing";
-import {HttpUtils} from "../../app/services/http-utils.service";
-import {TokenService} from "../../app/services/token.service";
+import {HttpUtils} from "../../src/app/services/http-utils.service";
+import {TokenService} from "../../src/app/services/token.service";
 /**
  * Created by Andrew Zelenskiy on 18.01.2017.
  */
@@ -22,21 +22,10 @@ describe('HttpUtilsService', ()=>{
         ]
     };
 
-    let httpUtilsProvider = {
-        provide: HttpUtils,
-        useFactory: (http: Http, tokenService: TokenService) => {
-            return new HttpUtils(http, tokenService);
-        },
-        deps: [
-            Http,
-            TokenService
-        ]
-    };
-
 
     beforeEach(() => {
         let storage = {'token': token};
-        spyOn(localStorage, 'getItem').and.callFake((key: string, value: string) => {
+        spyOn(localStorage, 'getItem').and.callFake((key: string) => {
             return storage[key] || null;
         });
         spyOn(localStorage, 'setItem').and.callFake((key: string, value: string) => {

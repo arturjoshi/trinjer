@@ -1,15 +1,15 @@
 import {TestBed, inject} from "@angular/core/testing";
-import {ProjectsService} from "../../app/projects/services/projects.service";
-import {AccountService} from "../../app/services/account.service";
-import {IAccount} from "../../app/models/account.interface";
-import {AccountDTO} from "../../app/models/account";
-import {ProjectDTO} from "../../app/projects/models/project.interface";
-import {Project} from "../../app/projects/models/project.model";
+import {ProjectsService} from "../../src/app/projects/services/projects.service";
+import {AccountService} from "../../src/app/services/account.service";
+import {IAccount} from "../../src/app/models/account.interface";
+import {AccountDTO} from "../../src/app/models/account";
+import {ProjectDTO} from "../../src/app/projects/models/project.interface";
+import {Project} from "../../src/app/projects/models/project.model";
 import {BaseRequestOptions, Http, RequestMethod, Response, ResponseOptions} from "@angular/http";
 import {MockBackend, MockConnection} from "@angular/http/testing";
-import {HttpUtils} from "../../app/services/http-utils.service";
-import {TokenService} from "../../app/services/token.service";
-import {Serializable} from "../../app/projects/models/serialization.interface";
+import {HttpUtils} from "../../src/app/services/http-utils.service";
+import {TokenService} from "../../src/app/services/token.service";
+import {Serializable} from "../../src/app/projects/models/serialization.interface";
 /**
  * Created by Andrew Zelenskiy on 23.01.2017.
  */
