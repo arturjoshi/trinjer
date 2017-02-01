@@ -8,12 +8,13 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "lib": ["es2015", "dom"],
-        "suppressImplicitAnyIndexErrors": true,
-
-        "outDir": "build"
+        "suppressImplicitAnyIndexErrors": true
+//        "types": [
+//            "hammerjs"
+//        ],
     },
     "compileOnSave": true,
     "exclude": [
-        "node_modules"
+        "./"
     ]
 }

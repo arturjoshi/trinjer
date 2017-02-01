@@ -1,0 +1,14 @@
+<md-toolbar color="primary" class="navigation-toolbar">
+    <div class="primary-buttons">
+        <button *ngIf="isAuth()" md-button routerLink="/dashboard">Dashboard</button>
+    </div>
+
+    <div class="secondary-buttons">
+        <button *ngIf="!isAuth()" md-button (click)="openLoginDialog()">Login</button>
+        <button *ngIf="!isAuth()" md-button (click)="openRegistrationDialog()">Registration</button>
+        <button *ngIf="isAuth()" md-button (click)="logout()">Log out</button>
+    </div>
+</md-toolbar>
+<div>
+    <router-outlet></router-outlet>
+</div>

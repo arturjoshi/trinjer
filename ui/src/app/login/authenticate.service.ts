@@ -5,9 +5,7 @@ import "rxjs/Rx";
 import {UserDTO} from "../models/user.dto.interface";
 import {Observable, Observer} from "rxjs/Rx";
 import {AccountService} from "../services/account.service";
-import {IAccount} from "../models/account.interface";
 import {Response} from "@angular/http";
-import {AccountTokenDTO} from "../models/account-token.dto";
 import {AccountDTO} from "../models/account";
 /**
  * Created by Andrew Zelenskiy on 09.01.2017.
@@ -26,7 +24,6 @@ export class AuthenticateService{
     public authenticate(user: UserDTO): Observable<AccountDTO>{
         return Observable.create((observer: Observer<AccountDTO>) => {
             this.httpUtils.makePostWithoutToken(this.baseUrl, user)
-                .catch((error: any): any => {return error;})
                 .subscribe((response: Response) => {
                     let json = response.json();
 
@@ -40,12 +37,10 @@ export class AuthenticateService{
 
                     observer.next(account);
                     observer.complete();
+                }, (error: any) => {
+                    observer.error(error._body);
+                    observer.complete();
                 });
         });
-    }
-
-    private static handleError(error: any): any{
-        console.error(error);
-        return error;
     }
 }

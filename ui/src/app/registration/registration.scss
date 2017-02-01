@@ -1,0 +1,24 @@
+.dialog-wrp{
+  max-width: 350px;
+
+  md-input{
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  md-dialog-actions{
+    button{
+      width: 49%;
+      justify-content: center;
+      md-spinner{
+        height: 20px;
+        width: 20px;
+        display: inline-flex;
+      }
+    }
+  }
+  span.alert-danger{
+    color: red;
+    font-style: italic;
+  }
+}

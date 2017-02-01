@@ -23,12 +23,14 @@ export class RegistrationService{
             //noinspection TypeScriptUnresolvedFunction
             this.httpUtils.makePostWithoutToken(this.baseUrl, user)
                 .map(RegistrationService.extractData)
-                .catch(RegistrationService.handleError)
                 .subscribe((response: Response) => {
                     this.authenticateService.authenticate(user).subscribe((user: AccountDTO) => {
                         observer.next(user);
                         observer.complete();
                     });
+                }, (error: any) => {
+                    observer.error(error._body);
+                    observer.complete();
                 });
         });
     }

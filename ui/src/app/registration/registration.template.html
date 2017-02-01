@@ -1,0 +1,51 @@
+<div class="dialog-wrp">
+    <p class="dialog-title" md-dialog-title>Registration</p>
+
+    <form [formGroup]="registrationForm" novalidate onsubmit="return false;">
+        <md-input formControlName="username" placeholder="Username"
+                  dividerColor="{{formErrors.username ? 'warn' : 'primary'}}"
+                  [(ngModel)]="user.username" autocomplete="off">
+            <md-hint>
+                <span class="alert-danger" *ngIf="formErrors.username">
+                    {{formErrors.username}}
+                </span>
+            </md-hint>
+        </md-input>
+
+        <md-input formControlName="email" type="email" placeholder="Email"
+                  dividerColor="{{formErrors.email ? 'warn' : 'primary'}}"
+                  [(ngModel)]="user.email" autocomplete="off">
+            <md-hint>
+                <span class="alert-danger" *ngIf="formErrors.email">
+                    {{formErrors.email}}
+                </span>
+            </md-hint>
+        </md-input>
+        <md-input formControlName="password" type="password" placeholder="Password"
+                  dividerColor="{{formErrors.password ? 'warn' : 'primary'}}"
+                  [(ngModel)]="user.password" autocomplete="off">
+            <md-hint>
+                <span class="alert-danger" *ngIf="formErrors.password">
+                    {{formErrors.password}}
+                </span>
+            </md-hint>
+        </md-input>
+        <md-input formControlName="passwordConfirm" type="password" placeholder="Confirm password"
+                  dividerColor="{{formErrors.passwordConfirm ? 'warn' : 'primary'}}"
+                  [(ngModel)]="user.passwordConfirm" autocomplete="off">
+            <md-hint>
+                <span class="alert-danger" *ngIf="formErrors.passwordConfirm">
+                    {{formErrors.passwordConfirm}}
+                </span>
+            </md-hint>
+        </md-input>
+    </form>
+
+    <md-dialog-actions>
+        <button md-button (click)="registration()" [disabled]="isRegistrationProcessed">
+            Registration
+            <md-spinner *ngIf="isRegistrationProcessed"></md-spinner>
+        </button>
+        <button md-button (click)="close()">Cancel</button>
+    </md-dialog-actions>
+</div>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!--suppress HtmlUnknownTarget -->
+<html lang="en">
+<head>
+    <base href="/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test home page</title>
+
+    <!-- Material dependency -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="node_modules/@angular/material/core/theming/prebuilt/indigo-pink.css" rel="stylesheet">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+
+    <!-- NPM Libs -->
+    <script src="../node_modules/systemjs/dist/system.src.js"></script>
+    <script src="../node_modules/core-js/client/shim.min.js"></script>
+    <script src="../node_modules/zone.js/dist/zone.js"></script>
+
+    <!-- System js config -->
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('app').catch(function(err){
+            console.error(err)
+        });
+    </script>
+
+
+</head>
+<body style="margin: 0; font-family: 'Poppins', sans-serif;">
+    <app>Loading test element...</app>
+</body>
+</html>

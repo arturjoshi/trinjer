@@ -1,0 +1,43 @@
+<div class="dialog-wrp">
+    <p class="dialog-title" md-dialog-title>Login</p>
+
+    <form [formGroup]="loginForm" novalidate onsubmit="return false;">
+        <md-input
+                [(ngModel)]="user.username"
+                formControlName="username"
+                placeholder="Username"
+                dividerColor="{{ formErrors.username ? 'warn' : 'primary' }}"
+                autocomplete="off">
+            <md-hint>
+                <span class="alert-danger" *ngIf="formErrors.username">
+                    {{formErrors.username}}
+                </span>
+            </md-hint>
+        </md-input>
+
+        <md-input [(ngModel)]="user.password"
+                  formControlName="password"
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  dividerColor="{{ formErrors.password ? 'warn' : 'primary' }}"
+                  autocomplete="off">
+
+            <md-hint>
+                <span class="alert-danger" *ngIf="formErrors.password">
+                    {{formErrors.password}}
+                </span>
+            </md-hint>
+        </md-input>
+
+        <md-dialog-actions>
+            <button type="button" (click)="login()" md-button [disabled]="isLoginProcessed">
+                Login
+                <md-spinner *ngIf="isLoginProcessed"></md-spinner>
+            </button>
+            <button md-button [disabled]="isLoginProcessed" (click)="close()">
+                Cancel
+            </button>
+        </md-dialog-actions>
+    </form>
+</div>
