@@ -12,6 +12,7 @@ const path = {
     src: 'src/',
     app: 'src/app/',
     build: 'dist/',
+    buildSrc: 'dist/src/',
     ts: 'src/**/*.ts',
     html: 'src/**/*.html',
     scss: 'src/**/*.scss',
@@ -30,19 +31,19 @@ gulp.task('clean', function(){
 gulp.task('build-ts', function(){
     return gulp.src(path.ts)
         .pipe(project())
-        .pipe(gulp.dest(path.build))
+        .pipe(gulp.dest(path.buildSrc))
         .pipe(browserSync.stream());
 });
 
 gulp.task('build-html', function(){
     return gulp.src(path.html)
-        .pipe(gulp.dest(path.build))
+        .pipe(gulp.dest(path.buildSrc))
         .pipe(browserSync.stream());
 });
 
 gulp.task('copy-config', function(){
     return gulp.src(path.systemjsConfig)
-        .pipe(gulp.dest(path.build))
+        .pipe(gulp.dest(path.buildSrc))
         .pipe(browserSync.stream());
 });
 
@@ -51,7 +52,7 @@ gulp.task('build-scss', function(){
         .pipe(scss({
             "bundleExec": true
         }))
-        .pipe(gulp.dest(path.build))
+        .pipe(gulp.dest(path.buildSrc))
         .pipe(browserSync.stream());
 });
 
@@ -65,7 +66,7 @@ gulp.task('webserver', ['build-src'], function(){
     browserSync({
         port: 9009,
         server: {
-            baseDir: path.build,
+            baseDir: path.buildSrc,
             routes: {
                 '/node_modules' : './node_modules'
             }
