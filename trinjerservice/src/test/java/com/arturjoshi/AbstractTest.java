@@ -1,11 +1,18 @@
 package com.arturjoshi;
 
 import com.arturjoshi.account.Account;
-import com.arturjoshi.account.AccountCredentials;
+import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.authentication.AccountDetails;
+import com.arturjoshi.authentication.dto.AccountRegistrationDto;
 import com.arturjoshi.authentication.token.TokenHandler;
+import com.arturjoshi.milestones.repository.MilestoneRepository;
 import com.arturjoshi.project.Project;
+import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
+import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
+import com.arturjoshi.project.repository.ProjectRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.After;
+import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -18,6 +25,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 public abstract class AbstractTest implements TestConst {
 
@@ -32,11 +41,48 @@ public abstract class AbstractTest implements TestConst {
     private TokenHandler tokenHandler;
 
     @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private MilestoneRepository milestoneRepository;
+
+    @Autowired
+    private ProjectAccountPermissionRepository projectAccountPermissionRepository;
+
+    @Autowired
+    private ProjectAccountProfileRepository projectAccountProfileRepository;
+
+    @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
         this.mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream()
                 .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
                 .findAny()
                 .orElse(null);
+    }
+
+    @Before
+    public void setup() {
+        this.mockMvc = webAppContextSetup(webApplicationContext).build();
+        milestoneRepository.deleteAll();
+        projectAccountPermissionRepository.deleteAll();
+        projectAccountProfileRepository.deleteAll();
+        projectRepository.deleteAll();
+        accountRepository.deleteAll();
+    }
+
+    @After
+    public void clean() {
+        projectAccountPermissionRepository.deleteAll();
+        projectAccountProfileRepository.deleteAll();
+        for (Project project : projectRepository.findAll()) {
+            project.setProjectOwner(null);
+            projectRepository.save(project);
+        }
+        projectRepository.deleteAll();
+        accountRepository.deleteAll();
     }
 
     protected String json(Object o) throws IOException {
@@ -51,21 +97,17 @@ public abstract class AbstractTest implements TestConst {
         return map.get("id");
     }
 
-    protected Account getDefaultTestAccount() {
-        Account account = new Account();
-        AccountCredentials accountCredentials = new AccountCredentials();
-        accountCredentials.setPassword(ACCOUNT_PASSWORD);
-        account.setCredentials(accountCredentials);
+    protected AccountRegistrationDto getDefaultTestAccount() {
+        AccountRegistrationDto account = new AccountRegistrationDto();
         account.setUsername(ACCOUNT_USERNAME);
         account.setEmail(ACCOUNT_EMAIL);
+        account.setPassword(ACCOUNT_PASSWORD);
         return account;
     }
 
-    protected Account getDefaultTestAccount(String prefix) {
-        Account account = new Account();
-        AccountCredentials accountCredentials = new AccountCredentials();
-        accountCredentials.setPassword(ACCOUNT_PASSWORD + prefix);
-        account.setCredentials(accountCredentials);
+    protected AccountRegistrationDto getDefaultTestAccount(String prefix) {
+        AccountRegistrationDto account = new AccountRegistrationDto();
+        account.setPassword(ACCOUNT_PASSWORD + prefix);
         account.setUsername(ACCOUNT_USERNAME + prefix);
         account.setEmail(ACCOUNT_EMAIL + prefix);
         return account;
