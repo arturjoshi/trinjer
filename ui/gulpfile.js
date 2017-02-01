@@ -11,8 +11,9 @@ const scss = require('gulp-sass');
 const path = {
     src: 'src/',
     app: 'src/app/',
-    build: 'dist/',
-    buildSrc: 'dist/src/',
+    build: 'build/',
+    test: 'test/',
+    buildSrc: 'build/src/',
     ts: 'src/**/*.ts',
     html: 'src/**/*.html',
     scss: 'src/**/*.scss',
@@ -61,6 +62,11 @@ gulp.task('build-src', ['clean'],function(){
     gulp.start(['build-ts', 'build-html', 'build-scss', 'copy-config']);
 });
 
+gulp.task('build-test', function(){
+    gulp.src(path.test + "**/*.spec.ts")
+        .pipe(project())
+        .pipe(gulp.dest(path.build + "/test/"));
+});
 
 gulp.task('webserver', ['build-src'], function(){
     browserSync({

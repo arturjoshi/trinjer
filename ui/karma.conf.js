@@ -3,9 +3,9 @@
  */
 module.exports = function(config){
 
-    var appBase = 'build/'; //transpiled js and map files
-    var appSrcBase = 'build/'; //sources ts files
-    var appAssets = 'base/build/';
+    var appBase = 'dist/'; //transpiled js and map files
+    var appSrcBase = 'dist/'; //sources ts files
+    var appAssets = 'base/dist/';
 
     //Testing helpers
     var testingBase = "testing/";
