@@ -14,5 +14,6 @@ public interface TestConst {
     String PROJECT_NAME = "testprojectname";
     boolean VISIBLE_PROJECT = true;
     boolean NON_VISIBLE_PROJECT = false;
-    String INVITEE_EMAIL = "testinviteeemail";
+
+    String MILESTONE_DESCRIPTION = "testdescription";
 }

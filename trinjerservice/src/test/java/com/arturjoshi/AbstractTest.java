@@ -5,6 +5,7 @@ import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.authentication.AccountDetails;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
 import com.arturjoshi.authentication.token.TokenHandler;
+import com.arturjoshi.milestones.Milestone;
 import com.arturjoshi.milestones.repository.MilestoneRepository;
 import com.arturjoshi.project.Project;
 import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -75,12 +77,9 @@ public abstract class AbstractTest implements TestConst {
 
     @After
     public void clean() {
+        milestoneRepository.deleteAll();
         projectAccountPermissionRepository.deleteAll();
         projectAccountProfileRepository.deleteAll();
-        for (Project project : projectRepository.findAll()) {
-            project.setProjectOwner(null);
-            projectRepository.save(project);
-        }
         projectRepository.deleteAll();
         accountRepository.deleteAll();
     }
@@ -118,6 +117,15 @@ public abstract class AbstractTest implements TestConst {
         project.setName(PROJECT_NAME);
         project.setIsVisible(VISIBLE_PROJECT);
         return project;
+    }
+
+    protected Milestone getDefaultMilestone(Milestone.MilestoneType milestoneType) {
+        Milestone milestone = new Milestone();
+        milestone.setDescription(MILESTONE_DESCRIPTION);
+        milestone.setType(milestoneType);
+        milestone.setStartDate(LocalDate.now());
+        milestone.setEndDate(LocalDate.now().plusWeeks(1));
+        return milestone;
     }
 
     protected String createToken(Account account) {

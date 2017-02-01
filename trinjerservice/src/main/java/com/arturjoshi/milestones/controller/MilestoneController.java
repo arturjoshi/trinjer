@@ -53,8 +53,8 @@ public class MilestoneController {
         Milestone parentMilestone = milestoneRepository.findOne(milestoneId);
         milestoneService.addChildMilestone(parentMilestone, childMilestone);
         childMilestone.setProject(project);
-        milestoneRepository.save(childMilestone);
-        return milestoneRepository.save(parentMilestone);
+        milestoneRepository.save(parentMilestone);
+        return milestoneRepository.save(childMilestone);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
