@@ -46,7 +46,7 @@ export class ProjectsService{
 
         let projects: Project[] = [];
 
-        for(let item of json){
+        for(let item of json._embedded.projects){
             item = JSON.parse(item);
             let project = new Project(item['name'], item['isVisible']);
             projects.push(project);

@@ -22,7 +22,7 @@ export class HttpUtils{
 
 
     makeGet(prefix: string, options: Object = {}):Observable<Response> {
-        return this.http.get(this.baseUrl + prefix, HttpUtils.appendOptions(options, this.options));
+        return this.http.get(this.baseUrl + prefix, this.options);
     }
 
 
@@ -58,10 +58,11 @@ export class HttpUtils{
     initializeTokenOptions(token: string){
         let headers = new Headers();
 
-        headers.append('content-type', 'application/x-www-form-urlencoded');
-        headers.append('x-auth-token', token);
+        // headers.append('content-type', 'application/x-www-form-urlencoded');
+        headers.append('X-AUTH-TOKEN', token);
 
         this.options = new RequestOptions({
+            method: RequestMethod.Get,
             headers: headers
         });
     }

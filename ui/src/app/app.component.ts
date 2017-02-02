@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 /**
  * Created by xoll on 07.01.2017.
  */
@@ -19,7 +20,9 @@ export class AppComponent{
     private loginDialog: MdDialogRef<LoginDialog>;
     private registrationDialog: MdDialogRef<RegistrationDialog>;
 
-    constructor(private authGuard: AuthGuard, private dialog: MdDialog){}
+    constructor(private authGuard: AuthGuard, 
+            private dialog: MdDialog, 
+            private router: Router){}
 
     isAuth(){
         return this.authGuard.isAuthenticated();
@@ -27,6 +30,7 @@ export class AppComponent{
 
     logout(){
         this.authGuard.logout();
+        this.router.navigateByUrl('/');
     }
 
     openLoginDialog(){
