@@ -7,6 +7,8 @@ const del = require('del');
 const ts = require('gulp-typescript');
 const browserSync = require('browser-sync');
 const scss = require('gulp-sass');
+const karmaServer = require('karma').Server;
+const runSequence = require('run-sequence');
 
 const path = {
     src: 'src/',
@@ -57,15 +59,32 @@ gulp.task('build-scss', function(){
         .pipe(browserSync.stream());
 });
 
-gulp.task('build-src', ['clean'],function(){
-    //noinspection JSUnresolvedFunction
-    gulp.start(['build-ts', 'build-html', 'build-scss', 'copy-config']);
+gulp.task('build-src', function(){
+    return runSequence('clean', ['build-ts', 'build-html', 'build-scss', 'copy-config']);
 });
 
 gulp.task('build-test', function(){
-    gulp.src(path.test + "**/*.spec.ts")
+    return gulp.src(path.test + "**/*.spec.ts")
         .pipe(project())
         .pipe(gulp.dest(path.build + "/test/"));
+});
+
+gulp.task('build-dev-full', function(){
+    runSequence('clean', ['build-ts', 'build-html', 'build-scss', 'copy-config'], 'build-test');
+});
+
+gulp.task('test', function(){
+    runSequence('build-dev-full', 'start-karma-server');
+});
+
+gulp.task('start-karma-server', function(){
+    new karmaServer({
+        configFile: __dirname + "/karma.conf.js",
+        singleRun: false
+    }).start();
+
+    gulp.watch(path.ts, ['build-ts']);
+    gulp.watch(path.test, ['build-test']);
 });
 
 gulp.task('webserver', ['build-src'], function(){
