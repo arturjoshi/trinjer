@@ -7,7 +7,6 @@ import {MdDialog, MdDialogRef} from "@angular/material";
 import {LoginDialog} from "./login/login.dialog";
 import {RegistrationDialog} from "./registration/registration.component";
 
-//TODO: Connect material or bootstrap to project
 @Component({
     selector: 'app',
     templateUrl: 'app/app.template.html',

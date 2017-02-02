@@ -1,3 +1,4 @@
+import { ProjectsListComponent } from './projects/projects-list.component';
 /**
  * Created by xoll on 07.01.2017.
  */
@@ -10,6 +11,7 @@ import {AuthGuard} from "./services/auth-guard.service";
 //TODO: Move routing component to another component
 const appRoutes: Routes = [
     { path: 'registration', component: RegistrationDialog},
+    { path: 'projects', component: ProjectsListComponent},
 
     { path: 'dashboard', component: DashboarComponent, canActivate: [AuthGuard]},
 ];

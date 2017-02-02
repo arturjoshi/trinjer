@@ -1,3 +1,4 @@
+import { ProjectsListComponent } from './projects/projects-list.component';
 /**
  * Created by xoll on 06.01.2017.
  */
@@ -30,7 +31,8 @@ import 'node_modules/hammerjs/hammer.min.js';
         AppComponent,
         LoginDialog,
         RegistrationDialog,
-        DashboarComponent
+        DashboarComponent,
+        ProjectsListComponent
     ],
     providers: [
         AuthGuard,
