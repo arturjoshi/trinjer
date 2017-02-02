@@ -30,8 +30,6 @@ export class AuthenticateService{
                     let account = AccountDTO.getFromJson(json['account']);
                     let token = json['token'];
 
-                    console.log(account);
-
                     this.accountService.saveAccount(account);
                     this.tokenService.setToken(token);
 
