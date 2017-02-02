@@ -1,9 +1,19 @@
 package com.arturjoshi;
 
 import com.arturjoshi.account.Account;
-import com.arturjoshi.account.AccountCredentials;
+import com.arturjoshi.account.repository.AccountRepository;
+import com.arturjoshi.authentication.AccountDetails;
+import com.arturjoshi.authentication.dto.AccountRegistrationDto;
+import com.arturjoshi.authentication.token.TokenHandler;
+import com.arturjoshi.milestones.Milestone;
+import com.arturjoshi.milestones.repository.MilestoneRepository;
 import com.arturjoshi.project.Project;
+import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
+import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
+import com.arturjoshi.project.repository.ProjectRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.After;
+import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -13,24 +23,39 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractTest {
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+public abstract class AbstractTest implements TestConst {
+
+    private HttpMessageConverter mappingJackson2HttpMessageConverter;
+    private ObjectMapper objectMapper = new ObjectMapper();
     protected MockMvc mockMvc;
 
-    protected HttpMessageConverter mappingJackson2HttpMessageConverter;
+    @Autowired
+    protected WebApplicationContext webApplicationContext;
 
-    protected ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private TokenHandler tokenHandler;
 
-    protected String json(Object o) throws IOException {
-        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-        this.mappingJackson2HttpMessageConverter.write(
-                o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
-        return mockHttpOutputMessage.getBodyAsString();
-    }
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private MilestoneRepository milestoneRepository;
+
+    @Autowired
+    private ProjectAccountPermissionRepository projectAccountPermissionRepository;
+
+    @Autowired
+    private ProjectAccountProfileRepository projectAccountProfileRepository;
 
     @Autowired
     void setConverters(HttpMessageConverter<?>[] converters) {
@@ -40,27 +65,50 @@ public abstract class AbstractTest {
                 .orElse(null);
     }
 
-    @Autowired
-    protected WebApplicationContext webApplicationContext;
+    @Before
+    public void setup() {
+        this.mockMvc = webAppContextSetup(webApplicationContext).build();
+        milestoneRepository.deleteAll();
+        projectAccountPermissionRepository.deleteAll();
+        projectAccountProfileRepository.deleteAll();
+        projectRepository.deleteAll();
+        accountRepository.deleteAll();
+    }
 
-    protected final String X_AUTH_TOKEN_HEADER = "X-Auth-Token";
+    @After
+    public void clean() {
+        milestoneRepository.deleteAll();
+        projectAccountPermissionRepository.deleteAll();
+        projectAccountProfileRepository.deleteAll();
+        projectRepository.deleteAll();
+        accountRepository.deleteAll();
+    }
 
-    protected final String ACCOUNT_PASSWORD = "testpassword";
-    protected final String ACCOUNT_USERNAME = "testusername";
-    protected final String ACCOUNT_EMAIL = "testemail";
+    protected String json(Object o) throws IOException {
+        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
+        this.mappingJackson2HttpMessageConverter.write(
+                o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
+        return mockHttpOutputMessage.getBodyAsString();
+    }
 
-    protected final String PROJECT_NAME = "testprojectname";
-    protected final boolean VISIBLE_PROJECT = true;
-    protected final boolean NON_VISIBLE_PROJECT = false;
-    protected final String INVITEE_EMAIL = "testinviteeemail";
+    protected Integer getIdFromJson(String json) throws IOException {
+        Map<String, Integer> map = objectMapper.readValue(json, HashMap.class);
+        return map.get("id");
+    }
 
-    protected Account getDefaultTestAccount() {
-        Account account = new Account();
-        AccountCredentials accountCredentials = new AccountCredentials();
-        accountCredentials.setPassword(ACCOUNT_PASSWORD);
-        account.setCredentials(accountCredentials);
+    protected AccountRegistrationDto getDefaultTestAccount() {
+        AccountRegistrationDto account = new AccountRegistrationDto();
         account.setUsername(ACCOUNT_USERNAME);
         account.setEmail(ACCOUNT_EMAIL);
+        account.setPassword(ACCOUNT_PASSWORD);
+        return account;
+    }
+
+    protected AccountRegistrationDto getDefaultTestAccount(String prefix) {
+        AccountRegistrationDto account = new AccountRegistrationDto();
+        account.setPassword(ACCOUNT_PASSWORD + prefix);
+        account.setUsername(ACCOUNT_USERNAME + prefix);
+        account.setEmail(ACCOUNT_EMAIL + prefix);
         return account;
     }
 
@@ -71,8 +119,16 @@ public abstract class AbstractTest {
         return project;
     }
 
-    protected Integer getIdFromJson(String json) throws IOException {
-        Map<String, Integer> map = objectMapper.readValue(json, HashMap.class);
-        return map.get("id");
+    protected Milestone getDefaultMilestone(Milestone.MilestoneType milestoneType) {
+        Milestone milestone = new Milestone();
+        milestone.setDescription(MILESTONE_DESCRIPTION);
+        milestone.setType(milestoneType);
+        milestone.setStartDate(LocalDate.now());
+        milestone.setEndDate(LocalDate.now().plusWeeks(1));
+        return milestone;
+    }
+
+    protected String createToken(Account account) {
+        return tokenHandler.createTokenForUser(new AccountDetails(account));
     }
 }
