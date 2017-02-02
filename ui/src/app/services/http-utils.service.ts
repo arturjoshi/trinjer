@@ -58,11 +58,9 @@ export class HttpUtils{
     initializeTokenOptions(token: string){
         let headers = new Headers();
 
-        // headers.append('content-type', 'application/x-www-form-urlencoded');
-        headers.append('X-AUTH-TOKEN', token);
+        headers.append('x-auth-token', token);
 
         this.options = new RequestOptions({
-            method: RequestMethod.Get,
             headers: headers
         });
     }
