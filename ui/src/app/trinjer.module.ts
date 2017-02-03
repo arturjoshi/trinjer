@@ -1,4 +1,4 @@
-import { ProjectsListComponent } from './projects/projects-list.component';
+import { ProjectsListComponent } from './projects/projects-list/projects-list.component';
 /**
  * Created by xoll on 06.01.2017.
  */
