@@ -1,6 +1,5 @@
 package com.arturjoshi.account;
 
-import com.arturjoshi.issues.Issue;
 import com.arturjoshi.project.Project;
 import com.arturjoshi.project.entities.ProjectAccountPermission;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -59,10 +58,6 @@ public class Account {
     @OneToMany(mappedBy = "account")
     @JsonIgnore
     private Set<ProjectAccountPermission> projectAccountPermissions = new HashSet<>();
-
-    @OneToMany(mappedBy = "assignee")
-    @JsonIgnore
-    private Set<Issue> issues = new HashSet<>();
 
     public Account(Account account) {
         this.id = account.id;

@@ -1,7 +1,7 @@
 package com.arturjoshi.project;
 
 import com.arturjoshi.account.Account;
-import com.arturjoshi.milestones.Milestone;
+import com.arturjoshi.sprint.Sprint;
 import com.arturjoshi.project.entities.ProjectAccountPermission;
 import com.arturjoshi.project.entities.ProjectAccountProfile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -57,5 +57,5 @@ public class Project {
 
     @OneToMany(mappedBy = "project")
     @JsonIgnore
-    private Set<Milestone> milestones = new HashSet<>();
+    private Set<Sprint> sprints = new HashSet<>();
 }

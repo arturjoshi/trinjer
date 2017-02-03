@@ -5,8 +5,8 @@ import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.authentication.AccountDetails;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
 import com.arturjoshi.authentication.token.TokenHandler;
-import com.arturjoshi.milestones.Milestone;
-import com.arturjoshi.milestones.repository.MilestoneRepository;
+import com.arturjoshi.sprint.Sprint;
+import com.arturjoshi.sprint.repository.SprintRepository;
 import com.arturjoshi.project.Project;
 import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
 import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
@@ -49,7 +49,7 @@ public abstract class AbstractTest implements TestConst {
     private ProjectRepository projectRepository;
 
     @Autowired
-    private MilestoneRepository milestoneRepository;
+    private SprintRepository sprintRepository;
 
     @Autowired
     private ProjectAccountPermissionRepository projectAccountPermissionRepository;
@@ -68,7 +68,7 @@ public abstract class AbstractTest implements TestConst {
     @Before
     public void setup() {
         this.mockMvc = webAppContextSetup(webApplicationContext).build();
-        milestoneRepository.deleteAll();
+        sprintRepository.deleteAll();
         projectAccountPermissionRepository.deleteAll();
         projectAccountProfileRepository.deleteAll();
         projectRepository.deleteAll();
@@ -77,7 +77,7 @@ public abstract class AbstractTest implements TestConst {
 
     @After
     public void clean() {
-        milestoneRepository.deleteAll();
+        sprintRepository.deleteAll();
         projectAccountPermissionRepository.deleteAll();
         projectAccountProfileRepository.deleteAll();
         projectRepository.deleteAll();
@@ -119,13 +119,12 @@ public abstract class AbstractTest implements TestConst {
         return project;
     }
 
-    protected Milestone getDefaultMilestone(Milestone.MilestoneType milestoneType) {
-        Milestone milestone = new Milestone();
-        milestone.setDescription(MILESTONE_DESCRIPTION);
-        milestone.setType(milestoneType);
-        milestone.setStartDate(LocalDate.now());
-        milestone.setEndDate(LocalDate.now().plusWeeks(1));
-        return milestone;
+    protected Sprint getDefaultSprint() {
+        Sprint sprint = new Sprint();
+        sprint.setDescription(SPRINT_DESCRIPTION);
+        sprint.setStartDate(LocalDate.now());
+        sprint.setEndDate(LocalDate.now().plusWeeks(1));
+        return sprint;
     }
 
     protected String createToken(Account account) {

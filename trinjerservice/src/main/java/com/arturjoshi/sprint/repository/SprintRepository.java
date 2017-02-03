@@ -1,6 +1,6 @@
-package com.arturjoshi.milestones.repository;
+package com.arturjoshi.sprint.repository;
 
-import com.arturjoshi.milestones.Milestone;
+import com.arturjoshi.sprint.Sprint;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
@@ -8,16 +8,16 @@ import org.springframework.data.rest.core.annotation.RestResource;
 /**
  * Created by ajoshi on 16-Jan-17.
  */
-@RepositoryRestResource(path = "milestones")
-public interface MilestoneRepository extends CrudRepository<Milestone, Long> {
+@RepositoryRestResource(path = "sprints")
+public interface SprintRepository extends CrudRepository<Sprint, Long> {
 
     @Override
     @RestResource(exported = false)
-    <S extends Milestone> S save(S s);
+    <S extends Sprint> S save(S s);
 
     @Override
     @RestResource(exported = false)
-    <S extends Milestone> Iterable<S> save(Iterable<S> iterable);
+    <S extends Sprint> Iterable<S> save(Iterable<S> iterable);
 
     @Override
     @RestResource(exported = false)
@@ -25,11 +25,11 @@ public interface MilestoneRepository extends CrudRepository<Milestone, Long> {
 
     @Override
     @RestResource(exported = false)
-    void delete(Milestone milestone);
+    void delete(Sprint sprint);
 
     @Override
     @RestResource(exported = false)
-    void delete(Iterable<? extends Milestone> iterable);
+    void delete(Iterable<? extends Sprint> iterable);
 
     @Override
     @RestResource(exported = false)

@@ -1,17 +1,13 @@
-package com.arturjoshi.milestones;
+package com.arturjoshi.sprint;
 
-import com.arturjoshi.issues.Issue;
 import com.arturjoshi.project.Project;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by ajoshi on 16-Jan-17.
@@ -20,9 +16,10 @@ import java.util.Set;
 @Data
 @Entity
 @EqualsAndHashCode(of = {"id", "description", "startDate", "endDate"})
-public class Milestone {
+public class Sprint {
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String description;
@@ -37,24 +34,4 @@ public class Milestone {
 
     @ManyToOne(optional = false)
     private Project project;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private MilestoneType type;
-
-    @ManyToOne
-    private Milestone parentMilestone;
-
-    @OneToMany(mappedBy = "parentMilestone")
-    @JsonIgnore
-    private Set<Milestone> children = new HashSet<>();
-
-    @OneToMany(mappedBy = "milestone")
-    @JsonIgnore
-    private Set<Issue> issues = new HashSet<>();
-
-    public enum MilestoneType {
-        MILESTONE,
-        SPRINT
-    }
 }

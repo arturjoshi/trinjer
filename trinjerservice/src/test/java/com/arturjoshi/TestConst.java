@@ -15,5 +15,5 @@ public interface TestConst {
     boolean VISIBLE_PROJECT = true;
     boolean NON_VISIBLE_PROJECT = false;
 
-    String MILESTONE_DESCRIPTION = "testdescription";
+    String SPRINT_DESCRIPTION = "testdescription";
 }
