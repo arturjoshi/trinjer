@@ -8,10 +8,9 @@ import {RegistrationDialog} from "./registration/registration.component";
 import {DashboarComponent} from "./dashboard/dashboard.component";
 import {AuthGuard} from "./services/auth-guard.service";
 
-//TODO: Move routing component to another component
 const appRoutes: Routes = [
     { path: 'registration', component: RegistrationDialog},
-    { path: 'projects', component: ProjectsListComponent},
+    { path: 'projects/', loadChildren: './app/projects/projects.module#ProjectModule'},
 
     { path: 'dashboard', component: DashboarComponent, canActivate: [AuthGuard]},
 ];

@@ -1,3 +1,4 @@
+import { ProjectModule } from './projects/projects.module';
 import { ProjectsListComponent } from './projects/projects-list/projects-list.component';
 /**
  * Created by xoll on 06.01.2017.
@@ -25,14 +26,14 @@ import 'node_modules/hammerjs/hammer.min.js';
         ReactiveFormsModule,
         MaterialModule.forRoot(),
         HttpModule,
+        ProjectModule,
         TrinjerRoutingModule
     ],
     declarations: [
         AppComponent,
         LoginDialog,
         RegistrationDialog,
-        DashboarComponent,
-        ProjectsListComponent
+        DashboarComponent
     ],
     providers: [
         AuthGuard,
