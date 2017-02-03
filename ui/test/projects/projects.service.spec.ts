@@ -1,15 +1,15 @@
-import {TestBed, inject} from "@angular/core/testing";
-import {ProjectsService} from "../../src/app/projects/services/projects.service";
-import {AccountService} from "../../src/app/services/account.service";
-import {IAccount} from "../../src/app/models/account.interface";
-import {AccountDTO} from "../../src/app/models/account";
-import {ProjectDTO} from "../../src/app/projects/models/project.interface";
-import {Project} from "../../src/app/projects/models/project.model";
-import {BaseRequestOptions, Http, RequestMethod, Response, ResponseOptions} from "@angular/http";
-import {MockBackend, MockConnection} from "@angular/http/testing";
-import {HttpUtils} from "../../src/app/services/http-utils.service";
-import {TokenService} from "../../src/app/services/token.service";
-import {Serializable} from "../../src/app/projects/models/serialization.interface";
+import { TestBed, inject } from "@angular/core/testing";
+import { ProjectsService } from "../../src/app/projects/services/projects.service";
+import { AccountService } from "../../src/app/services/account.service";
+import { IAccount } from "../../src/app/models/account.interface";
+import { AccountDTO } from "../../src/app/models/account";
+import { ProjectDTO } from "../../src/app/projects/models/project.interface";
+import { Project } from "../../src/app/projects/models/project.model";
+import { BaseRequestOptions, Http, RequestMethod, Response, ResponseOptions } from "@angular/http";
+import { MockBackend, MockConnection } from "@angular/http/testing";
+import { HttpUtils } from "../../src/app/services/http-utils.service";
+import { TokenService } from "../../src/app/services/token.service";
+import { Serializable } from "../../src/app/projects/models/serialization.interface";
 /**
  * Created by Andrew Zelenskiy on 23.01.2017.
  */
@@ -52,7 +52,7 @@ describe("Project service", () => {
         let length = 0;
 
         projectsService.projects.subscribe((projects: ProjectDTO[]) => {
-            if(isFirst)
+            if (isFirst)
                 isFirst = false;
             expect(projects.length).toEqual(length);
         });
@@ -81,9 +81,9 @@ describe("Project service", () => {
 
             connection.mockRespond(new Response(new ResponseOptions({
                 body: {
-                    _embedded:{
+                    _embedded: {
                         projects: serializableProjects
-                    } 
+                    }
                 }
             })));
         });
@@ -94,15 +94,15 @@ describe("Project service", () => {
     })
 });
 
-function serializeList(list: Serializable[]){
+function serializeList(list: Serializable[]) {
     let result: string[] = [];
-    for(let item of list){
+    for (let item of list) {
         result.push(item.serialize());
     }
     return result;
 }
 
-function configureModule(){
+function configureModule() {
     let httpProvider = {
         provide: Http,
         useFactory: (mockBackend: MockBackend, baseRequestOptions: BaseRequestOptions) => {
@@ -127,7 +127,7 @@ function configureModule(){
     });
 }
 
-function getAccount(){
+function getAccount() {
     return AccountDTO.getFromJson({
         id: 12,
         username: "testuser",
@@ -138,15 +138,15 @@ function getAccount(){
     });
 }
 
-function spyOnLocalStorage(){
+function spyOnLocalStorage() {
     let storage = {};
-    spyOn(localStorage, 'getItem').and.callFake((key: string) =>{
+    spyOn(localStorage, 'getItem').and.callFake((key: string) => {
         return storage[key];
     });
-    spyOn(localStorage, 'setItem').and.callFake((key:string, value: string) => {
+    spyOn(localStorage, 'setItem').and.callFake((key: string, value: string) => {
         storage[key] = value;
     });
-    spyOn(localStorage, 'removeItem').and.callFake((key:string) => {
+    spyOn(localStorage, 'removeItem').and.callFake((key: string) => {
         delete storage[key];
     });
 }

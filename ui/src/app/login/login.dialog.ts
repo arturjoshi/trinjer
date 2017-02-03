@@ -13,8 +13,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
     templateUrl: 'app/login/login.template.html',
     styleUrls: ['app/login/login.css'],
     providers: [
-        AuthenticateService,
-        AccountService
+        AuthenticateService
     ]
 })
 export class LoginDialog{

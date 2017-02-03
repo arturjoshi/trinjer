@@ -9,12 +9,13 @@ import {BehaviorSubject, Observable} from "rxjs/Rx";
 @Injectable()
 export class AccountService{
     private key: string = 'account';
+    private _account: IAccount;
     private accountBehavior: BehaviorSubject<IAccount>;
 
     constructor(){
-        let account = this.getAccountFromLocalStorage();
+        this._account = this.getAccountFromLocalStorage();
 
-        this.accountBehavior = new BehaviorSubject<IAccount>(account);
+        this.accountBehavior = new BehaviorSubject<IAccount>(this._account);
     }
 
     get account(): Observable<IAccount> {
@@ -22,14 +23,18 @@ export class AccountService{
     }
 
     saveAccount(account: IAccount): void{
+        this._account = account;
+
         let obj = JSON.stringify(account);
         localStorage.setItem(this.key, obj);
-        this.accountBehavior.next(account);
+        
+        this.notifySubscribers();
     }
 
     removeAccount(): void{
+        this._account = null;
         localStorage.removeItem(this.key);
-        this.accountBehavior.next(null);
+        this.notifySubscribers();
     }
 
     private getAccountFromLocalStorage(): IAccount{
@@ -39,5 +44,9 @@ export class AccountService{
             return null;
 
         return AccountDTO.getFromJson(JSON.parse(obj));
+    }
+
+    private notifySubscribers(){
+        this.accountBehavior.next(this._account);
     }
 }

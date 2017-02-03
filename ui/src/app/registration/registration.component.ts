@@ -16,8 +16,7 @@ import {AccountService} from "../services/account.service";
     styleUrls: ['app/registration/registration.css'],
     providers: [
         RegistrationService,
-        AuthenticateService,
-        AccountService
+        AuthenticateService
     ]
 })
 export class RegistrationDialog{
