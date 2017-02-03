@@ -80,7 +80,11 @@ describe("Project service", () => {
             let serializableProjects = serializeList(projects);
 
             connection.mockRespond(new Response(new ResponseOptions({
-                body: serializableProjects
+                body: {
+                    _embedded:{
+                        projects: serializableProjects
+                    } 
+                }
             })));
         });
 
