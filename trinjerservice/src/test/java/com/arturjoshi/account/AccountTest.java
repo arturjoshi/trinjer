@@ -1,7 +1,7 @@
 package com.arturjoshi.account;
 
 import com.arturjoshi.AbstractTest;
-import com.arturjoshi.authentication.controllers.AuthenticationController;
+import com.arturjoshi.authentication.controller.AuthenticationController;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,8 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,6 +39,110 @@ public class AccountTest extends AbstractTest {
                 .andExpect(jsonPath("$.id", is(accountId)))
                 .andExpect(jsonPath("$.username", is(ACCOUNT_USERNAME)))
                 .andExpect(jsonPath("$.email", is(ACCOUNT_EMAIL)));
+    }
+
+    @Test
+    public void updateAccountUsernameTest() throws Exception {
+        AccountRegistrationDto account = getDefaultTestAccount();
+
+        MvcResult accountMvcResult = mockMvc.perform(post("/api/register/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Integer accountId = getIdFromJson(accountMvcResult.getResponse().getContentAsString());
+
+        mockMvc.perform(get("/api/accounts/" + accountId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(accountId)))
+                .andExpect(jsonPath("$.username", is(ACCOUNT_USERNAME)))
+                .andExpect(jsonPath("$.email", is(ACCOUNT_EMAIL)));
+
+        String accountToken = createToken(account.getAccountFromDto());
+        account.setUsername(account.getUsername() + TMP_ACCOUNT_SUFFIX);
+
+        mockMvc.perform(patch("/api/" + accountId + "/updateAccount/username")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account))
+                .header(X_AUTH_TOKEN_HEADER, accountToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.username", is(ACCOUNT_USERNAME + TMP_ACCOUNT_SUFFIX)));
+
+        mockMvc.perform(post("/api/authenticate/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.account.username", is(ACCOUNT_USERNAME + TMP_ACCOUNT_SUFFIX)));
+    }
+
+    @Test
+    public void updateAccountEmailTest() throws Exception {
+        AccountRegistrationDto account = getDefaultTestAccount();
+
+        MvcResult accountMvcResult = mockMvc.perform(post("/api/register/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Integer accountId = getIdFromJson(accountMvcResult.getResponse().getContentAsString());
+
+        mockMvc.perform(get("/api/accounts/" + accountId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(accountId)))
+                .andExpect(jsonPath("$.username", is(ACCOUNT_USERNAME)))
+                .andExpect(jsonPath("$.email", is(ACCOUNT_EMAIL)));
+
+        String accountToken = createToken(account.getAccountFromDto());
+        account.setEmail(account.getEmail() + TMP_ACCOUNT_SUFFIX);
+
+        mockMvc.perform(patch("/api/" + accountId + "/updateAccount/email")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account))
+                .header(X_AUTH_TOKEN_HEADER, accountToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email", is(ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX)));
+
+        mockMvc.perform(post("/api/authenticate/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.account.email", is(ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX)));
+    }
+
+    @Test
+    public void updateAccountPasswordTest() throws Exception {
+        AccountRegistrationDto account = getDefaultTestAccount();
+
+        MvcResult accountMvcResult = mockMvc.perform(post("/api/register/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Integer accountId = getIdFromJson(accountMvcResult.getResponse().getContentAsString());
+
+        mockMvc.perform(get("/api/accounts/" + accountId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(accountId)))
+                .andExpect(jsonPath("$.username", is(ACCOUNT_USERNAME)))
+                .andExpect(jsonPath("$.email", is(ACCOUNT_EMAIL)));
+
+        String accountToken = createToken(account.getAccountFromDto());
+        account.setPassword(account.getPassword() + TMP_ACCOUNT_SUFFIX);
+
+        mockMvc.perform(patch("/api/" + accountId + "/updateAccount/password")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account))
+                .header(X_AUTH_TOKEN_HEADER, accountToken))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/authenticate/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token", notNullValue()));
     }
 
     @Test

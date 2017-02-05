@@ -1,4 +1,4 @@
-package com.arturjoshi.authentication.controllers;
+package com.arturjoshi.authentication.controller;
 
 /**
  * Created by arturjoshi on 14-Jan-17.

@@ -1,4 +1,4 @@
-package com.arturjoshi.authentication.controllers;
+package com.arturjoshi.authentication.controller;
 
 import com.arturjoshi.account.Account;
 import com.arturjoshi.account.repository.AccountRepository;
