@@ -4,9 +4,16 @@
     <form [formGroup]="projectForm" novalidate onsubmit="return false;">
         <md-input 
             [(ngModel)]="project.name" 
-            formControlName="name"
+            formControlName="projectName"
             autocomplete="off" 
+            dividerColor="{{ formErrors.projectName ? 'warn' : 'primary' }}"
             placeholder="Name">
+            
+            <md-hint>
+                <span class="alert-danger" *ngIf="formErrors.projectName">
+                    {{formErrors.projectName}}
+                </span>
+            </md-hint>
         </md-input>
 
         <md-checkbox [(ngModel)]="project.isVisible" formControlName="isVisible">

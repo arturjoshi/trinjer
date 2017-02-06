@@ -14,6 +14,14 @@ export class CreateProjectDialog{
     projectForm: FormGroup;
     project: Project;
     isCreateInProcess: boolean = false;
+    formErrors = {
+        'projectName': '',
+    }
+    validationMessages = {
+        'projectName': {
+            'required': 'Name is require'
+        }
+    }; 
 
     constructor(
         private dialogRef: MdDialogRef<CreateProjectDialog>,
@@ -22,18 +30,42 @@ export class CreateProjectDialog{
         this.project = new Project('', true);
 
         this.projectForm = this.formBuilder.group({
-            'name': [this.project.name, [Validators.required]],
-            'isVisible': [Validators.required]
+            'projectName': [this.project.name, [Validators.required]],
+            'isVisible': [this.project.isVisible, []]
         });
+        this.projectForm.valueChanges.subscribe(() => {
+            this.onFormChange();
+        })
     }
 
     create(){
-        this.isCreateInProcess = true;
-        setTimeout(() => {this.isCreateInProcess = false;}, 5000);
-        console.log(this.project.serialize());
+        if(this.projectForm.invalid){
+            this.formErrors.projectName = this.validationMessages.projectName.required;
+        }else{
+            this.isCreateInProcess = true;
+            setTimeout(() => {this.isCreateInProcess = false;}, 5000);
+            console.log(this.project.serialize());
+        }
     }
 
     close(){
         this.dialogRef.close('Cancel');
+    }
+
+    private onFormChange(){
+        if(!this.projectForm) return ;
+        const form = this.projectForm;
+
+        for(const field in this.formErrors){
+            this.formErrors[field] = '';
+            const control = form.get(field);
+
+            if(control && control.dirty && !control.valid){
+                const messages = this.validationMessages[field];
+                for(const key in control.errors){
+                    this.formErrors[field] += messages[key] + " ";
+                }
+            }
+        }
     }
 }
