@@ -65,6 +65,16 @@ public class ProjectController {
         return projectRepository.save(project);
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{accountId}/deleteProject/{projectId}")
+    public void deleteProject(@PathVariable Long accountId, @PathVariable Long projectId)
+            throws NotOwnedProjectException {
+        Account owner = accountRepository.findOne(accountId);
+        Project project = projectRepository.findOne(projectId);
+        if(!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
+
+        projectRepository.delete(project);
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/inviteProjectEmail/{projectId}")
     public Project inviteProject(@RequestParam String email, @PathVariable Long accountId, @PathVariable Long projectId)
             throws NotOwnedProjectException {

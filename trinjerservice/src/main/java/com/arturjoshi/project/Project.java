@@ -8,8 +8,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -48,14 +51,17 @@ public class Project {
     private Set<Account> inboxInvitations = new HashSet<>();
 
     @OneToMany(mappedBy = "project")
+    @Cascade(CascadeType.DELETE)
     @JsonIgnore
     private Set<ProjectAccountProfile> projectAccountProfiles = new HashSet<>();
 
     @OneToMany(mappedBy = "project")
+    @Cascade(CascadeType.DELETE)
     @JsonIgnore
     private Set<ProjectAccountPermission> projectAccountPermissions = new HashSet<>();
 
     @OneToMany(mappedBy = "project")
+    @Cascade(CascadeType.DELETE)
     @JsonIgnore
     private Set<Sprint> sprints = new HashSet<>();
 }

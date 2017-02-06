@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -79,6 +80,35 @@ public class ProjectTest extends AbstractTest {
                 .andExpect(jsonPath("$.isVisible", is(NON_VISIBLE_PROJECT)))
                 .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
                 .andExpect(jsonPath("$.projectOwner.email", is(ACCOUNT_EMAIL)));
+    }
+
+    @Test
+    public void deleteProjectTest() throws Exception {
+        AccountRegistrationDto account = getDefaultTestAccount();
+        MvcResult accountMvcResult = mockMvc.perform(post("/api/register/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Integer accountId = getIdFromJson(accountMvcResult.getResponse().getContentAsString());
+
+        Project project = getDefaultProject();
+        MvcResult projectMvcResult = mockMvc.perform(post("/api/" + accountId + "/createProject")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(project)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
+                .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
+                .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
+                .andExpect(jsonPath("$.projectOwner.email", is(ACCOUNT_EMAIL)))
+                .andReturn();
+
+        Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
+
+        mockMvc.perform(delete("/api/" + accountId + "/deleteProject/" + projectId)
+                .content(this.json(project)))
+                .andExpect(status().isOk());
     }
 
     @Test
