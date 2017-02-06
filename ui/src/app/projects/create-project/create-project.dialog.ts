@@ -7,7 +7,8 @@ import { Component } from '@angular/core';
 
 @Component({
     selector: 'create-project',
-    templateUrl: 'app/projects/create-project/create-project.template.html'
+    templateUrl: 'app/projects/create-project/create-project.template.html',
+    styleUrls: ['app/projects/create-project/create-project.css']
 })
 export class CreateProjectDialog{
     projectForm: FormGroup;

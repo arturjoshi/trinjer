@@ -9,7 +9,9 @@
             placeholder="Name">
         </md-input>
 
-        <md-checkbox></md-checkbox>
+        <md-checkbox [(ngModel)]="project.isVisible" formControlName="isVisible">
+            Is project visible
+        </md-checkbox>
 
         <md-dialog-actions>
             <button type="button" (click)="create()" md-button [disabled]="isCreateInProcess">
