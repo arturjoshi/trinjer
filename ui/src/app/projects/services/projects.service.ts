@@ -62,10 +62,14 @@ export class ProjectsService{
         return this.projectsBehavior.asObservable();
     }
 
-    addProject(project: ProjectDTO): void{
-        this.projectsArray.push(project);
-        this.sendNotification();
-        this.projectsBehavior.next(this.projectsArray);
+    addProject(project: ProjectDTO): Observable<ProjectDTO>{
+        return Observable.create((observer: Observer<ProjectDTO>) => {
+            this.projectsArray.push(project);
+            this.sendNotification();
+            this.projectsBehavior.next(this.projectsArray);
+            observer.next(project);
+            observer.complete();
+        })
     }
 
     private sendNotification(): void{

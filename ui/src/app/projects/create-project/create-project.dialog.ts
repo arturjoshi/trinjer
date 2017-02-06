@@ -1,3 +1,4 @@
+import { ProjectDTO } from './../models/project.interface';
 import { ProjectsService } from './../services/projects.service';
 import { Validators } from '@angular/forms';
 import { Project } from './../models/project.model';
@@ -44,8 +45,10 @@ export class CreateProjectDialog{
         if(this.projectForm.invalid){
             this.formErrors.projectName = this.validationMessages.projectName.required;
         }else{
-            this.projectsService.addProject(this.project);
-            this.dialogRef.close("Create!");
+            this.projectsService.addProject(this.project).subscribe((project: ProjectDTO) => {
+                this.dialogRef.close("Create!");
+                console.log(project);
+            });
         }
     }
 
