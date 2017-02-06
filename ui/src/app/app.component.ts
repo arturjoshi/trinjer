@@ -30,7 +30,7 @@ export class AppComponent{
 
     logout(){
         this.authGuard.logout();
-        this.router.navigate(['/']);
+        this.router.navigate(['./']);
     }
 
     openLoginDialog(){

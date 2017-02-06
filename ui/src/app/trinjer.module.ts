@@ -1,3 +1,4 @@
+import { HomeComponent } from './home.component';
 import { ProjectModule } from './projects/projects.module';
 import { ProjectsListComponent } from './projects/projects-list/projects-list.component';
 /**
@@ -33,6 +34,7 @@ import 'node_modules/hammerjs/hammer.min.js';
         AppComponent,
         LoginDialog,
         RegistrationDialog,
+        HomeComponent,
         DashboarComponent
     ],
     providers: [
@@ -41,10 +43,9 @@ import 'node_modules/hammerjs/hammer.min.js';
         AccountService,
         HttpUtils],
     entryComponents: [
-        LoginDialog
+        LoginDialog,
+        RegistrationDialog
     ],
     bootstrap: [AppComponent]
 })
-export class TrinjerModule{
-
-}
+export class TrinjerModule{}
