@@ -1,3 +1,4 @@
+import { ProjectsService } from './../services/projects.service';
 import { Validators } from '@angular/forms';
 import { Project } from './../models/project.model';
 import { FormGroup } from '@angular/forms';
@@ -25,6 +26,7 @@ export class CreateProjectDialog{
 
     constructor(
         private dialogRef: MdDialogRef<CreateProjectDialog>,
+        private projectsService: ProjectsService,
         private formBuilder: FormBuilder
     ){
         this.project = new Project('', true);
@@ -42,9 +44,8 @@ export class CreateProjectDialog{
         if(this.projectForm.invalid){
             this.formErrors.projectName = this.validationMessages.projectName.required;
         }else{
-            this.isCreateInProcess = true;
-            setTimeout(() => {this.isCreateInProcess = false;}, 5000);
-            console.log(this.project.serialize());
+            this.projectsService.addProject(this.project);
+            this.dialogRef.close("Create!");
         }
     }
 

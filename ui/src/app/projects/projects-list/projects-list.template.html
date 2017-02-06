@@ -1,4 +1,10 @@
-<md-list *ngIf="isProjectsPresent()"></md-list>
+<div *ngIf="isProjectsPresent()">
+    <md-list *ngFor="let project of projectsArray">
+        <md-list-item>
+            {{ project.name }}
+        </md-list-item>
+    </md-list>
+</div>
 <div flex *ngIf="!isProjectsPresent()">
     <p>There are no projects yet</p>
 </div>
