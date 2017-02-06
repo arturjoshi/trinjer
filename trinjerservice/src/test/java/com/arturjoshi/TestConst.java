@@ -12,6 +12,7 @@ public interface TestConst {
     String TMP_ACCOUNT_SUFFIX = "_tmp";
 
     String PROJECT_NAME = "testprojectname";
+    String PROJECT_NAME_UPDATED = "updatedprojectname";
     boolean VISIBLE_PROJECT = true;
     boolean NON_VISIBLE_PROJECT = false;
 

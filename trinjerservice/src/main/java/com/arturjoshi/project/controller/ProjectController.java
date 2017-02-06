@@ -53,6 +53,18 @@ public class ProjectController {
         return project;
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/updateProject/{projectId}")
+    public Project updateProject(@RequestBody ProjectDto projectDto, @PathVariable Long accountId, @PathVariable Long projectId)
+            throws NotOwnedProjectException {
+        Account owner = accountRepository.findOne(accountId);
+        Project project = projectRepository.findOne(projectId);
+        if(!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
+
+        project.setName(projectDto.getName());
+        project.setIsVisible(projectDto.getIsVisible());
+        return projectRepository.save(project);
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/inviteProjectEmail/{projectId}")
     public Project inviteProject(@RequestParam String email, @PathVariable Long accountId, @PathVariable Long projectId)
             throws NotOwnedProjectException {
