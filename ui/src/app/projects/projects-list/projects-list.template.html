@@ -2,4 +2,6 @@
 <div flex *ngIf="!isProjectsPresent()">
     <p>There are no projects yet</p>
 </div>
-<button md-button routerLink="/projects/create">Create</button>
+<button md-fab (click)="openCreateProjectDialog()">
+    <md-icon>add</md-icon>
+</button>

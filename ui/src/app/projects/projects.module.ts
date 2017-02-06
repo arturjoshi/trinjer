@@ -1,4 +1,5 @@
-import { CreateProjectComponent } from './create-project/create-project.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CreateProjectDialog } from './create-project/create-project.dialog';
 import { ProjectRoutingModule } from './project-routing.module';
 import { MaterialModule } from '@angular/material';
 import { ProjectsListComponent } from './projects-list/projects-list.component';
@@ -14,6 +15,7 @@ import { CommonModule } from '@angular/common';
 @NgModule({
     imports: [
         CommonModule,
+        ReactiveFormsModule,
         MaterialModule.forRoot(),
         HttpModule,
         ProjectRoutingModule
@@ -26,7 +28,10 @@ import { CommonModule } from '@angular/common';
     ],
     declarations: [
         ProjectsListComponent,
-        CreateProjectComponent
+        CreateProjectDialog
+    ],
+    entryComponents: [
+        CreateProjectDialog
     ]
 })
 export class ProjectModule{}

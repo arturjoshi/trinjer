@@ -5,20 +5,12 @@ import {Serializable} from "./serialization.interface";
  */
 
 export class Project implements ProjectDTO, Serializable{
-    private _name: string;
-    private _isVisible: boolean;
+    name: string;
+    isVisible: boolean;
 
     constructor(name: string, isVisible: boolean = false){
-        this._name = name;
-        this._isVisible = isVisible;
-    }
-
-    get name(): string {
-        return this._name;
-    }
-
-    get isVisible(): boolean {
-        return this._isVisible;
+        this.name = name;
+        this.isVisible = isVisible;
     }
 
     serialize(): string{

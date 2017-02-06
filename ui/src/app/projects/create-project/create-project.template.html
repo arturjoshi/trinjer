@@ -1,0 +1,22 @@
+<div class="dialog-wrp">
+    <p class="dialog-title" md-dialog-title>Create new project</p>
+
+    <form [formGroup]="projectForm" novalidate onsubmit="return false;">
+        <md-input 
+            [(ngModel)]="project.name" 
+            formControlName="name"
+            autocomplete="off" 
+            placeholder="Name">
+        </md-input>
+
+        <md-checkbox></md-checkbox>
+
+        <md-dialog-actions>
+            <button type="button" (click)="create()" md-button [disabled]="isCreateInProcess">
+                Create
+                <md-spinner *ngIf="isCreateInProcess"></md-spinner>
+            </button>
+            <button type="button" (click)="close()" md-button>Cancel</button>
+        </md-dialog-actions>
+    </form>
+</div>
