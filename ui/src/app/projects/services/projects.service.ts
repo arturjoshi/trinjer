@@ -64,11 +64,14 @@ export class ProjectsService{
 
     addProject(project: ProjectDTO): Observable<ProjectDTO>{
         return Observable.create((observer: Observer<ProjectDTO>) => {
-            this.projectsArray.push(project);
-            this.sendNotification();
-            this.projectsBehavior.next(this.projectsArray);
-            observer.next(project);
-            observer.complete();
+            let urlPrefix = this.account.id + "/createProject/"; 
+            this.httpUtils.makePost(urlPrefix, project.serialize()).subscribe(() => {
+                this.projectsArray.push(project);
+                this.sendNotification();
+                
+                observer.next(project);
+                observer.complete();
+            })
         })
     }
 

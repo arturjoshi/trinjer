@@ -58,6 +58,7 @@ export class HttpUtils{
     initializeTokenOptions(token: string){
         let headers = new Headers();
 
+        headers.append('Content-Type', 'application/json');
         headers.append('x-auth-token', token);
 
         this.options = new RequestOptions({
