@@ -4,11 +4,10 @@ import { LandingComponent } from './landing/landing.component';
  */
 import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
-import {RegistrationDialog} from "./registration/registration.component";
 import {AuthGuard} from "./services/auth-guard.service";
 
 const appRoutes: Routes = [
-    { path: 'projects/', loadChildren: './app/core/projects/projects.module#ProjectModule'},
+    { path: 'core/', loadChildren: './app/core/core.module#CoreModule', canActivate: [AuthGuard]},
 
     { path: '', component: LandingComponent}
 ];
