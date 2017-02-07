@@ -6,5 +6,6 @@ package com.arturjoshi.ticket;
 public enum TicketStatus {
     TODO,
     IN_PROGRESS,
+    RESOLVED,
     DONE
 }

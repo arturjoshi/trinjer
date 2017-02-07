@@ -4,9 +4,12 @@ import com.arturjoshi.project.Project;
 import com.arturjoshi.ticket.issue.AbstractIssue;
 import com.arturjoshi.ticket.story.AbstractStory;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -40,8 +43,12 @@ public class Sprint {
     private Project project;
 
     @OneToMany(mappedBy = "sprint")
+    @Cascade(CascadeType.DELETE)
+    @JsonIgnore
     private Set<AbstractStory> sprintBacklog = new HashSet<>();
 
     @OneToMany(mappedBy = "sprint")
+    @Cascade(CascadeType.DELETE)
+    @JsonIgnore
     private Set<AbstractIssue> issues = new HashSet<>();
 }
