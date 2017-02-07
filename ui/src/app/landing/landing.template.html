@@ -1,0 +1,20 @@
+<div class="landing-wrp" color="primary">
+    <h3>Welcome to Trinjer</h3>
+
+    <div class="actions" *ngIf="!isAuthentificate()">
+        <button md-button (click)="openLoginDialog()">
+            Log in
+        </button>
+        <button md-button (click)="openRegistrationDialog()">
+            Registration
+        </button>
+    </div>
+    <div class="actions" *ngIf="isAuthentificate()">
+        <button md-button>
+            Dashboard
+        </button>
+        <button md-button (click)="logout()">
+            Log out
+        </button>
+    </div>
+</div>

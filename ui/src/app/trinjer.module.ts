@@ -1,6 +1,5 @@
-import { HomeComponent } from './home.component';
-import { ProjectModule } from './projects/projects.module';
-import { ProjectsListComponent } from './projects/projects-list/projects-list.component';
+import { LandingComponent } from './landing/landing.component';
+import { ProjectModule } from './core/projects/projects.module';
 /**
  * Created by xoll on 06.01.2017.
  */
@@ -10,7 +9,6 @@ import {AppComponent} from "./app.component";
 import {TrinjerRoutingModule} from "./trinjer-routing.module";
 import {LoginDialog} from "./login/login.dialog";
 import {RegistrationDialog} from "./registration/registration.component";
-import {DashboarComponent} from "./dashboard/dashboard.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms"
 import {AuthGuard} from "./services/auth-guard.service";
 import {TokenService} from "./services/token.service";
@@ -33,9 +31,8 @@ import 'node_modules/hammerjs/hammer.min.js';
     declarations: [
         AppComponent,
         LoginDialog,
-        RegistrationDialog,
-        HomeComponent,
-        DashboarComponent
+        LandingComponent,
+        RegistrationDialog
     ],
     providers: [
         AuthGuard,

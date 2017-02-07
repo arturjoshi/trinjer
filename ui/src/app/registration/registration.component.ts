@@ -68,7 +68,7 @@ export class RegistrationDialog{
             this.isRegistrationProcessed = true;
             this.registrationService.registration(this.user).subscribe(() => {
                 this.isRegistrationProcessed = false;
-                this.close();
+                this.close("Registration");
             }, (error: any) => {
                 this.isRegistrationProcessed = false;
                 this.errorHandler(error);
@@ -128,8 +128,8 @@ export class RegistrationDialog{
         }
     }
 
-    close(){
-        this.dialogRef.close('Cancel');
+    close(result: string = "Cancel"){
+        this.dialogRef.close(result);
     }
 }
 

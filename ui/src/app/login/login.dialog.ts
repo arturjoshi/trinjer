@@ -60,7 +60,7 @@ export class LoginDialog{
                 .subscribe(
                     () => {
                         this.isLoginProcessed = false;
-                        this.close();
+                        this.close("Login");
                     },
                     (error: any): void => {
                         this.isLoginProcessed = false;
@@ -88,8 +88,8 @@ export class LoginDialog{
         });
     }
 
-    close(){
-        this.dialogRef.close('Cancel');
+    close(result: string = 'Cancel'){
+        this.dialogRef.close(result);
     }
 
     private onFormChange(){
