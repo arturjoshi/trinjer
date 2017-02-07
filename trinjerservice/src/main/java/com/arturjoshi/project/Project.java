@@ -1,18 +1,19 @@
 package com.arturjoshi.project;
 
 import com.arturjoshi.account.Account;
-import com.arturjoshi.sprint.Sprint;
 import com.arturjoshi.project.entities.ProjectAccountPermission;
 import com.arturjoshi.project.entities.ProjectAccountProfile;
+import com.arturjoshi.sprint.Sprint;
+import com.arturjoshi.ticket.issue.AbstractIssue;
+import com.arturjoshi.ticket.story.AbstractStory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -64,4 +65,14 @@ public class Project {
     @Cascade(CascadeType.DELETE)
     @JsonIgnore
     private Set<Sprint> sprints = new HashSet<>();
+
+    @OneToMany(mappedBy = "project")
+    @Cascade(CascadeType.DELETE)
+    @JsonIgnore
+    private Set<AbstractStory> projectBacklog = new HashSet<>();
+
+    @OneToMany(mappedBy = "project")
+    @Cascade(CascadeType.DELETE)
+    @JsonIgnore
+    private Set<AbstractIssue> issues = new HashSet<>();
 }

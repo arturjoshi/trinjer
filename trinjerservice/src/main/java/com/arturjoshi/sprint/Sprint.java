@@ -1,6 +1,8 @@
 package com.arturjoshi.sprint;
 
 import com.arturjoshi.project.Project;
+import com.arturjoshi.ticket.issue.AbstractIssue;
+import com.arturjoshi.ticket.story.AbstractStory;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -8,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by ajoshi on 16-Jan-17.
@@ -34,4 +38,10 @@ public class Sprint {
 
     @ManyToOne(optional = false)
     private Project project;
+
+    @OneToMany(mappedBy = "sprint")
+    private Set<AbstractStory> sprintBacklog = new HashSet<>();
+
+    @OneToMany(mappedBy = "sprint")
+    private Set<AbstractIssue> issues = new HashSet<>();
 }
