@@ -6,8 +6,6 @@ import com.arturjoshi.project.Project;
 import com.arturjoshi.project.dto.ProjectAccountPermissionDto;
 import com.arturjoshi.project.dto.ProjectAccountProfileDto;
 import com.arturjoshi.project.dto.ProjectDto;
-import com.arturjoshi.project.entities.ProjectAccountPermission;
-import com.arturjoshi.project.entities.ProjectAccountProfile;
 import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
 import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
 import com.arturjoshi.project.repository.ProjectRepository;
@@ -16,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -56,139 +53,64 @@ public class ProjectController {
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/updateProject/{projectId}")
     public Project updateProject(@RequestBody ProjectDto projectDto, @PathVariable Long accountId, @PathVariable Long projectId)
             throws NotOwnedProjectException {
-        Account owner = accountRepository.findOne(accountId);
-        Project project = projectRepository.findOne(projectId);
-        if(!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
-
-        project.setName(projectDto.getName());
-        project.setIsVisible(projectDto.getIsVisible());
-        return projectRepository.save(project);
+        return projectService.updateProject(projectDto, accountId, projectId);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{accountId}/deleteProject/{projectId}")
     public void deleteProject(@PathVariable Long accountId, @PathVariable Long projectId)
             throws NotOwnedProjectException {
-        Account owner = accountRepository.findOne(accountId);
-        Project project = projectRepository.findOne(projectId);
-        if(!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
-
-        projectRepository.delete(project);
+        projectService.deleteProject(accountId, projectId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/inviteProjectEmail/{projectId}")
     public Project inviteProject(@RequestParam String email, @PathVariable Long accountId, @PathVariable Long projectId)
             throws NotOwnedProjectException {
-        Account owner = accountRepository.findOne(accountId);
-        Project project = projectRepository.findOne(projectId);
-        if(!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
-        Account invitee = accountRepository.findByEmail(email);
-        return invitee == null ? projectService.inviteNewAccount(email, project) :
-                projectService.inviteExistingAccount(invitee, project);
+        return projectService.inviteProject(email, accountId, projectId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/joinProject/{projectId}")
     public Project joinProjectRequest(@PathVariable Long accountId, @PathVariable Long projectId)
-            throws NotOwnedProjectException, ProjectIsNotVisibleException {
-        Project project = projectRepository.findOne(projectId);
-        if (!project.getIsVisible()) throw new ProjectIsNotVisibleException();
-        Account account = accountRepository.findOne(accountId);
-        project.getInboxInvitations().add(account);
-        return projectRepository.save(project);
+            throws ProjectIsNotVisibleException {
+        return projectService.joinProjectRequest(accountId, projectId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/confirmProjectInvitation/{projectId}")
     public Project acceptInboxProjectInvitation(@PathVariable Long accountId, @PathVariable Long projectId) throws NotInProjectInvitationsException {
-        Account account = accountRepository.findOne(accountId);
-        Project project = projectRepository.findOne(projectId);
-        if (!account.getProjectInvitations().contains(project)) throw new NotInProjectInvitationsException();
-
-        project.getOutboxInvitations().remove(account);
-        project.getMembers().add(account);
-        return projectRepository.save(project);
+        return projectService.acceptInboxProjectInvitation(accountId, projectId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/refuseProjectInvitation/{projectId}")
     public Project refuseInboxProjectInvitation(@PathVariable Long accountId, @PathVariable Long projectId) throws NotInProjectInvitationsException {
-        Account account = accountRepository.findOne(accountId);
-        Project project = projectRepository.findOne(projectId);
-        if (!account.getProjectInvitations().contains(project)) throw new NotInProjectInvitationsException();
-
-        project.getOutboxInvitations().remove(account);
-        return projectRepository.save(project);
+        return projectService.refuseInboxProjectInvitation(accountId, projectId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{ownerId}/confirmProjectInboxInvitation/{projectId}/{accountId}")
     public Project acceptProjectJoin(@PathVariable Long ownerId, @PathVariable Long projectId, @PathVariable Long accountId)
             throws NotOwnedProjectException, NotInProjectInvitationsException {
-        Account owner = accountRepository.findOne(ownerId);
-        Project project = projectRepository.findOne(projectId);
-        if (!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
-
-        Account account = accountRepository.findOne(accountId);
-        if (!project.getInboxInvitations().contains(account)) throw new NotInProjectInvitationsException();
-
-        project.getInboxInvitations().remove(account);
-        project.getMembers().add(account);
-        return projectRepository.save(project);
+        return projectService.acceptProjectJoin(ownerId, projectId, accountId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{ownerId}/refuseProjectInboxInvitation/{projectId}/{accountId}")
     public Project refuseProjectJoin(@PathVariable Long ownerId, @PathVariable Long projectId, @PathVariable Long accountId)
             throws NotOwnedProjectException, NotInProjectInvitationsException {
-        Account owner = accountRepository.findOne(ownerId);
-        Project project = projectRepository.findOne(projectId);
-        if (!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
-
-        Account account = accountRepository.findOne(accountId);
-        if (!project.getInboxInvitations().contains(account)) throw new NotInProjectInvitationsException();
-
-        project.getInboxInvitations().remove(account);
-        return projectRepository.save(project);
+        return projectService.refuseProjectJoin(ownerId, projectId, accountId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{ownerId}/kickFromProject/{projectId}/{accountId}")
     public Project kickFromProject(@PathVariable Long ownerId, @PathVariable Long projectId, @PathVariable Long accountId)
             throws NotOwnedProjectException, NotInProjectInvitationsException {
-        Account owner = accountRepository.findOne(ownerId);
-        Project project = projectRepository.findOne(projectId);
-        if (!project.getProjectOwner().equals(owner)) throw new NotOwnedProjectException();
-
-        Account account = accountRepository.findOne(accountId);
-
-        project.getMembers().remove(account);
-        return projectRepository.save(project);
+        return projectService.kickFromProject(ownerId, projectId, accountId);
     }
 
-    @RequestMapping(method = RequestMethod.GET,
-            value = "/projectAccountPermissions/search/findByProjectId")
-    public List<ProjectAccountPermissionDto> findProjectAccountPermissionsByProjectName(
-            @RequestParam Long projectId) {
-        List<ProjectAccountPermissionDto> permissions = new ArrayList<>();
-
-        for (Object[] projectAccountPermissionArray : projectRepository.findPermissionsByProjectId(projectId)) {
-            permissions.add(new ProjectAccountPermissionDto(
-                    projectAccountPermissionArray[0].toString(),
-                    projectAccountPermissionArray[1].toString(),
-                    ProjectAccountPermission.ProjectPermission.valueOf(projectAccountPermissionArray[2].toString())
-            ));
-        }
-        return permissions;
+    @RequestMapping(method = RequestMethod.GET, value = "/projectAccountPermissions/search/findByProjectId")
+    public List<ProjectAccountPermissionDto> findProjectAccountPermissionsByProject(@RequestParam Long projectId) {
+        return projectService.findProjectAccountPermissionsByProject(projectId);
     }
 
     @RequestMapping(method = RequestMethod.GET,
             value = "/projectAccountProfiles/search/findByProjectId")
-    public List<ProjectAccountProfileDto> findProjectAccountProfilesByProjectName(
-            @RequestParam Long projectId) {
-        List<ProjectAccountProfileDto> profiles = new ArrayList<>();
-
-        for (Object[] projectAccountPermissionArray : projectRepository.findProfilesByProjectId(projectId)) {
-            profiles.add(new ProjectAccountProfileDto(
-                    projectAccountPermissionArray[0].toString(),
-                    projectAccountPermissionArray[1].toString(),
-                    ProjectAccountProfile.ProjectProfile.valueOf(projectAccountPermissionArray[2].toString())
-            ));
-        }
-        return profiles;
+    public List<ProjectAccountProfileDto> findProjectAccountProfilesByProject(@RequestParam Long projectId) {
+        return projectService.findProjectAccountProfilesByProject(projectId);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
