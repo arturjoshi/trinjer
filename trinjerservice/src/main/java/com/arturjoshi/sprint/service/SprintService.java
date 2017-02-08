@@ -5,6 +5,7 @@ import com.arturjoshi.project.repository.ProjectRepository;
 import com.arturjoshi.sprint.Sprint;
 import com.arturjoshi.sprint.repository.SprintRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,6 +20,7 @@ public class SprintService {
     @Autowired
     private SprintRepository sprintRepository;
 
+    @PreAuthorize("@projectPermissionsEvaluator.isAllowedForProject(#accountId, #projectId, 'MASTER')")
     public Sprint createSprint(Long accountId, Long projectId, Sprint sprint) {
         Project project = projectRepository.findOne(projectId);
 

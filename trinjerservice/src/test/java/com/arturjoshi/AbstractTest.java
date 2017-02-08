@@ -3,14 +3,15 @@ package com.arturjoshi;
 import com.arturjoshi.account.Account;
 import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.authentication.AccountDetails;
+import com.arturjoshi.authentication.StatelessAuthenticationFilter;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
 import com.arturjoshi.authentication.token.TokenHandler;
-import com.arturjoshi.sprint.Sprint;
-import com.arturjoshi.sprint.repository.SprintRepository;
 import com.arturjoshi.project.Project;
 import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
 import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
 import com.arturjoshi.project.repository.ProjectRepository;
+import com.arturjoshi.sprint.Sprint;
+import com.arturjoshi.sprint.repository.SprintRepository;
 import com.arturjoshi.ticket.story.Story;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -23,9 +24,11 @@ import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.Filter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,7 +71,9 @@ public abstract class AbstractTest implements TestConst {
 
     @Before
     public void setup() {
-        this.mockMvc = webAppContextSetup(webApplicationContext).build();
+        Collection<StatelessAuthenticationFilter> filterCollection = webApplicationContext.getBeansOfType(StatelessAuthenticationFilter.class).values();
+        Filter[] filters = filterCollection.toArray(new Filter[filterCollection.size()]);
+        this.mockMvc = webAppContextSetup(webApplicationContext).addFilters(filters).build();
         sprintRepository.deleteAll();
         projectAccountPermissionRepository.deleteAll();
         projectAccountProfileRepository.deleteAll();

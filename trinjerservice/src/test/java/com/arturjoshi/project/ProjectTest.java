@@ -72,7 +72,9 @@ public class ProjectTest extends AbstractTest {
         project.setIsVisible(NON_VISIBLE_PROJECT);
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
+        String accountToken = createToken(account.getAccountFromDto());
         mockMvc.perform(post("/api/" + accountId + "/updateProject/" + projectId)
+                .header(X_AUTH_TOKEN_HEADER, accountToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(project)))
                 .andExpect(status().isOk())
@@ -106,8 +108,9 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
+        String accountToken = createToken(account.getAccountFromDto());
         mockMvc.perform(delete("/api/" + accountId + "/deleteProject/" + projectId)
-                .content(this.json(project)))
+                .header(X_AUTH_TOKEN_HEADER, accountToken))
                 .andExpect(status().isOk());
     }
 

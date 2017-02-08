@@ -14,6 +14,7 @@ import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
 import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
 import com.arturjoshi.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class ProjectService {
         return project;
     }
 
+    @PreAuthorize("@projectPermissionsEvaluator.isAllowedForProject(#accountId, #projectId, 'OWNER')")
     public Project updateProject(ProjectDto projectDto, Long accountId, Long projectId) {
         Project project = projectRepository.findOne(projectId);
 
@@ -56,11 +58,13 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
+    @PreAuthorize("@projectPermissionsEvaluator.isAllowedForProject(#accountId, #projectId, 'OWNER')")
     public void deleteProject(Long accountId, Long projectId) {
         Project project = projectRepository.findOne(projectId);
         projectRepository.delete(project);
     }
 
+    @PreAuthorize("@projectPermissionsEvaluator.isAllowedForProject(#accountId, #projectId, 'MASTER')")
     public Project inviteProject(String email, Long accountId, Long projectId) {
         Project project = projectRepository.findOne(projectId);
         Account invitee = accountRepository.findByEmail(email);
@@ -94,6 +98,8 @@ public class ProjectService {
         project.getOutboxInvitations().remove(account);
         return projectRepository.save(project);
     }
+
+    @PreAuthorize("@projectPermissionsEvaluator.isAllowedForProject(#ownerId, #projectId, 'OWNER')")
     public Project acceptProjectJoin(Long ownerId, Long projectId, Long accountId)
             throws NotInProjectInvitationsException {
         Project project = projectRepository.findOne(projectId);
@@ -106,6 +112,7 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
+    @PreAuthorize("@projectPermissionsEvaluator.isAllowedForProject(#ownerId, #projectId, 'OWNER')")
     public Project refuseProjectJoin(Long ownerId, Long projectId, Long accountId)
             throws NotInProjectInvitationsException {
         Project project = projectRepository.findOne(projectId);
@@ -117,6 +124,7 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
+    @PreAuthorize("@projectPermissionsEvaluator.isAllowedForProject(#ownerId, #projectId, 'OWNER')")
     public Project kickFromProject(Long ownerId, Long projectId, Long accountId)
             throws NotInProjectInvitationsException {
         Project project = projectRepository.findOne(projectId);

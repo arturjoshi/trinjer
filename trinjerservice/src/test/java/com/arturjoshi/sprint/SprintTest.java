@@ -50,7 +50,9 @@ public class SprintTest extends AbstractTest {
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
         Sprint sprint = getDefaultSprint();
 
+        String accountToken = createToken(account.getAccountFromDto());
         MvcResult sprintMvcResult = mockMvc.perform(post("/api/" + accountId + "/createSprint/" + projectId)
+                .header(X_AUTH_TOKEN_HEADER, accountToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(sprint)))
                 .andExpect(status().isOk())
