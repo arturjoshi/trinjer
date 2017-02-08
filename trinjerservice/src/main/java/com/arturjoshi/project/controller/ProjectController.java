@@ -1,14 +1,9 @@
 package com.arturjoshi.project.controller;
 
-import com.arturjoshi.account.Account;
-import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.project.Project;
 import com.arturjoshi.project.dto.ProjectAccountPermissionDto;
 import com.arturjoshi.project.dto.ProjectAccountProfileDto;
 import com.arturjoshi.project.dto.ProjectDto;
-import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
-import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
-import com.arturjoshi.project.repository.ProjectRepository;
 import com.arturjoshi.project.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,30 +19,11 @@ import java.util.List;
 public class ProjectController {
 
     @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
     private ProjectService projectService;
-
-    @Autowired
-    private ProjectAccountPermissionRepository projectAccountPermissionRepository;
-
-    @Autowired
-    private ProjectAccountProfileRepository projectAccountProfileRepository;
 
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/createProject")
     public Project createProjectForUser(@RequestBody ProjectDto projectDto, @PathVariable Long accountId) {
-        Account account = accountRepository.findOne(accountId);
-        Project project = projectDto.convertFromDto();
-        project.setProjectOwner(account);
-        projectRepository.save(project);
-
-        projectAccountPermissionRepository.save(projectService.initDefaultProjectOwnerPermissions(account, project));
-        projectAccountProfileRepository.save(projectService.initDefaultProjectOwnerProfile(account, project));
-        return project;
+        return projectService.createProjectForUser(projectDto, accountId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/updateProject/{projectId}")

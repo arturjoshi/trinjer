@@ -10,6 +10,8 @@ import com.arturjoshi.project.dto.ProjectAccountProfileDto;
 import com.arturjoshi.project.dto.ProjectDto;
 import com.arturjoshi.project.entities.ProjectAccountPermission;
 import com.arturjoshi.project.entities.ProjectAccountProfile;
+import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
+import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
 import com.arturjoshi.project.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,23 @@ public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private ProjectAccountPermissionRepository projectAccountPermissionRepository;
+
+    @Autowired
+    private ProjectAccountProfileRepository projectAccountProfileRepository;
+
+    public Project createProjectForUser(ProjectDto projectDto, Long accountId) {
+        Account account = accountRepository.findOne(accountId);
+        Project project = projectDto.convertFromDto();
+        project.setProjectOwner(account);
+        projectRepository.save(project);
+
+        projectAccountPermissionRepository.save(initDefaultProjectOwnerPermissions(account, project));
+        projectAccountProfileRepository.save(initDefaultProjectOwnerProfile(account, project));
+        return project;
+    }
 
     public Project updateProject(ProjectDto projectDto, Long accountId, Long projectId) {
         Project project = projectRepository.findOne(projectId);
