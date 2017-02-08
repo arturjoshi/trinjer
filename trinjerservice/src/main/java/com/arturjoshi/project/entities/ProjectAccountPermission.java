@@ -29,7 +29,8 @@ public class ProjectAccountPermission {
 
     public enum ProjectPermission {
         OWNER,
-        ADMIN,
+        MASTER,
+        MEMBER,
         REPORTER
     }
 }

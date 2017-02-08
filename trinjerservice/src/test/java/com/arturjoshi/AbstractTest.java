@@ -11,6 +11,7 @@ import com.arturjoshi.project.Project;
 import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
 import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
 import com.arturjoshi.project.repository.ProjectRepository;
+import com.arturjoshi.ticket.story.Story;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -125,6 +126,17 @@ public abstract class AbstractTest implements TestConst {
         sprint.setStartDate(LocalDate.now());
         sprint.setEndDate(LocalDate.now().plusWeeks(1));
         return sprint;
+    }
+
+    protected Story getDefaultStory() {
+        Story story = new Story();
+        story.setDescription(STORY_DESCRIPTION);
+        story.setSummary(STORY_SUMMARY);
+        story.setAcceptanceCriteria(STORY_ACCEPTANCE_CRITERIA);
+        story.setPriority(STORY_PRIORITY);
+        story.setStatus(STORY_STATUS);
+        story.setEstimate(STORY_ESTIMATE);
+        return story;
     }
 
     protected String createToken(Account account) {
