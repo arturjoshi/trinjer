@@ -60,20 +60,20 @@ public class AccountTest extends AbstractTest {
                 .andExpect(jsonPath("$.email", is(ACCOUNT_EMAIL)));
 
         String accountToken = createToken(account.getAccountFromDto());
-        account.setUsername(account.getUsername() + TMP_ACCOUNT_SUFFIX);
+        account.setUsername(account.getUsername() + TMP_SUFFIX);
 
         mockMvc.perform(patch("/api/" + accountId + "/updateAccount/username")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(account))
                 .header(X_AUTH_TOKEN_HEADER, accountToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username", is(ACCOUNT_USERNAME + TMP_ACCOUNT_SUFFIX)));
+                .andExpect(jsonPath("$.username", is(ACCOUNT_USERNAME + TMP_SUFFIX)));
 
         mockMvc.perform(post("/api/authenticate/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(account)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.account.username", is(ACCOUNT_USERNAME + TMP_ACCOUNT_SUFFIX)));
+                .andExpect(jsonPath("$.account.username", is(ACCOUNT_USERNAME + TMP_SUFFIX)));
     }
 
     @Test
@@ -95,20 +95,20 @@ public class AccountTest extends AbstractTest {
                 .andExpect(jsonPath("$.email", is(ACCOUNT_EMAIL)));
 
         String accountToken = createToken(account.getAccountFromDto());
-        account.setEmail(account.getEmail() + TMP_ACCOUNT_SUFFIX);
+        account.setEmail(account.getEmail() + TMP_SUFFIX);
 
         mockMvc.perform(patch("/api/" + accountId + "/updateAccount/email")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(account))
                 .header(X_AUTH_TOKEN_HEADER, accountToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.email", is(ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX)));
+                .andExpect(jsonPath("$.email", is(ACCOUNT_EMAIL + TMP_SUFFIX)));
 
         mockMvc.perform(post("/api/authenticate/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(account)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.account.email", is(ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX)));
+                .andExpect(jsonPath("$.account.email", is(ACCOUNT_EMAIL + TMP_SUFFIX)));
     }
 
     @Test
@@ -130,7 +130,7 @@ public class AccountTest extends AbstractTest {
                 .andExpect(jsonPath("$.email", is(ACCOUNT_EMAIL)));
 
         String accountToken = createToken(account.getAccountFromDto());
-        account.setPassword(account.getPassword() + TMP_ACCOUNT_SUFFIX);
+        account.setPassword(account.getPassword() + TMP_SUFFIX);
 
         mockMvc.perform(patch("/api/" + accountId + "/updateAccount/password")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -211,7 +211,7 @@ public class AccountTest extends AbstractTest {
                 .andExpect(status().isOk());
 
         AccountRegistrationDto wrongAccount = getDefaultTestAccount();
-        wrongAccount.setPassword(ACCOUNT_PASSWORD + TMP_ACCOUNT_SUFFIX);
+        wrongAccount.setPassword(ACCOUNT_PASSWORD + TMP_SUFFIX);
         mockMvc.perform(post("/api/authenticate/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(wrongAccount)))

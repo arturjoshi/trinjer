@@ -1,6 +1,5 @@
 package com.arturjoshi.ticket.story.service;
 
-import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.project.Project;
 import com.arturjoshi.project.repository.ProjectRepository;
 import com.arturjoshi.sprint.Sprint;
@@ -12,14 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Created by ajoshi on 09-Feb-17.
  */
 @Service
 public class StoryService {
-
-    @Autowired
-    private AccountRepository accountRepository;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -62,4 +60,23 @@ public class StoryService {
         return storyRepository.save(story);
     }
 
+    @PreAuthorize("@projectPermissionsEvaluator.isAllowedForStory(#accountId, #storyId, 'MASTER')")
+    public AbstractStory updateStory(Long accountId, Long storyId, Story story) {
+        AbstractStory oldStory = storyRepository.findOne(storyId);
+
+        oldStory.setSummary(Optional.ofNullable(story.getSummary()).orElse(oldStory.getSummary()));
+        oldStory.setDescription(Optional.ofNullable(story.getDescription()).orElse(oldStory.getDescription()));
+        oldStory.setPriority(Optional.ofNullable(story.getPriority()).orElse(oldStory.getPriority()));
+        oldStory.setStatus(Optional.ofNullable(story.getStatus()).orElse(oldStory.getStatus()));
+        oldStory.setEstimate(Optional.ofNullable(story.getEstimate()).orElse(oldStory.getEstimate()));
+        oldStory.setAcceptanceCriteria(Optional.ofNullable(story.getAcceptanceCriteria())
+                .orElse(oldStory.getAcceptanceCriteria()));
+
+        return storyRepository.save(oldStory);
+    }
+
+    @PreAuthorize("@projectPermissionsEvaluator.isAllowedForStory(#accountId, #storyId, 'MASTER')")
+    public void deleteStory(Long accountId, Long storyId) {
+        storyRepository.delete(storyRepository.findOne(storyId));
+    }
 }

@@ -39,4 +39,14 @@ public class StoryController {
         return storyService.moveToSprint(accountId, sprintId, storyId);
     }
 
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{accountId}/updateStory/{storyId}")
+    public AbstractStory updateStory(@PathVariable Long accountId, @PathVariable Long storyId, @RequestBody Story story) {
+        return storyService.updateStory(accountId, storyId, story);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{accountId}/deleteStory/{storyId}")
+    public void deleteStory(@PathVariable Long accountId, @PathVariable Long storyId) {
+        storyService.deleteStory(accountId, storyId);
+    }
+
 }

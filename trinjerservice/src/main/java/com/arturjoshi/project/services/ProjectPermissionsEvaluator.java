@@ -7,6 +7,8 @@ import com.arturjoshi.project.entities.ProjectAccountPermission;
 import com.arturjoshi.project.repository.ProjectRepository;
 import com.arturjoshi.sprint.Sprint;
 import com.arturjoshi.sprint.repository.SprintRepository;
+import com.arturjoshi.ticket.story.AbstractStory;
+import com.arturjoshi.ticket.story.repository.StoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,9 @@ public class ProjectPermissionsEvaluator {
     @Autowired
     private SprintRepository sprintRepository;
 
+    @Autowired
+    private StoryRepository storyRepository;
+
     public boolean isAllowedForProject(Long accountId, Long projectId, String requiredPermission) {
         Account account = accountRepository.findOne(accountId);
         Project project = projectRepository.findOne(projectId);
@@ -40,5 +45,11 @@ public class ProjectPermissionsEvaluator {
     public boolean isAllowedForSprint(Long accountId, Long sprintId, String requiredPermission) {
         Sprint sprint = sprintRepository.findOne(sprintId);
         return isAllowedForProject(accountId, sprint.getProject().getId(), requiredPermission);
+    }
+
+    public boolean isAllowedForStory(Long accountId, Long storyId, String requiredPermission) {
+        AbstractStory story = storyRepository.findOne(storyId);
+        Project project = story.getProject() != null ? story.getProject() : story.getSprint().getProject();
+        return isAllowedForProject(accountId, project.getId(), requiredPermission);
     }
 }

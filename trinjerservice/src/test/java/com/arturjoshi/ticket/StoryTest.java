@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.format.DateTimeFormatter;
 
+import static com.arturjoshi.ticket.TicketPriority.TRIVIAL;
+import static com.arturjoshi.ticket.TicketStatus.DONE;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -321,5 +323,135 @@ public class StoryTest extends AbstractTest {
                 .andExpect(jsonPath("$._embedded.stories[0].estimate", is(STORY_ESTIMATE)))
                 .andExpect(jsonPath("$._embedded.stories[0].priority", is(STORY_PRIORITY.toString())))
                 .andExpect(jsonPath("$._embedded.stories[0].status", is(STORY_STATUS.toString())));
+    }
+
+    @Test
+    public void updateStoryTest() throws Exception {
+        AccountRegistrationDto account = getDefaultTestAccount();
+        MvcResult accountMvcResult = mockMvc.perform(post("/api/register/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Integer accountId = getIdFromJson(accountMvcResult.getResponse().getContentAsString());
+
+        Project project = getDefaultProject();
+        MvcResult projectMvcResult = mockMvc.perform(post("/api/" + accountId + "/createProject")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(project)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
+                .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
+                .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
+                .andExpect(jsonPath("$.projectOwner.email", is(ACCOUNT_EMAIL)))
+                .andReturn();
+
+        Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
+
+        Story story = getDefaultStory();
+        String accountToken = createToken(account.getAccountFromDto());
+        MvcResult storyMvcResult = mockMvc.perform(post("/api/" + accountId + "/project/" + projectId + "/createStory")
+                .header(X_AUTH_TOKEN_HEADER, accountToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(story)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.summary", is(STORY_SUMMARY)))
+                .andExpect(jsonPath("$.description", is(STORY_DESCRIPTION)))
+                .andExpect(jsonPath("$.acceptanceCriteria", is(STORY_ACCEPTANCE_CRITERIA)))
+                .andExpect(jsonPath("$.estimate", is(STORY_ESTIMATE)))
+                .andExpect(jsonPath("$.priority", is(STORY_PRIORITY.toString())))
+                .andExpect(jsonPath("$.status", is(STORY_STATUS.toString())))
+                .andExpect(jsonPath("$.project.id", is(projectId)))
+                .andReturn();
+
+        mockMvc.perform(get("/api/projects/" + projectId + "/projectBacklog"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.stories[0].summary", is(STORY_SUMMARY)))
+                .andExpect(jsonPath("$._embedded.stories[0].description", is(STORY_DESCRIPTION)))
+                .andExpect(jsonPath("$._embedded.stories[0].acceptanceCriteria", is(STORY_ACCEPTANCE_CRITERIA)))
+                .andExpect(jsonPath("$._embedded.stories[0].estimate", is(STORY_ESTIMATE)))
+                .andExpect(jsonPath("$._embedded.stories[0].priority", is(STORY_PRIORITY.toString())))
+                .andExpect(jsonPath("$._embedded.stories[0].status", is(STORY_STATUS.toString())));
+
+        Integer storyId = getIdFromJson(storyMvcResult.getResponse().getContentAsString());
+
+        story.setStatus(DONE);
+        story.setPriority(TRIVIAL);
+        story.setDescription(story.getDescription() + TMP_SUFFIX);
+        story.setSummary(story.getSummary() + TMP_SUFFIX);
+        story.setAcceptanceCriteria(story.getAcceptanceCriteria() + TMP_SUFFIX);
+        mockMvc.perform(patch("/api/" + accountId + "/updateStory/" + storyId)
+                .header(X_AUTH_TOKEN_HEADER, accountToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(story)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.summary", is(STORY_SUMMARY + TMP_SUFFIX)))
+                .andExpect(jsonPath("$.description", is(STORY_DESCRIPTION + TMP_SUFFIX)))
+                .andExpect(jsonPath("$.acceptanceCriteria", is(STORY_ACCEPTANCE_CRITERIA + TMP_SUFFIX)))
+                .andExpect(jsonPath("$.estimate", is(STORY_ESTIMATE)))
+                .andExpect(jsonPath("$.priority", is(TRIVIAL.toString())))
+                .andExpect(jsonPath("$.status", is(DONE.toString())))
+                .andExpect(jsonPath("$.project.id", is(projectId)));
+    }
+
+    @Test
+    public void deleteStoryTest() throws Exception {
+        AccountRegistrationDto account = getDefaultTestAccount();
+        MvcResult accountMvcResult = mockMvc.perform(post("/api/register/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Integer accountId = getIdFromJson(accountMvcResult.getResponse().getContentAsString());
+
+        Project project = getDefaultProject();
+        MvcResult projectMvcResult = mockMvc.perform(post("/api/" + accountId + "/createProject")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(project)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
+                .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
+                .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
+                .andExpect(jsonPath("$.projectOwner.email", is(ACCOUNT_EMAIL)))
+                .andReturn();
+
+        Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
+
+        Story story = getDefaultStory();
+        String accountToken = createToken(account.getAccountFromDto());
+        MvcResult storyMvcResult = mockMvc.perform(post("/api/" + accountId + "/project/" + projectId + "/createStory")
+                .header(X_AUTH_TOKEN_HEADER, accountToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(story)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.summary", is(STORY_SUMMARY)))
+                .andExpect(jsonPath("$.description", is(STORY_DESCRIPTION)))
+                .andExpect(jsonPath("$.acceptanceCriteria", is(STORY_ACCEPTANCE_CRITERIA)))
+                .andExpect(jsonPath("$.estimate", is(STORY_ESTIMATE)))
+                .andExpect(jsonPath("$.priority", is(STORY_PRIORITY.toString())))
+                .andExpect(jsonPath("$.status", is(STORY_STATUS.toString())))
+                .andExpect(jsonPath("$.project.id", is(projectId)))
+                .andReturn();
+
+        mockMvc.perform(get("/api/projects/" + projectId + "/projectBacklog"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.stories[0].summary", is(STORY_SUMMARY)))
+                .andExpect(jsonPath("$._embedded.stories[0].description", is(STORY_DESCRIPTION)))
+                .andExpect(jsonPath("$._embedded.stories[0].acceptanceCriteria", is(STORY_ACCEPTANCE_CRITERIA)))
+                .andExpect(jsonPath("$._embedded.stories[0].estimate", is(STORY_ESTIMATE)))
+                .andExpect(jsonPath("$._embedded.stories[0].priority", is(STORY_PRIORITY.toString())))
+                .andExpect(jsonPath("$._embedded.stories[0].status", is(STORY_STATUS.toString())));
+
+        Integer storyId = getIdFromJson(storyMvcResult.getResponse().getContentAsString());
+
+        mockMvc.perform(delete("/api/" + accountId + "/deleteStory/" + storyId)
+                .header(X_AUTH_TOKEN_HEADER, accountToken))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/projects/" + projectId + "/projectBacklog"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.abstractStories.length()", is(0)));
     }
 }
