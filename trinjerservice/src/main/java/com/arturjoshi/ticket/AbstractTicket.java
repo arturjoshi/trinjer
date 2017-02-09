@@ -1,6 +1,7 @@
 package com.arturjoshi.ticket;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.EnumType;
@@ -12,6 +13,7 @@ import javax.persistence.MappedSuperclass;
  */
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(of = {"summary", "description", "priority", "status"})
 @MappedSuperclass
 public abstract class AbstractTicket {
 

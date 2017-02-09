@@ -4,6 +4,7 @@ import com.arturjoshi.project.Project;
 import com.arturjoshi.sprint.Sprint;
 import com.arturjoshi.ticket.AbstractTicket;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import javax.persistence.*;
  */
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = true, of = {"id", "estimate", "acceptanceCriteria"})
 @Entity
 @Table(name = "story")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

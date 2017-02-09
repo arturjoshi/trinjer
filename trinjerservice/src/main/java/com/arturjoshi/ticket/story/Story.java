@@ -1,6 +1,7 @@
 package com.arturjoshi.ticket.story;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.DiscriminatorValue;
@@ -11,6 +12,7 @@ import javax.persistence.Entity;
  */
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @DiscriminatorValue("story")
 public class Story extends AbstractStory {

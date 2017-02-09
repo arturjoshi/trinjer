@@ -5,6 +5,7 @@ import com.arturjoshi.project.Project;
 import com.arturjoshi.sprint.Sprint;
 import com.arturjoshi.ticket.AbstractTicket;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Entity
+@EqualsAndHashCode(callSuper = true,of = {"id", "reporter", "assignee", "resolution"})
 @Table(name = "issue")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "issue_type", discriminatorType = DiscriminatorType.STRING)

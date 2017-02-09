@@ -1,6 +1,7 @@
 package com.arturjoshi.ticket.issue;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.DiscriminatorValue;
@@ -11,6 +12,7 @@ import javax.persistence.Entity;
  */
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @DiscriminatorValue("task")
 public class Task extends AbstractIssue {
