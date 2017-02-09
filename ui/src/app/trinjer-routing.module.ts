@@ -7,8 +7,6 @@ import {RouterModule, Routes} from "@angular/router";
 import {AuthGuard} from "./services/auth-guard.service";
 
 const appRoutes: Routes = [
-    { path: 'core/', loadChildren: './app/core/core.module#CoreModule', canActivate: [AuthGuard]},
-
     { path: '', component: LandingComponent}
 ];
 

@@ -1,5 +1,4 @@
 import { LandingComponent } from './landing/landing.component';
-import { ProjectModule } from './core/projects/projects.module';
 /**
  * Created by xoll on 06.01.2017.
  */
@@ -25,7 +24,6 @@ import 'node_modules/hammerjs/hammer.min.js';
         ReactiveFormsModule,
         MaterialModule.forRoot(),
         HttpModule,
-        ProjectModule,
         TrinjerRoutingModule
     ],
     declarations: [
