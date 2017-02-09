@@ -1,14 +1,9 @@
 package com.arturjoshi.ticket.story.controller;
 
-import com.arturjoshi.account.Account;
-import com.arturjoshi.account.repository.AccountRepository;
-import com.arturjoshi.project.Project;
-import com.arturjoshi.project.repository.ProjectRepository;
-import com.arturjoshi.sprint.Sprint;
 import com.arturjoshi.sprint.controller.NotMemberProject;
-import com.arturjoshi.sprint.repository.SprintRepository;
+import com.arturjoshi.ticket.story.AbstractStory;
 import com.arturjoshi.ticket.story.Story;
-import com.arturjoshi.ticket.story.repository.StoryRepository;
+import com.arturjoshi.ticket.story.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,40 +15,28 @@ import org.springframework.web.bind.annotation.*;
 public class StoryController {
 
     @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private SprintRepository sprintRepository;
-
-    @Autowired
-    private StoryRepository storyRepository;
+    private StoryService storyService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/project/{projectId}/createStory")
     public Story createProjectStory(@PathVariable Long accountId, @PathVariable Long projectId, @RequestBody Story story)
             throws NotMemberProject {
-        Account account = accountRepository.findOne(accountId);
-        Project project = projectRepository.findOne(projectId);
-
-        if(!project.getProjectOwner().equals(account) && !project.getMembers().contains(account))
-            throw new NotMemberProject();
-
-        story.setProject(project);
-        return storyRepository.save(story);
+        return storyService.createProjectStory(accountId, projectId, story);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/sprint/{sprintId}/createStory")
     public Story createSprintStory(@PathVariable Long accountId, @PathVariable Long sprintId, @RequestBody Story story)
             throws NotMemberProject {
-        Account account = accountRepository.findOne(accountId);
-        Sprint sprint = sprintRepository.findOne(sprintId);
-
-        if(!sprint.getProject().getProjectOwner().equals(account) && !sprint.getProject().getMembers().contains(account))
-            throw new NotMemberProject();
-
-        story.setSprint(sprint);
-        return storyRepository.save(story);
+        return storyService.createSprintStory(accountId, sprintId, story);
     }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{accountId}/project/{projectId}/moveStory/{storyId}")
+    public AbstractStory moveToProject(@PathVariable Long accountId, @PathVariable Long projectId, @PathVariable Long storyId) {
+        return storyService.moveToProject(accountId, projectId, storyId);
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{accountId}/sprint/{sprintId}/moveStory/{storyId}")
+    public AbstractStory moveToSprint(@PathVariable Long accountId, @PathVariable Long sprintId, @PathVariable Long storyId) {
+        return storyService.moveToSprint(accountId, sprintId, storyId);
+    }
+
 }
