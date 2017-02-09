@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 
 @Component({
     selector: 'projects-list',
-    templateUrl: 'app/core/projects/projects-list/projects-list.template.html'
+    templateUrl: 'app/cabinet/projects/projects-list/projects-list.template.html'
 })
 export class ProjectsListComponent {
     projectsArray: ProjectDTO[];
