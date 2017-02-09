@@ -1,3 +1,4 @@
+import { CabinetComponent } from './cabinet/cabinet.component';
 import { LandingComponent } from './landing/landing.component';
 /**
  * Created by xoll on 07.01.2017.
@@ -7,7 +8,8 @@ import {RouterModule, Routes} from "@angular/router";
 import {AuthGuard} from "./services/auth-guard.service";
 
 const appRoutes: Routes = [
-    { path: '', component: LandingComponent}
+    { path: '', component: LandingComponent},
+    { path: 'cabinet', component: CabinetComponent}
 ];
 
 @NgModule({

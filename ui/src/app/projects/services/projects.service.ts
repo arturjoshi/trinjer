@@ -1,9 +1,9 @@
 import {Injectable} from "@angular/core";
 import {ProjectDTO} from "../models/project.interface";
 import {BehaviorSubject, Observable, Observer} from "rxjs/Rx";
-import {AccountService} from "../../../services/account.service";
-import {IAccount} from "../../../models/account.interface";
-import {HttpUtils} from "../../../services/http-utils.service";
+import {AccountService} from "../../services/account.service";
+import {IAccount} from "../../models/account.interface";
+import {HttpUtils} from "../../services/http-utils.service";
 import {Response} from "@angular/http";
 import {Project} from "../models/project.model";
 /**

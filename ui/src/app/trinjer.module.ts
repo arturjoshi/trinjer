@@ -1,3 +1,4 @@
+import { CabinetComponent } from './cabinet/cabinet.component';
 import { LandingComponent } from './landing/landing.component';
 /**
  * Created by xoll on 06.01.2017.
@@ -30,7 +31,8 @@ import 'node_modules/hammerjs/hammer.min.js';
         AppComponent,
         LoginDialog,
         LandingComponent,
-        RegistrationDialog
+        RegistrationDialog,
+        CabinetComponent
     ],
     providers: [
         AuthGuard,
