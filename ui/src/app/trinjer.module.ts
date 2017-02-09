@@ -1,5 +1,4 @@
 import { CabinetModule } from './cabinet/cabinet.module';
-import { CabinetComponent } from './cabinet/cabinet.component';
 import { LandingComponent } from './landing/landing.component';
 /**
  * Created by xoll on 06.01.2017.

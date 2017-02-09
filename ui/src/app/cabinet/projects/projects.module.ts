@@ -21,9 +21,6 @@ import { CommonModule } from '@angular/common';
         ProjectRoutingModule
     ],
     providers: [
-        HttpUtils,
-        AccountService,
-        TokenService,
         ProjectsService
     ],
     declarations: [

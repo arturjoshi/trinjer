@@ -5,4 +5,4 @@ import { Component } from '@angular/core';
     selector: 'cabinet',
     templateUrl: "cabinet.template.html"
 })
-export class CabinetComponent{}
+export class MainComponent{}

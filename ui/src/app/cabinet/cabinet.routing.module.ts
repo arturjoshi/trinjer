@@ -1,10 +1,11 @@
-import { CabinetComponent } from './cabinet.component';
+import { AuthGuard } from './../services/auth-guard.service';
+import { MainComponent } from './main.component';
 import { Routes } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 const routes: Routes = [
-    {path: 'cabinet', component: CabinetComponent, children: [
+    {path: 'cabinet', canActivate: [AuthGuard], component: MainComponent, children: [
         {path: '', loadChildren: './app/cabinet/projects/projects.module#ProjectModule'}
     ]}
 ]

@@ -5,7 +5,7 @@ import { ProjectsListComponent } from './projects-list/projects-list.component';
 import { Routes } from '@angular/router';
 
 const routes: Routes = [
-    { path: 'projects/list', component: ProjectsListComponent, canActivate: [AuthGuard]}
+    { path: 'projects', component: ProjectsListComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
