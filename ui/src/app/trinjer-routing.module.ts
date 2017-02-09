@@ -8,8 +8,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {AuthGuard} from "./services/auth-guard.service";
 
 const appRoutes: Routes = [
-    { path: '', component: LandingComponent},
-    { path: 'cabinet', component: CabinetComponent}
+    { path: '', component: LandingComponent}
 ];
 
 @NgModule({

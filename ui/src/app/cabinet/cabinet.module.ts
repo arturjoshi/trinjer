@@ -1,3 +1,4 @@
+import { CabinetRoutingModule } from './cabinet.routing.module';
 import { ProjectModule } from './projects/projects.module';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from '@angular/material';
@@ -10,14 +11,12 @@ import { NgModule } from '@angular/core';
     imports: [
         RouterModule,
         MaterialModule,
-        CommonModule
+        CommonModule,
+
+        CabinetRoutingModule
     ],
     declarations: [
         CabinetComponent
-    ],
-    exports: [
-        CabinetComponent
     ]
-
 })
 export class CabinetModule{}
