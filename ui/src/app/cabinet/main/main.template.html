@@ -1,0 +1,23 @@
+<md-toolbar color="primary" class="header">
+    <div class="primary-buttons">
+        <button md-button routerLink="projects">Projects</button>
+    </div>
+
+    <div class="user-container centered-row">
+        <p class="name">
+            {{ account.username }}
+        </p>
+        <md-icon class="glyphicon">more_vert</md-icon>
+    </div>
+
+    <div class="glyphicon centered-row icon-button hovered">
+        <md-icon>
+            notifications
+        </md-icon>
+    </div>
+
+    <div class="glyphicon centered-row icon-button hovered">
+        <md-icon (click)="logout()">exit_to_app</md-icon>
+    </div>
+</md-toolbar>
+<router-outlet></router-outlet>
