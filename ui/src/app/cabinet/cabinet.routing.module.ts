@@ -1,5 +1,5 @@
 import { AuthGuard } from './../services/auth-guard.service';
-import { MainComponent } from './main.component';
+import { MainComponent } from './main/main.component';
 import { Routes } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';

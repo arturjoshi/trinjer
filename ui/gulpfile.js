@@ -9,6 +9,7 @@ const browserSync = require('browser-sync');
 const scss = require('gulp-sass');
 const karmaServer = require('karma').Server;
 const runSequence = require('run-sequence');
+const modRewrite = require("connect-modrewrite");
 
 const path = {
     src: 'src/',
@@ -92,6 +93,11 @@ gulp.task('webserver', ['build-src'], function(){
         port: 9009,
         server: {
             baseDir: path.buildSrc,
+            middleware: [
+                modRewrite([
+                    '!\\.\\w+$ /index.html [L]'
+                ])
+            ],
             routes: {
                 '/node_modules' : './node_modules'
             }
