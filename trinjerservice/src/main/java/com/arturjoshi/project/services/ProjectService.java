@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by arturjoshi on 08-Jan-17.
@@ -53,8 +54,8 @@ public class ProjectService {
     public Project updateProject(ProjectDto projectDto, Long accountId, Long projectId) {
         Project project = projectRepository.findOne(projectId);
 
-        project.setName(projectDto.getName());
-        project.setIsVisible(projectDto.getIsVisible());
+        project.setName(Optional.ofNullable(projectDto.getName()).orElse(project.getName()));
+        project.setIsVisible(Optional.ofNullable(projectDto.getIsVisible()).orElse(project.getIsVisible()));
         return projectRepository.save(project);
     }
 
