@@ -1,3 +1,4 @@
+import { TestRoutingComponent } from './test-routing.component';
 import { CabinetRoutingModule } from './cabinet.routing.module';
 import { ProjectModule } from './projects/projects.module';
 import { RouterModule } from '@angular/router';
@@ -16,7 +17,8 @@ import { NgModule } from '@angular/core';
         CabinetRoutingModule
     ],
     declarations: [
-        CabinetComponent
+        CabinetComponent,
+        TestRoutingComponent
     ]
 })
 export class CabinetModule{}
