@@ -1,4 +1,3 @@
-import { TestRoutingComponent } from './test-routing.component';
 import { CabinetComponent } from './cabinet.component';
 import { Routes } from '@angular/router';
 import { RouterModule } from '@angular/router';
@@ -6,7 +5,7 @@ import { NgModule } from '@angular/core';
 
 const routes: Routes = [
     {path: 'cabinet', component: CabinetComponent, children: [
-        {path: 'test', component: TestRoutingComponent}
+        {path: '', loadChildren: './app/cabinet/projects/projects.module#ProjectModule'}
     ]}
 ]
 
