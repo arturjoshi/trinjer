@@ -1,3 +1,4 @@
+import { CabinetModule } from './cabinet/cabinet.module';
 import { CabinetComponent } from './cabinet/cabinet.component';
 import { LandingComponent } from './landing/landing.component';
 /**
@@ -25,14 +26,14 @@ import 'node_modules/hammerjs/hammer.min.js';
         ReactiveFormsModule,
         MaterialModule.forRoot(),
         HttpModule,
+        CabinetModule,
         TrinjerRoutingModule
     ],
     declarations: [
         AppComponent,
         LoginDialog,
         LandingComponent,
-        RegistrationDialog,
-        CabinetComponent
+        RegistrationDialog
     ],
     providers: [
         AuthGuard,
