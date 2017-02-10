@@ -1,3 +1,4 @@
+import { ProjectListItemComponent } from './projects-list/projects-list-item/projects-list-item.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CreateProjectDialog } from './create-project/create-project.dialog';
 import { ProjectRoutingModule } from './project-routing.module';
@@ -25,6 +26,7 @@ import { CommonModule } from '@angular/common';
     ],
     declarations: [
         ProjectsListComponent,
+        ProjectListItemComponent,
         CreateProjectDialog
     ],
     entryComponents: [
