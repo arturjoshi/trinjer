@@ -5,7 +5,7 @@
     <div *ngIf="isProjectsPresent()">
         <md-list *ngFor="let project of projectsArray">
             <md-list-item>
-                <project-list-item></project-list-item>
+                <project-list-item [project]="project"></project-list-item>
             </md-list-item>
         </md-list>
     </div>

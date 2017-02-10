@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Project } from './../../models/project.model';
+import { Component, Input } from '@angular/core';
 
 
 @Component({
@@ -6,4 +7,6 @@ import { Component } from '@angular/core';
     selector: 'project-list-item',
     templateUrl: 'project-list-item.template.html'
 })
-export class ProjectListItemComponent{}
+export class ProjectListItemComponent{
+    @Input() project:Project;
+}
