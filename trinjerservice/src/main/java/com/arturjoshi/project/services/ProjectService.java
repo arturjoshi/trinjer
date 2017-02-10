@@ -17,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by arturjoshi on 08-Jan-17.
@@ -38,6 +36,13 @@ public class ProjectService {
 
     @Autowired
     private ProjectAccountProfileRepository projectAccountProfileRepository;
+
+    public Set<Project> getAllAccountProjects(Long accountId) {
+        Set<Project> projects = new HashSet<>();
+        projects.addAll(accountRepository.findOne(accountId).getProjectOwned());
+        projects.addAll(accountRepository.findOne(accountId).getProjects());
+        return projects;
+    }
 
     public Project createProjectForUser(ProjectDto projectDto, Long accountId) {
         Account account = accountRepository.findOne(accountId);

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by arturjoshi on 09-Jan-17.
@@ -20,6 +21,11 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{accountId}/projects")
+    public Set<Project> getAllAccountProjects(@PathVariable Long accountId) {
+        return projectService.getAllAccountProjects(accountId);
+    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/createProject")
     public Project createProjectForUser(@RequestBody ProjectDto projectDto, @PathVariable Long accountId) {
