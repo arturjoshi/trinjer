@@ -1,13 +1,15 @@
-<div *ngIf="isProjectsPresent()">
-    <md-list *ngFor="let project of projectsArray">
-        <md-list-item>
-            {{ project.name }}
-        </md-list-item>
-    </md-list>
+<div class="project-list-wrp">
+    <button md-mini-fab (click)="openCreateProjectDialog()" class="add-fab-button">
+        <md-icon class="md-24">add</md-icon>
+    </button>
+    <div *ngIf="isProjectsPresent()">
+        <md-list *ngFor="let project of projectsArray">
+            <md-list-item>
+                {{ project.name }}
+            </md-list-item>
+        </md-list>
+    </div>
+    <div flex *ngIf="!isProjectsPresent()">
+        <p>There are no projects yet</p>
+    </div>
 </div>
-<div flex *ngIf="!isProjectsPresent()">
-    <p>There are no projects yet</p>
-</div>
-<button md-fab (click)="openCreateProjectDialog()">
-    <md-icon>add</md-icon>
-</button>

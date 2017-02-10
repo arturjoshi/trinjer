@@ -6,8 +6,10 @@ import { ProjectsService } from './../services/projects.service';
 import { Component } from '@angular/core';
 
 @Component({
+    moduleId: module.id,
     selector: 'projects-list',
-    templateUrl: 'app/cabinet/projects/projects-list/projects-list.template.html'
+    templateUrl: 'projects-list.template.html',
+    styleUrls: ['projects-list.css']
 })
 export class ProjectsListComponent {
     projectsArray: ProjectDTO[];
