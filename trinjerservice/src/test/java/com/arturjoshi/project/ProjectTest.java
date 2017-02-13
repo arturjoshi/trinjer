@@ -2,6 +2,7 @@ package com.arturjoshi.project;
 
 import com.arturjoshi.AbstractTest;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
+import com.arturjoshi.project.dto.ProjectInvitationDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -140,11 +141,12 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
+        ProjectInvitationDto projectInvitationDto = getInvitationDto(ACCOUNT_EMAIL + TMP_SUFFIX, null, null);
         mockMvc.perform(post("/api/" + ownerId + "/inviteProjectEmail/" +
-                projectId + "?email=" + (ACCOUNT_EMAIL + TMP_SUFFIX))
+                projectId)
                 .header(X_AUTH_TOKEN_HEADER, ownerToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(this.json(project)))
+                .content(this.json(projectInvitationDto)))
                 .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
                 .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
                 .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
@@ -278,11 +280,12 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
+        ProjectInvitationDto projectInvitationDto = getInvitationDto(ACCOUNT_EMAIL + TMP_SUFFIX, null, null);
         mockMvc.perform(post("/api/" + accountId + "/inviteProjectEmail/" +
-                projectId + "?email=" + ACCOUNT_EMAIL + TMP_SUFFIX)
+                projectId)
                 .header(X_AUTH_TOKEN_HEADER, accountToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(this.json(project)))
+                .content(this.json(projectInvitationDto)))
                 .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
                 .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
                 .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
@@ -444,12 +447,13 @@ public class ProjectTest extends AbstractTest {
 
         Integer inviteeId = getIdFromJson(applicantMvcResult.getResponse().getContentAsString());
 
+        ProjectInvitationDto projectInvitationDto = getInvitationDto(ACCOUNT_EMAIL + TMP_SUFFIX, null, null);
         String inviteeToken = createToken(invitee.getAccountFromDto());
         mockMvc.perform(post("/api/" + ownerId + "/inviteProjectEmail/" +
-                projectId + "?email=" + (ACCOUNT_EMAIL + TMP_SUFFIX))
+                projectId)
                 .header(X_AUTH_TOKEN_HEADER, ownerToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(this.json(project)))
+                .content(this.json(projectInvitationDto)))
                 .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
                 .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
                 .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
@@ -498,12 +502,13 @@ public class ProjectTest extends AbstractTest {
 
         Integer inviteeId = getIdFromJson(applicantMvcResult.getResponse().getContentAsString());
 
+        ProjectInvitationDto projectInvitationDto = getInvitationDto(ACCOUNT_EMAIL + TMP_SUFFIX, null, null);
         String inviteeToken = createToken(invitee.getAccountFromDto());
         mockMvc.perform(post("/api/" + ownerId + "/inviteProjectEmail/" +
-                projectId + "?email=" + (ACCOUNT_EMAIL + TMP_SUFFIX))
+                projectId)
                 .header(X_AUTH_TOKEN_HEADER, ownerToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(this.json(project)))
+                .content(this.json(projectInvitationDto)))
                 .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
                 .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
                 .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
@@ -614,11 +619,12 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
+        ProjectInvitationDto projectInvitationDto = getInvitationDto(ACCOUNT_EMAIL + TMP_SUFFIX, null, null);
         mockMvc.perform(post("/api/" + accountId + "/inviteProjectEmail/" +
-                projectId + "?email=" + (ACCOUNT_EMAIL + TMP_SUFFIX))
+                projectId)
                 .header(X_AUTH_TOKEN_HEADER, accountToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(this.json(project)))
+                .content(this.json(projectInvitationDto)))
                 .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
                 .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
                 .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))

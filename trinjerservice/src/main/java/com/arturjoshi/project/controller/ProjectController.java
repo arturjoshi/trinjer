@@ -4,6 +4,7 @@ import com.arturjoshi.project.Project;
 import com.arturjoshi.project.dto.ProjectAccountPermissionDto;
 import com.arturjoshi.project.dto.ProjectAccountProfileDto;
 import com.arturjoshi.project.dto.ProjectDto;
+import com.arturjoshi.project.dto.ProjectInvitationDto;
 import com.arturjoshi.project.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,9 +46,9 @@ public class ProjectController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/inviteProjectEmail/{projectId}")
-    public Project inviteProject(@RequestParam String email, @PathVariable Long accountId, @PathVariable Long projectId)
+    public Project inviteProject(@RequestBody ProjectInvitationDto projectInvitationDto, @PathVariable Long accountId, @PathVariable Long projectId)
             throws NotOwnedProjectException {
-        return projectService.inviteProject(email, accountId, projectId);
+        return projectService.inviteProject(projectInvitationDto, accountId, projectId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/joinProject/{projectId}")

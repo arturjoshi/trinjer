@@ -8,6 +8,7 @@ import com.arturjoshi.project.controller.ProjectIsNotVisibleException;
 import com.arturjoshi.project.dto.ProjectAccountPermissionDto;
 import com.arturjoshi.project.dto.ProjectAccountProfileDto;
 import com.arturjoshi.project.dto.ProjectDto;
+import com.arturjoshi.project.dto.ProjectInvitationDto;
 import com.arturjoshi.project.entities.ProjectAccountPermission;
 import com.arturjoshi.project.entities.ProjectAccountProfile;
 import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
@@ -50,8 +51,8 @@ public class ProjectService {
         project.setProjectOwner(account);
         projectRepository.save(project);
 
-        projectAccountPermissionRepository.save(initDefaultProjectOwnerPermissions(account, project));
-        projectAccountProfileRepository.save(initDefaultProjectOwnerProfile(account, project));
+        projectAccountPermissionRepository.save(initProjectPermissions(account, project));
+        projectAccountProfileRepository.save(initProjectProfile(account, project));
         return project;
     }
 
@@ -71,11 +72,11 @@ public class ProjectService {
     }
 
     @PreAuthorize("@projectPermissionsEvaluator.isAllowedForProject(#accountId, #projectId, 'MASTER')")
-    public Project inviteProject(String email, Long accountId, Long projectId) {
+    public Project inviteProject(ProjectInvitationDto projectInvitationDto, Long accountId, Long projectId) {
         Project project = projectRepository.findOne(projectId);
-        Account invitee = accountRepository.findByEmail(email);
-        return invitee == null ? inviteNewAccount(email, project) :
-                inviteExistingAccount(invitee, project);
+        Account invitee = accountRepository.findByEmail(projectInvitationDto.getEmail());
+        return invitee == null ? inviteNewAccount(projectInvitationDto, project) :
+                inviteExistingAccount(projectInvitationDto, project);
     }
 
     public Project joinProjectRequest(Long accountId, Long projectId) throws ProjectIsNotVisibleException {
@@ -166,33 +167,55 @@ public class ProjectService {
         return profiles;
     }
 
-    private Project inviteNewAccount(String email, Project project) {
+    private Project inviteNewAccount(ProjectInvitationDto projectInvitationDto, Project project) {
         Account account = new Account();
-        account.setEmail(email);
+        account.setEmail(projectInvitationDto.getEmail());
         account.setIsTemp(true);
         accountRepository.save(account);
         project.getOutboxInvitations().add(account);
-        return projectRepository.save(project);
+        projectRepository.save(project);
+
+        projectAccountPermissionRepository.save(initProjectPermissions(account, project, projectInvitationDto.getPermission()));
+        projectAccountProfileRepository.save(initProjectProfile(account, project, projectInvitationDto.getProfile()));
+
+        return project;
     }
 
-    private Project inviteExistingAccount(Account account, Project project) {
+    private Project inviteExistingAccount(ProjectInvitationDto projectInvitationDto, Project project) {
+        Account account = accountRepository.findByEmail(projectInvitationDto.getEmail());
         project.getOutboxInvitations().add(account);
-        return projectRepository.save(project);
+        projectRepository.save(project);
+
+        projectAccountPermissionRepository.save(initProjectPermissions(account, project, projectInvitationDto.getPermission()));
+        projectAccountProfileRepository.save(initProjectProfile(account, project, projectInvitationDto.getProfile()));
+
+        return project;
     }
 
-    public ProjectAccountPermission initDefaultProjectOwnerPermissions(Account owner, Project project) {
+    private ProjectAccountPermission initProjectPermissions(Account owner, Project project) {
+        return initProjectPermissions(owner, project, ProjectAccountPermission.ProjectPermission.OWNER);
+    }
+
+    private ProjectAccountProfile initProjectProfile(Account owner, Project project) {
+        return initProjectProfile(owner, project, ProjectAccountProfile.ProjectProfile.MANAGER);
+    }
+
+    private ProjectAccountPermission initProjectPermissions(Account account, Project project,
+                                                            ProjectAccountPermission.ProjectPermission projectPermission) {
         ProjectAccountPermission permission = new ProjectAccountPermission();
-        permission.setAccount(owner);
+        permission.setAccount(account);
         permission.setProject(project);
-        permission.setProjectPermission(ProjectAccountPermission.ProjectPermission.OWNER);
+        permission.setProjectPermission(Optional.ofNullable(projectPermission)
+                .orElse(ProjectAccountPermission.ProjectPermission.MEMBER));
         return permission;
     }
 
-    public ProjectAccountProfile initDefaultProjectOwnerProfile(Account owner, Project project) {
+    private ProjectAccountProfile initProjectProfile(Account owner, Project project,
+                                                     ProjectAccountProfile.ProjectProfile projectProfile) {
         ProjectAccountProfile profile = new ProjectAccountProfile();
         profile.setAccount(owner);
         profile.setProject(project);
-        profile.setProjectProfile(ProjectAccountProfile.ProjectProfile.MANAGER);
+        profile.setProjectProfile(Optional.ofNullable(projectProfile).orElse(ProjectAccountProfile.ProjectProfile.DEVELOPER));
         return profile;
     }
 }

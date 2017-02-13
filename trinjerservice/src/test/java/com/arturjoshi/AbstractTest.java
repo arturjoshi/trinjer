@@ -7,6 +7,9 @@ import com.arturjoshi.authentication.StatelessAuthenticationFilter;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
 import com.arturjoshi.authentication.token.TokenHandler;
 import com.arturjoshi.project.Project;
+import com.arturjoshi.project.dto.ProjectInvitationDto;
+import com.arturjoshi.project.entities.ProjectAccountPermission;
+import com.arturjoshi.project.entities.ProjectAccountProfile;
 import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
 import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
 import com.arturjoshi.project.repository.ProjectRepository;
@@ -27,10 +30,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.servlet.Filter;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -142,6 +142,18 @@ public abstract class AbstractTest implements TestConst {
         story.setStatus(STORY_STATUS);
         story.setEstimate(STORY_ESTIMATE);
         return story;
+    }
+
+    protected ProjectInvitationDto getInvitationDto(String email,
+                                                    ProjectAccountPermission.ProjectPermission projectPermission,
+                                                    ProjectAccountProfile.ProjectProfile projectProfile) {
+        ProjectInvitationDto projectInvitationDto = new ProjectInvitationDto();
+        projectInvitationDto.setEmail(email);
+        projectInvitationDto.setPermission(Optional.ofNullable(projectPermission)
+                .orElse(ProjectAccountPermission.ProjectPermission.MEMBER));
+        projectInvitationDto.setProfile(Optional.ofNullable(projectProfile)
+                .orElse(ProjectAccountProfile.ProjectProfile.DEVELOPER));
+        return projectInvitationDto;
     }
 
     protected String createToken(Account account) {
