@@ -1,7 +1,5 @@
 package com.arturjoshi.project.dto;
 
-import com.arturjoshi.project.entities.ProjectAccountPermission;
-import com.arturjoshi.project.entities.ProjectAccountProfile;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,8 +8,6 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @Data
-public class ProjectInvitationDto {
+public class ProjectInvitationDto extends ProjectPermissionProfileDto {
     private String email;
-    private ProjectAccountPermission.ProjectPermission permission;
-    private ProjectAccountProfile.ProjectProfile profile;
 }

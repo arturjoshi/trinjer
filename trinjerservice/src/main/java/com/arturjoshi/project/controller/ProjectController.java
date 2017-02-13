@@ -1,10 +1,8 @@
 package com.arturjoshi.project.controller;
 
+import com.arturjoshi.account.Account;
 import com.arturjoshi.project.Project;
-import com.arturjoshi.project.dto.ProjectAccountPermissionDto;
-import com.arturjoshi.project.dto.ProjectAccountProfileDto;
-import com.arturjoshi.project.dto.ProjectDto;
-import com.arturjoshi.project.dto.ProjectInvitationDto;
+import com.arturjoshi.project.dto.*;
 import com.arturjoshi.project.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -94,6 +92,14 @@ public class ProjectController {
             value = "/projectAccountProfiles/search/findByProjectId")
     public List<ProjectAccountProfileDto> findProjectAccountProfilesByProject(@RequestParam Long projectId) {
         return projectService.findProjectAccountProfilesByProject(projectId);
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH,
+            value = "/{accountId}/project/{projectId}/updatePermissionProfile/{memberId}")
+    public void updateMemberPermissionProfile(@PathVariable Long accountId, @PathVariable Long projectId,
+                                                 @PathVariable Long memberId,
+                                                 @RequestBody ProjectPermissionProfileDto projectPermissionProfileDto) {
+        projectService.updateMemberPermissionProfile(accountId, projectId, memberId, projectPermissionProfileDto);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

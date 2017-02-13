@@ -5,10 +5,7 @@ import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.project.Project;
 import com.arturjoshi.project.controller.NotInProjectInvitationsException;
 import com.arturjoshi.project.controller.ProjectIsNotVisibleException;
-import com.arturjoshi.project.dto.ProjectAccountPermissionDto;
-import com.arturjoshi.project.dto.ProjectAccountProfileDto;
-import com.arturjoshi.project.dto.ProjectDto;
-import com.arturjoshi.project.dto.ProjectInvitationDto;
+import com.arturjoshi.project.dto.*;
 import com.arturjoshi.project.entities.ProjectAccountPermission;
 import com.arturjoshi.project.entities.ProjectAccountProfile;
 import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
@@ -165,6 +162,18 @@ public class ProjectService {
             ));
         }
         return profiles;
+    }
+
+    @PreAuthorize("@projectPermissionsEvaluator.isAllowedForProject(#accountId, #projectId, 'OWNER')")
+    public void updateMemberPermissionProfile(Long accountId, Long projectId, Long memberId,
+                                                 ProjectPermissionProfileDto projectPermissionProfileDto) {
+        Account member = accountRepository.findOne(memberId);
+        ProjectAccountPermission permission = projectAccountPermissionRepository.findByAccount(member);
+        ProjectAccountProfile profile = projectAccountProfileRepository.findByAccount(member);
+        permission.setProjectPermission(projectPermissionProfileDto.getPermission());
+        profile.setProjectProfile(projectPermissionProfileDto.getProfile());
+        projectAccountPermissionRepository.save(permission);
+        projectAccountProfileRepository.save(profile);
     }
 
     private Project inviteNewAccount(ProjectInvitationDto projectInvitationDto, Project project) {
