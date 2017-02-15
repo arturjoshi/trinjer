@@ -4,6 +4,7 @@ import {Serializable} from "./serialization.interface";
  */
 
 export interface ProjectDTO extends Serializable{
+    id: number;
     name: string;
     isVisible: boolean;
 }

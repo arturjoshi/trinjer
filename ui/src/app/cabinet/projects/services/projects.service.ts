@@ -49,7 +49,7 @@ export class ProjectsService{
         let projects: Project[] = [];
 
         for(let item of json){
-            let project = new Project(item['name'], item['isVisible']);
+            let project = new Project(item['id'], item['name'], item['isVisible']);
             projects.push(project);
         }
 

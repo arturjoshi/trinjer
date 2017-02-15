@@ -30,7 +30,7 @@ export class CreateProjectDialog{
         private projectsService: ProjectsService,
         private formBuilder: FormBuilder
     ){
-        this.project = new Project('', true);
+        this.project = new Project(0, '', true);
 
         this.projectForm = this.formBuilder.group({
             'projectName': [this.project.name, [Validators.required]],
