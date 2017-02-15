@@ -25,7 +25,8 @@ const path = {
 const tsConfig = {
     app: path.app + 'tsconfig.json'
 };
-const project = ts.createProject(tsConfig.app);
+const srcProject = ts.createProject(tsConfig.app);
+const testProject = ts.createProject(tsConfig.app);
 
 
 gulp.task('clean', function(){
@@ -34,7 +35,7 @@ gulp.task('clean', function(){
 
 gulp.task('build-ts', function(){
     return gulp.src(path.ts)
-        .pipe(project())
+        .pipe(srcProject())
         .pipe(gulp.dest(path.buildSrc))
         .pipe(browserSync.stream());
 });
@@ -66,7 +67,7 @@ gulp.task('build-src', function(){
 
 gulp.task('build-test', function(){
     return gulp.src(path.test + "**/*.spec.ts")
-        .pipe(project())
+        .pipe(testProject())
         .pipe(gulp.dest(path.build + "/test/"));
 });
 
