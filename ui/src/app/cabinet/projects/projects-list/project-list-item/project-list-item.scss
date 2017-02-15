@@ -1,0 +1,23 @@
+span{
+    color: #777;
+}
+
+md-list-item{
+    padding: 10px 30px;
+}
+
+.project-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+
+    .info-container{
+        display: flex;
+        align-content: center;
+        justify-content: center;
+
+        flex-direction: column;
+    }
+
+}
