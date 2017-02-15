@@ -2,6 +2,7 @@ package com.arturjoshi.project;
 
 import com.arturjoshi.AbstractTest;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
+import com.arturjoshi.project.dto.ProjectInvitationDto;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +14,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,6 +48,74 @@ public class ProjectTest extends AbstractTest {
     }
 
     @Test
+    public void updateProjectTest() throws Exception {
+        AccountRegistrationDto account = getDefaultTestAccount();
+        MvcResult accountMvcResult = mockMvc.perform(post("/api/register/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Integer accountId = getIdFromJson(accountMvcResult.getResponse().getContentAsString());
+
+        Project project = getDefaultProject();
+        MvcResult projectMvcResult = mockMvc.perform(post("/api/" + accountId + "/createProject")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(project)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
+                .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
+                .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
+                .andExpect(jsonPath("$.projectOwner.email", is(ACCOUNT_EMAIL)))
+                .andReturn();
+
+        project.setName(PROJECT_NAME_UPDATED);
+        project.setIsVisible(NON_VISIBLE_PROJECT);
+        Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
+
+        String accountToken = createToken(account.getAccountFromDto());
+        mockMvc.perform(post("/api/" + accountId + "/updateProject/" + projectId)
+                .header(X_AUTH_TOKEN_HEADER, accountToken)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(project)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(PROJECT_NAME_UPDATED)))
+                .andExpect(jsonPath("$.isVisible", is(NON_VISIBLE_PROJECT)))
+                .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
+                .andExpect(jsonPath("$.projectOwner.email", is(ACCOUNT_EMAIL)));
+    }
+
+    @Test
+    public void deleteProjectTest() throws Exception {
+        AccountRegistrationDto account = getDefaultTestAccount();
+        MvcResult accountMvcResult = mockMvc.perform(post("/api/register/")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(account)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        Integer accountId = getIdFromJson(accountMvcResult.getResponse().getContentAsString());
+
+        Project project = getDefaultProject();
+        MvcResult projectMvcResult = mockMvc.perform(post("/api/" + accountId + "/createProject")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(this.json(project)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
+                .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
+                .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
+                .andExpect(jsonPath("$.projectOwner.email", is(ACCOUNT_EMAIL)))
+                .andReturn();
+
+        Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
+
+        String accountToken = createToken(account.getAccountFromDto());
+        mockMvc.perform(delete("/api/" + accountId + "/deleteProject/" + projectId)
+                .header(X_AUTH_TOKEN_HEADER, accountToken))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void inviteToProject() throws Exception {
         AccountRegistrationDto owner = getDefaultTestAccount();
         MvcResult accountMvcResult = mockMvc.perform(post("/api/register/")
@@ -71,17 +141,18 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
+        ProjectInvitationDto projectInvitationDto = getInvitationDto(ACCOUNT_EMAIL + TMP_SUFFIX, null, null);
         mockMvc.perform(post("/api/" + ownerId + "/inviteProjectEmail/" +
-                projectId + "?email=" + (ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX))
+                projectId)
                 .header(X_AUTH_TOKEN_HEADER, ownerToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(this.json(project)))
+                .content(this.json(projectInvitationDto)))
                 .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
                 .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
                 .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
                 .andExpect(jsonPath("$.projectOwner.email", is(ACCOUNT_EMAIL)));
 
-        AccountRegistrationDto invitee = getDefaultTestAccount(TMP_ACCOUNT_SUFFIX);
+        AccountRegistrationDto invitee = getDefaultTestAccount(TMP_SUFFIX);
         MvcResult applicantMvcResult = mockMvc.perform(post("/api/register/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(invitee)))
@@ -124,7 +195,7 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
-        AccountRegistrationDto applicant = getDefaultTestAccount(TMP_ACCOUNT_SUFFIX);
+        AccountRegistrationDto applicant = getDefaultTestAccount(TMP_SUFFIX);
         MvcResult applicantMvcResult = mockMvc.perform(post("/api/register/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(applicant)))
@@ -146,8 +217,8 @@ public class ProjectTest extends AbstractTest {
                 .header(X_AUTH_TOKEN_HEADER, applicantToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.accounts[0].id", is(applicantId)))
-                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_ACCOUNT_SUFFIX)))
-                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX)));
+                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_SUFFIX)))
+                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_SUFFIX)));
     }
 
     @Test
@@ -209,11 +280,12 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
+        ProjectInvitationDto projectInvitationDto = getInvitationDto(ACCOUNT_EMAIL + TMP_SUFFIX, null, null);
         mockMvc.perform(post("/api/" + accountId + "/inviteProjectEmail/" +
-                projectId + "?email=" + ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX)
+                projectId)
                 .header(X_AUTH_TOKEN_HEADER, accountToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(this.json(project)))
+                .content(this.json(projectInvitationDto)))
                 .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
                 .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
                 .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
@@ -223,7 +295,7 @@ public class ProjectTest extends AbstractTest {
                 .header(X_AUTH_TOKEN_HEADER, accountToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.accounts[0].username", isEmptyOrNullString()))
-                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX)));
+                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_SUFFIX)));
     }
 
     @Test
@@ -252,7 +324,7 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
-        AccountRegistrationDto applicant = getDefaultTestAccount(TMP_ACCOUNT_SUFFIX);
+        AccountRegistrationDto applicant = getDefaultTestAccount(TMP_SUFFIX);
         MvcResult applicantMvcResult = mockMvc.perform(post("/api/register/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(applicant)))
@@ -274,8 +346,8 @@ public class ProjectTest extends AbstractTest {
                 .header(X_AUTH_TOKEN_HEADER, applicantToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.accounts[0].id", is(applicantId)))
-                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_ACCOUNT_SUFFIX)))
-                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX)));
+                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_SUFFIX)))
+                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_SUFFIX)));
 
         mockMvc.perform(post("/api/" + ownerId + "/confirmProjectInboxInvitation/" + projectId + "/" + applicantId)
                 .header(X_AUTH_TOKEN_HEADER, ownerToken))
@@ -284,8 +356,8 @@ public class ProjectTest extends AbstractTest {
         mockMvc.perform(get("/api/projects/" + projectId + "/members")
                 .header(X_AUTH_TOKEN_HEADER, ownerToken))
                 .andExpect(jsonPath("$._embedded.accounts[0].id", is(applicantId)))
-                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_ACCOUNT_SUFFIX)))
-                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX)));
+                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_SUFFIX)))
+                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_SUFFIX)));
     }
 
     @Test
@@ -314,7 +386,7 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
-        AccountRegistrationDto applicant = getDefaultTestAccount(TMP_ACCOUNT_SUFFIX);
+        AccountRegistrationDto applicant = getDefaultTestAccount(TMP_SUFFIX);
         MvcResult applicantMvcResult = mockMvc.perform(post("/api/register/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(applicant)))
@@ -366,7 +438,7 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
-        AccountRegistrationDto invitee = getDefaultTestAccount(TMP_ACCOUNT_SUFFIX);
+        AccountRegistrationDto invitee = getDefaultTestAccount(TMP_SUFFIX);
         MvcResult applicantMvcResult = mockMvc.perform(post("/api/register/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(invitee)))
@@ -375,12 +447,13 @@ public class ProjectTest extends AbstractTest {
 
         Integer inviteeId = getIdFromJson(applicantMvcResult.getResponse().getContentAsString());
 
+        ProjectInvitationDto projectInvitationDto = getInvitationDto(ACCOUNT_EMAIL + TMP_SUFFIX, null, null);
         String inviteeToken = createToken(invitee.getAccountFromDto());
         mockMvc.perform(post("/api/" + ownerId + "/inviteProjectEmail/" +
-                projectId + "?email=" + (ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX))
+                projectId)
                 .header(X_AUTH_TOKEN_HEADER, ownerToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(this.json(project)))
+                .content(this.json(projectInvitationDto)))
                 .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
                 .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
                 .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
@@ -420,7 +493,7 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
-        AccountRegistrationDto invitee = getDefaultTestAccount(TMP_ACCOUNT_SUFFIX);
+        AccountRegistrationDto invitee = getDefaultTestAccount(TMP_SUFFIX);
         MvcResult applicantMvcResult = mockMvc.perform(post("/api/register/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(invitee)))
@@ -429,12 +502,13 @@ public class ProjectTest extends AbstractTest {
 
         Integer inviteeId = getIdFromJson(applicantMvcResult.getResponse().getContentAsString());
 
+        ProjectInvitationDto projectInvitationDto = getInvitationDto(ACCOUNT_EMAIL + TMP_SUFFIX, null, null);
         String inviteeToken = createToken(invitee.getAccountFromDto());
         mockMvc.perform(post("/api/" + ownerId + "/inviteProjectEmail/" +
-                projectId + "?email=" + (ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX))
+                projectId)
                 .header(X_AUTH_TOKEN_HEADER, ownerToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(this.json(project)))
+                .content(this.json(projectInvitationDto)))
                 .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
                 .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
                 .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
@@ -454,8 +528,8 @@ public class ProjectTest extends AbstractTest {
         mockMvc.perform(get("/api/projects/" + projectId + "/members")
                 .header(X_AUTH_TOKEN_HEADER, ownerToken))
                 .andExpect(jsonPath("$._embedded.accounts[0].id", is(inviteeId)))
-                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_ACCOUNT_SUFFIX)))
-                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX)));
+                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_SUFFIX)))
+                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_SUFFIX)));
     }
 
     @Test
@@ -484,7 +558,7 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
-        AccountRegistrationDto applicant = getDefaultTestAccount(TMP_ACCOUNT_SUFFIX);
+        AccountRegistrationDto applicant = getDefaultTestAccount(TMP_SUFFIX);
         MvcResult applicantMvcResult = mockMvc.perform(post("/api/register/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(applicant)))
@@ -506,8 +580,8 @@ public class ProjectTest extends AbstractTest {
                 .header(X_AUTH_TOKEN_HEADER, applicantToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.accounts[0].id", is(applicantId)))
-                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_ACCOUNT_SUFFIX)))
-                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX)));
+                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_SUFFIX)))
+                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_SUFFIX)));
 
         mockMvc.perform(post("/api/" + ownerId + "/refuseProjectInboxInvitation/" + projectId + "/" + applicantId)
                 .header(X_AUTH_TOKEN_HEADER, ownerToken))
@@ -545,17 +619,18 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
+        ProjectInvitationDto projectInvitationDto = getInvitationDto(ACCOUNT_EMAIL + TMP_SUFFIX, null, null);
         mockMvc.perform(post("/api/" + accountId + "/inviteProjectEmail/" +
-                projectId + "?email=" + (ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX))
+                projectId)
                 .header(X_AUTH_TOKEN_HEADER, accountToken)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(this.json(project)))
+                .content(this.json(projectInvitationDto)))
                 .andExpect(jsonPath("$.name", is(PROJECT_NAME)))
                 .andExpect(jsonPath("$.isVisible", is(VISIBLE_PROJECT)))
                 .andExpect(jsonPath("$.projectOwner.username", is(ACCOUNT_USERNAME)))
                 .andExpect(jsonPath("$.projectOwner.email", is(ACCOUNT_EMAIL)));
 
-        AccountRegistrationDto invitee = getDefaultTestAccount(TMP_ACCOUNT_SUFFIX);
+        AccountRegistrationDto invitee = getDefaultTestAccount(TMP_SUFFIX);
         MvcResult inviteeMvcResult = mockMvc.perform(post("/api/register/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(invitee)))
@@ -608,7 +683,7 @@ public class ProjectTest extends AbstractTest {
 
         Integer projectId = getIdFromJson(projectMvcResult.getResponse().getContentAsString());
 
-        AccountRegistrationDto applicant = getDefaultTestAccount(TMP_ACCOUNT_SUFFIX);
+        AccountRegistrationDto applicant = getDefaultTestAccount(TMP_SUFFIX);
         MvcResult applicantMvcResult = mockMvc.perform(post("/api/register/")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(this.json(applicant)))
@@ -630,8 +705,8 @@ public class ProjectTest extends AbstractTest {
                 .header(X_AUTH_TOKEN_HEADER, applicantToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.accounts[0].id", is(applicantId)))
-                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_ACCOUNT_SUFFIX)))
-                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX)));
+                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_SUFFIX)))
+                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_SUFFIX)));
 
         mockMvc.perform(post("/api/" + ownerId + "/confirmProjectInboxInvitation/" + projectId + "/" + applicantId)
                 .header(X_AUTH_TOKEN_HEADER, ownerToken))
@@ -640,8 +715,8 @@ public class ProjectTest extends AbstractTest {
         mockMvc.perform(get("/api/projects/" + projectId + "/members")
                 .header(X_AUTH_TOKEN_HEADER, ownerToken))
                 .andExpect(jsonPath("$._embedded.accounts[0].id", is(applicantId)))
-                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_ACCOUNT_SUFFIX)))
-                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_ACCOUNT_SUFFIX)));
+                .andExpect(jsonPath("$._embedded.accounts[0].username", is(ACCOUNT_USERNAME + TMP_SUFFIX)))
+                .andExpect(jsonPath("$._embedded.accounts[0].email", is(ACCOUNT_EMAIL + TMP_SUFFIX)));
 
         mockMvc.perform(post("/api/" + ownerId + "/kickFromProject/" + projectId + "/" + applicantId)
                 .header(X_AUTH_TOKEN_HEADER, ownerToken))

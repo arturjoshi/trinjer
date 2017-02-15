@@ -3,14 +3,19 @@ package com.arturjoshi;
 import com.arturjoshi.account.Account;
 import com.arturjoshi.account.repository.AccountRepository;
 import com.arturjoshi.authentication.AccountDetails;
+import com.arturjoshi.authentication.StatelessAuthenticationFilter;
 import com.arturjoshi.authentication.dto.AccountRegistrationDto;
 import com.arturjoshi.authentication.token.TokenHandler;
-import com.arturjoshi.milestones.Milestone;
-import com.arturjoshi.milestones.repository.MilestoneRepository;
 import com.arturjoshi.project.Project;
+import com.arturjoshi.project.dto.ProjectInvitationDto;
+import com.arturjoshi.project.entities.ProjectAccountPermission;
+import com.arturjoshi.project.entities.ProjectAccountProfile;
 import com.arturjoshi.project.repository.ProjectAccountPermissionRepository;
 import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
 import com.arturjoshi.project.repository.ProjectRepository;
+import com.arturjoshi.sprint.Sprint;
+import com.arturjoshi.sprint.repository.SprintRepository;
+import com.arturjoshi.ticket.story.Story;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
 import org.junit.Before;
@@ -22,11 +27,10 @@ import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.Filter;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
@@ -49,7 +53,7 @@ public abstract class AbstractTest implements TestConst {
     private ProjectRepository projectRepository;
 
     @Autowired
-    private MilestoneRepository milestoneRepository;
+    private SprintRepository sprintRepository;
 
     @Autowired
     private ProjectAccountPermissionRepository projectAccountPermissionRepository;
@@ -67,8 +71,10 @@ public abstract class AbstractTest implements TestConst {
 
     @Before
     public void setup() {
-        this.mockMvc = webAppContextSetup(webApplicationContext).build();
-        milestoneRepository.deleteAll();
+        Collection<StatelessAuthenticationFilter> filterCollection = webApplicationContext.getBeansOfType(StatelessAuthenticationFilter.class).values();
+        Filter[] filters = filterCollection.toArray(new Filter[filterCollection.size()]);
+        this.mockMvc = webAppContextSetup(webApplicationContext).addFilters(filters).build();
+        sprintRepository.deleteAll();
         projectAccountPermissionRepository.deleteAll();
         projectAccountProfileRepository.deleteAll();
         projectRepository.deleteAll();
@@ -77,7 +83,7 @@ public abstract class AbstractTest implements TestConst {
 
     @After
     public void clean() {
-        milestoneRepository.deleteAll();
+        sprintRepository.deleteAll();
         projectAccountPermissionRepository.deleteAll();
         projectAccountProfileRepository.deleteAll();
         projectRepository.deleteAll();
@@ -119,13 +125,35 @@ public abstract class AbstractTest implements TestConst {
         return project;
     }
 
-    protected Milestone getDefaultMilestone(Milestone.MilestoneType milestoneType) {
-        Milestone milestone = new Milestone();
-        milestone.setDescription(MILESTONE_DESCRIPTION);
-        milestone.setType(milestoneType);
-        milestone.setStartDate(LocalDate.now());
-        milestone.setEndDate(LocalDate.now().plusWeeks(1));
-        return milestone;
+    protected Sprint getDefaultSprint() {
+        Sprint sprint = new Sprint();
+        sprint.setDescription(SPRINT_DESCRIPTION);
+        sprint.setStartDate(LocalDate.now());
+        sprint.setEndDate(LocalDate.now().plusWeeks(1));
+        return sprint;
+    }
+
+    protected Story getDefaultStory() {
+        Story story = new Story();
+        story.setDescription(STORY_DESCRIPTION);
+        story.setSummary(STORY_SUMMARY);
+        story.setAcceptanceCriteria(STORY_ACCEPTANCE_CRITERIA);
+        story.setPriority(STORY_PRIORITY);
+        story.setStatus(STORY_STATUS);
+        story.setEstimate(STORY_ESTIMATE);
+        return story;
+    }
+
+    protected ProjectInvitationDto getInvitationDto(String email,
+                                                    ProjectAccountPermission.ProjectPermission projectPermission,
+                                                    ProjectAccountProfile.ProjectProfile projectProfile) {
+        ProjectInvitationDto projectInvitationDto = new ProjectInvitationDto();
+        projectInvitationDto.setEmail(email);
+        projectInvitationDto.setPermission(Optional.ofNullable(projectPermission)
+                .orElse(ProjectAccountPermission.ProjectPermission.MEMBER));
+        projectInvitationDto.setProfile(Optional.ofNullable(projectProfile)
+                .orElse(ProjectAccountProfile.ProjectProfile.DEVELOPER));
+        return projectInvitationDto;
     }
 
     protected String createToken(Account account) {
