@@ -22,12 +22,14 @@ export class ProjectsService{
 
         this.accountService.account.subscribe((account: IAccount) => {
             this.account = account;
-            this.getProjectsFromBackend().subscribe();
+            this.getProjectsFromBackend().subscribe(() => {
+                this.sendNotification();
+            });
         });
     }
 
     private getProjectsFromBackend(): Observable<ProjectDTO[]>{
-        let url = "accounts/" + this.account.id + "/projects";
+        let url = "" + this.account.id + "/projects";
 
         return Observable.create((observer: Observer<ProjectDTO[]>) => {
             this.httpUtils.makeGet(url)
@@ -46,8 +48,7 @@ export class ProjectsService{
 
         let projects: Project[] = [];
 
-        for(let item of json._embedded.projects){
-            item = JSON.parse(item);
+        for(let item of json){
             let project = new Project(item['name'], item['isVisible']);
             projects.push(project);
         }

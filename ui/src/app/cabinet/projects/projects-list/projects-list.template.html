@@ -1,18 +1,31 @@
 <div class="project-list-wrp">
-    <button md-mini-fab (click)="openCreateProjectDialog()" class="add-fab-button">
-        <md-icon class="md-24">add</md-icon>
+    <button md-fab (click)="openCreateProjectDialog()" class="add-fab-button">
+        <md-icon>add</md-icon>
     </button>
-    <div *ngIf="isProjectsPresent()">
+    <div *ngIf="isProjectsPresent()" class="project-list">
         <md-list *ngFor="let project of projectsArray">
             <md-list-item>
-                <div class="project-item">
-                    <span class="name">
-                        {{project.name}}
-                    </span>
-                    <button md-mini-fab (click)="openProjectSettings(project)">
-                        <md-icon class="md-24">settings</md-icon>
+                <md-icon md-list-avatar>
+                    insert_photo
+                </md-icon>
+
+                <div class="project-container">
+                    <div class="info-container" md-line>
+                        <span class="name">
+                            {{project.name}}
+                        </span>
+                        <span class="description">
+                            Some description
+                        </span>
+                    </div>
+
+                    <button md-mini-fab color="primary" (click)="openProjectSettings(project)">
+                        <md-icon>
+                            settings
+                        </md-icon>
                     </button>
                 </div>
+                <md-divider></md-divider>
             </md-list-item>
         </md-list>
     </div>
