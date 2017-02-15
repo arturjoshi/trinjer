@@ -3,37 +3,40 @@
         <md-icon>add</md-icon>
     </button>
     <div *ngIf="isProjectsPresent()" class="project-list">
-        <md-list *ngFor="let project of projectsArray">
-            <md-list-item>
-                <md-icon md-list-avatar>
-                    insert_photo
-                </md-icon>
+        <md-list>
+            <div *ngFor="let project of projectsArray">
+                <md-list-item>
+                    <md-icon md-list-avatar>
+                        insert_photo
+                    </md-icon>
 
-                <div class="project-container">
-                    <div class="info-container" md-line>
-                        <span class="name">
-                            {{project.name}}
-                        </span>
-                        <span class="description">
-                            Some description
-                        </span>
-                    </div>
-                    
-                    <div class="actions">
-                        <button md-mini-fab class="invite-fab" color="primary" (click)="openInviteProjectDialog(project)">
-                            <md-icon>
-                                exposure_plus_1
-                            </md-icon>
-                        </button>
+                    <div class="project-container">
+                        <div class="info-container" md-line>
+                            <span class="name">
+                                {{project.name}}
+                            </span>
+                            <span class="description">
+                                Some description
+                            </span>
+                        </div>
+                        
+                        <div class="actions">
+                            <button md-mini-fab class="invite-fab" color="primary" (click)="openInviteProjectDialog(project)">
+                                <md-icon>
+                                    person_add
+                                </md-icon>
+                            </button>
 
-                        <button md-mini-fab class="settings-fab" color="primary" (click)="openProjectSettings(project)">
-                            <md-icon>
-                                settings
-                            </md-icon>
-                        </button>
+                            <button md-mini-fab class="settings-fab" color="primary" (click)="openProjectSettings(project)">
+                                <md-icon>
+                                    settings
+                                </md-icon>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </md-list-item>
+                </md-list-item>
+                <md-divider></md-divider>
+            </div>
         </md-list>
     </div>
     <div flex *ngIf="!isProjectsPresent()">
