@@ -19,11 +19,19 @@
                         </span>
                     </div>
                     
-                    <button md-mini-fab class="settings-fab" color="primary" (click)="openProjectSettings(project)">
-                        <md-icon>
-                            settings
-                        </md-icon>
-                    </button>
+                    <div class="actions">
+                        <button md-mini-fab class="invite-fab" color="primary" (click)="openInviteProjectDialog(project)">
+                            <md-icon>
+                                exposure_plus_1
+                            </md-icon>
+                        </button>
+
+                        <button md-mini-fab class="settings-fab" color="primary" (click)="openProjectSettings(project)">
+                            <md-icon>
+                                settings
+                            </md-icon>
+                        </button>
+                    </div>
                 </div>
             </md-list-item>
         </md-list>

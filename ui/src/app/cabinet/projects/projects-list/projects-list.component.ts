@@ -35,4 +35,8 @@ export class ProjectsListComponent {
     openProjectSettings(project: ProjectDTO){
         console.log("Open settings to project: " + project.serialize());
     }
+
+    openInviteProjectDialog(project: ProjectDTO){
+        console.log("Open invitions to project: " + project.serialize())
+    }
 }
