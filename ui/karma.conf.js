@@ -1,7 +1,7 @@
 /**
  * Created by xoll on 06.01.2017.
  */
-module.exports = function(config){
+module.exports = function (config) {
 
     var appBase = 'dist/'; //transpiled js and map files
     var appSrcBase = 'dist/'; //sources ts files
@@ -13,10 +13,12 @@ module.exports = function(config){
 
     config.set({
         basePath: '',
-        frameworks: ['jasmine'],
+        frameworks: ['jasmine', 'es6-shim'],
 
         plugins: [
             require('karma-jasmine'),
+            require('karma-es6-shim'),
+            require('karma-phantomjs-launcher'),
             require('karma-chrome-launcher'),
             require('karma-jasmine-html-reporter')
         ],
@@ -30,12 +32,29 @@ module.exports = function(config){
             Chrome_travis_ci: {
                 base: 'Chrome',
                 flags: ['--no-sandbox']
+            },
+            PhantomJS_custom: {
+                base: 'PhantomJS',
+                options: {
+                    windowName: 'my-window',
+                    settings: {
+                        webSecurityEnabled: false
+                    },
+                },
+                flags: ['--load-images=true'],
+                debug: true
             }
+        },
+
+        phantomjsLauncher: {
+            // Have phantomjs exit if a ResourceError is encountered (useful if karma exits without killing phantom)
+            exitOnResourceError: true
         },
 
         files: [
             //Systemjs
             'node_modules/systemjs/dist/system.src.js',
+            'node_modules/systemjs/dist/system-polyfills.js',
 
             // Polyfills
             'node_modules/core-js/client/shim.js',
@@ -76,7 +95,7 @@ module.exports = function(config){
             { pattern: appSrcBase + '**/*.ts', included: false, watched: false },
             { pattern: appBase + '**/*.js.map', included: false, watched: false },
             { pattern: testingSrcBase + '**/*.ts', included: false, watched: false },
-            { pattern: testingBase + '**/*.js.map', included: false, watched: false}
+            { pattern: testingBase + '**/*.js.map', included: false, watched: false }
         ],
 
         // Proxied base paths for loading assets
@@ -93,7 +112,7 @@ module.exports = function(config){
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['Chrome'],
+        browsers: ['Chrome', 'PhantomJS', 'PhantomJS_custom'],
         singleRun: false
     })
 };
