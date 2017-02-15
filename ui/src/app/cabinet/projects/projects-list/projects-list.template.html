@@ -5,7 +5,14 @@
     <div *ngIf="isProjectsPresent()">
         <md-list *ngFor="let project of projectsArray">
             <md-list-item>
-                <project-list-item [project]="project"></project-list-item>
+                <div class="project-item">
+                    <span class="name">
+                        {{project.name}}
+                    </span>
+                    <button md-mini-fab (click)="openProjectSettings(project)">
+                        <md-icon class="md-24">settings</md-icon>
+                    </button>
+                </div>
             </md-list-item>
         </md-list>
     </div>
