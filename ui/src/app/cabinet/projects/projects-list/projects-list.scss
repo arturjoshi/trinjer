@@ -1,18 +1,19 @@
 .project-list-wrp{
-    position: relative;
-    
     span{
         color: #777;
     }
 
     md-list-item{
-        padding-right: 50px;
+        padding: 10px 30px;
     }
 
     .add-fab-button{
         position: absolute;
-        top: 0;
         right: 0;
+        bottom: 0;
+        margin: 20px;
+
+        z-index: 1;
     }
 
     .project-container{
