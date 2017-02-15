@@ -1,7 +1,12 @@
 .project-list-wrp{
     position: relative;
+    
     span{
         color: #777;
+    }
+
+    md-list-item{
+        padding-right: 50px;
     }
 
     .add-fab-button{
@@ -13,6 +18,8 @@
     .project-container{
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
     }
     .info-container{
         display: flex;
