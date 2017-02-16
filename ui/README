@@ -1,4 +1,5 @@
 For quickstart ui
     1. Install npm dependencies 'npm install' (for production 'npm install --production')
-    2. Check installation with 'npm run test-one' (karma-test)
-    3. Start develop server with 'npm run start'
+    2. For start developer server run 'gulp webserver'
+    3. Build only source code 'gulp build-src'
+    4. Run tests 'gulp test'
