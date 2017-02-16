@@ -1,6 +1,6 @@
 import { AccountDTO } from './../src/app/models/account';
 import { Response } from '@angular/http';
-import { ResponseOptions } from '@angular/http';
+import { ResponseOptions, ResponseType } from '@angular/http';
 import { RequestMethod } from '@angular/http';
 import { MockConnection } from '@angular/http/testing';
 import { AbstractControl } from '@angular/forms';
@@ -50,6 +50,10 @@ class MdSnackBarRefMock{
     }
 }
 
+class MockError extends Response implements Error {
+    name:any
+    message:any
+}
 
 describe('Login dialog test', () => {
     let fixture: ComponentFixture<LoginDialog>;
@@ -205,7 +209,11 @@ describe('Login dialog test', () => {
                 expect(connection.request.url).toEqual(apiPath);
                 expect(connection.request.method).toEqual(RequestMethod.Post);
 
-                connection.mockError(new Error("No such account"));
+                connection.mockError(new MockError(new ResponseOptions({
+                    type: ResponseType.Error,
+                    status: 500,
+                    body: "No such account"
+                })))
             });
 
             usernameControl.setValue(account.username);
@@ -215,7 +223,7 @@ describe('Login dialog test', () => {
 
             loginDialog.login();
 
-            tick();
+            tick(100);
 
             fixture.detectChanges();
 

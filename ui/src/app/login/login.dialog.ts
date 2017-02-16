@@ -88,7 +88,7 @@ export class LoginDialog{
         });
     }
 
-    close(result: string = 'Cancel'){
+    close(result: string){
         this.dialogRef.close(result);
     }
 
