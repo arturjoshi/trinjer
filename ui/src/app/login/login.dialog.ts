@@ -93,13 +93,12 @@ export class LoginDialog{
     }
 
     private onFormChange(){
-        if(!this.loginForm) return ;
         const form = this.loginForm;
-
         for(const field in this.formErrors){
             this.formErrors[field] = '';
             const control = form.get(field);
 
+            //Check form field and set errors messages
             if(control && control.dirty && !control.valid){
                 const messages = this.validationMessages[field];
                 for(const key in control.errors){
