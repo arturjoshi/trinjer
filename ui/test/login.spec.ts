@@ -12,7 +12,7 @@ import { HttpUtils } from './../src/app/services/http-utils.service';
 import { AccountService } from './../src/app/services/account.service';
 import { TokenService } from './../src/app/services/token.service';
 import { AuthenticateService } from './../src/app/login/authenticate.service';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { async } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -32,6 +32,20 @@ class MdDialogRefMock{
     close(result: string){
         if(result != null){
             this.callback(result);
+        }
+    }
+}
+
+class MdSnackBarRefMock{
+    private callback: any = null;
+
+    setOnOpenCallback(callback:any){
+        this.callback = callback;
+    }
+
+    open(){
+        if(this.callback != null){
+            this.callback();
         }
     }
 }
@@ -123,7 +137,7 @@ describe('Login dialog test', () => {
         });
     });
 
-    describe("Correct login and parse response errors", () => {
+    describe("Parse response errors", () => {
         let usernameControl: AbstractControl;
         let passwordControl: AbstractControl;
         let mockBackend: MockBackend;
@@ -132,10 +146,13 @@ describe('Login dialog test', () => {
         let password: string;
         let account: AccountDTO;
 
+        let apiPath: string;
+
         beforeEach(() => {
             usernameControl = loginDialog.loginForm.controls["username"];
             passwordControl = loginDialog.loginForm.controls["password"];
-            
+            apiPath = "http://localhost:8080/api/authenticate/";
+
             token = "testtoken";
             password = "123123";
             account = AccountDTO.getFromJson({
@@ -152,15 +169,16 @@ describe('Login dialog test', () => {
             mockBackend = MockBackend;
         }));
 
-        it("Sucess log in", async(() => {
+        it("Sucess log in", (done) => {
             providers.mdDialogRefProvider.useValue.setOnCloseCallback((result: string) => {
                 expect(result).toEqual("Login");
                 expect(localStorage.getItem("token")).toEqual(token);
                 expect(localStorage.getItem("account")).toEqual(JSON.stringify(account));
+                
+                done();
             })
 
             mockBackend.connections.subscribe((connection: MockConnection) => {
-                let apiPath = "http://localhost:8080/api/authenticate/";
 
                 expect(connection.request.method).toEqual(RequestMethod.Post);
                 expect(connection.request.url).toEqual(apiPath);
@@ -180,6 +198,32 @@ describe('Login dialog test', () => {
             fixture.detectChanges();
 
             loginDialog.login();
+        });
+
+        it("No such user", fakeAsync(() => {
+            mockBackend.connections.subscribe((connection: MockConnection) => {
+                expect(connection.request.url).toEqual(apiPath);
+                expect(connection.request.method).toEqual(RequestMethod.Post);
+
+                connection.mockError(new Error("No such account"));
+            });
+
+            usernameControl.setValue(account.username);
+            passwordControl.setValue(password);
+
+            fixture.detectChanges();
+
+            loginDialog.login();
+
+            tick();
+
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                fixture.detectChanges();
+                expect(loginDialog.formErrors.username).toEqual(loginDialog.validationMessages.username.wrong);
+                expect(loginDialog.formErrors.password).toEqual("");     
+            })
         }));
     });
 });
@@ -203,7 +247,7 @@ function getProviders(){
 
     let mdSnackBarProvider = {
         provide: MdSnackBar,
-        useValue: {}
+        useValue: new MdSnackBarRefMock()
     }
 
     return {httpProvider, mdDialogRefProvider, mdSnackBarProvider}
