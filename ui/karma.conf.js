@@ -18,6 +18,7 @@ module.exports = function (config) {
         plugins: [
             require('karma-jasmine'),
             require('karma-es6-shim'),
+            require('karma-coverage'),
             require('karma-phantomjs-launcher'),
             require('karma-chrome-launcher'),
             require('karma-jasmine-html-reporter')
@@ -105,14 +106,20 @@ module.exports = function (config) {
         },
 
         exclude: [],
-        preprocessors: {},
-        reporters: ['progress', 'kjhtml'],
+        preprocessors: {
+            "dist/src/**/*.js": ['coverage'] 
+        },
+        reporters: ['progress', 'kjhtml', 'coverage'],
+        coverageReporter: {
+            type : 'html',
+            dir : 'coverage/'
+        },
 
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['PhantomJS_custom'],
+        browsers: ['Chrome'],
         singleRun: false
     })
 };

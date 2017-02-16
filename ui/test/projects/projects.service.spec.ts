@@ -58,33 +58,29 @@ describe("Project service", () => {
         });
 
         length = 1;
-        projectsService.addProject(new Project("test name"));
+        projectsService.addProject(new Project(0,"test name"));
         expect(isFirst).toBeFalsy();
     });
 
     it('Get list of projects', () => {
         let projects: Project[] = [
-            new Project("First project"),
-            new Project("Second project"),
-            new Project("Third project"),
-            new Project("Fours project")
+            new Project(1, "First project"),
+            new Project(2, "Second project"),
+            new Project(3, "Third project"),
+            new Project(4, "Fours project")
         ];
 
         mockBackend.connections.subscribe((connection: MockConnection) => {
-            let expectedUrl = "http://localhost:8080/api/accounts/" + account.id + "/projects";
+            let expectedUrl = "http://localhost:8080/api/" + account.id + "/projects";
 
             expect(connection.request.method).toEqual(RequestMethod.Get);
             expect(connection.request.headers.get("x-auth-token")).toEqual(token);
             expect(connection.request.url).toEqual(expectedUrl);
 
-            let serializableProjects = serializeList(projects);
+            let serializableProjects = JSON.stringify(projects);
 
             connection.mockRespond(new Response(new ResponseOptions({
-                body: {
-                    _embedded: {
-                        projects: serializableProjects
-                    }
-                }
+                body: serializableProjects
             })));
         });
 
