@@ -68,8 +68,7 @@ export class LoginDialog{
                         this.handleError(error);
                     });
         }else{
-            this.formErrors.password = this.validationMessages.password.required;
-            this.formErrors.username = this.validationMessages.username.required;
+            this.onFormChange();
         }
     }
 

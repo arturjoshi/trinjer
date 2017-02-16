@@ -78,11 +78,6 @@ gulp.task('build-dev-full', function(){
 
 gulp.task('test', function(){
     runSequence('build-dev-full', 'start-karma-server');
-    
-    gulp.watch(path.ts, ['build-ts']);
-    gulp.watch(path.html, ['build-html']);
-    gulp.watch(path.scss, ['build-scss']);
-    gulp.watch(path.testTs, ['build-test']);
 });
 
 gulp.task('start-karma-server', function(){
@@ -92,7 +87,7 @@ gulp.task('start-karma-server', function(){
     }).start();
 
     gulp.watch(path.ts, ['build-ts']);
-    gulp.watch(path.test, ['build-test']);
+    gulp.watch(path.test + "**/*.ts", ['build-test']);
 });
 
 gulp.task('webserver', ['build-src'], function(){
