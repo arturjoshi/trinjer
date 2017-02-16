@@ -20,6 +20,7 @@ const path = {
     ts: 'src/**/*.ts',
     html: 'src/**/*.html',
     scss: 'src/**/*.scss',
+    testTs: 'test/**.ts',
     systemjsConfig: 'src/systemjs.config.js'
 };
 const tsConfig = {
@@ -77,6 +78,11 @@ gulp.task('build-dev-full', function(){
 
 gulp.task('test', function(){
     runSequence('build-dev-full', 'start-karma-server');
+    
+    gulp.watch(path.ts, ['build-ts']);
+    gulp.watch(path.html, ['build-html']);
+    gulp.watch(path.scss, ['build-scss']);
+    gulp.watch(path.testTs, ['build-test']);
 });
 
 gulp.task('start-karma-server', function(){

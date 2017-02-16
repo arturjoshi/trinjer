@@ -10,8 +10,9 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     selector: 'login',
-    templateUrl: 'app/login/login.template.html',
-    styleUrls: ['app/login/login.css'],
+    moduleId: module.id,
+    templateUrl: 'login.template.html',
+    styleUrls: ['login.css'],
     providers: [
         AuthenticateService
     ]
