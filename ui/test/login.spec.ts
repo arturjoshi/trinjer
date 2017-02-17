@@ -43,9 +43,9 @@ class MdSnackBarRefMock{
         this.callback = callback;
     }
 
-    open(){
+    open(message: string){
         if(this.callback != null){
-            this.callback();
+            this.callback(message);
         }
     }
 }
@@ -55,7 +55,7 @@ class MockError extends Response implements Error {
     message:any
 }
 
-describe('Login dialog test', () => {
+fdescribe('Login dialog test', () => {
     let fixture: ComponentFixture<LoginDialog>;
     let loginDialog: LoginDialog;
 
@@ -149,7 +149,6 @@ describe('Login dialog test', () => {
         let token: string;
         let password: string;
         let account: AccountDTO;
-
         let apiPath: string;
 
         beforeEach(() => {
@@ -178,12 +177,10 @@ describe('Login dialog test', () => {
                 expect(result).toEqual("Login");
                 expect(localStorage.getItem("token")).toEqual(token);
                 expect(localStorage.getItem("account")).toEqual(JSON.stringify(account));
-                
                 done();
             })
 
             mockBackend.connections.subscribe((connection: MockConnection) => {
-
                 expect(connection.request.method).toEqual(RequestMethod.Post);
                 expect(connection.request.url).toEqual(apiPath);
 
@@ -195,10 +192,8 @@ describe('Login dialog test', () => {
                     }
                 })));
             });
-
             usernameControl.setValue(account.username);
             passwordControl.setValue(password);
-
             fixture.detectChanges();
 
             loginDialog.login();
@@ -212,18 +207,14 @@ describe('Login dialog test', () => {
                     body: "No such account"
                 })))
             });
-
             usernameControl.setValue(account.username);
             passwordControl.setValue(password);
-
             fixture.detectChanges();
-
+            
             loginDialog.login();
-
             tick(100);
-
+            
             fixture.detectChanges();
-
             fixture.whenStable().then(() => {
                 expect(loginDialog.formErrors.username).toEqual(loginDialog.validationMessages.username.wrong);
                 expect(loginDialog.formErrors.password).toEqual("");     
@@ -246,7 +237,7 @@ describe('Login dialog test', () => {
 
             loginDialog.login();
 
-            tick(1000);
+            tick(100);
 
             fixture.detectChanges();
 
@@ -254,6 +245,23 @@ describe('Login dialog test', () => {
                 expect(loginDialog.formErrors.username).toEqual("");
                 expect(loginDialog.formErrors.password).toEqual(loginDialog.validationMessages.password.wrong);
             })
+        }))
+
+        it("Server connection error", fakeAsync(() => {
+            providers.mdSnackBarProvider.useValue.setOnOpenCallback((message: string) => {
+                expect(message).toEqual("Server connection error!");
+            })
+
+            mockBackend.connections.subscribe((connection: MockConnection) => {
+                connection.mockError(new Error());
+            })
+
+            usernameControl.setValue(account.username);
+            passwordControl.setValue(password);
+            fixture.detectChanges();
+
+            loginDialog.login();
+            tick(100);
         }))
     });
 });
