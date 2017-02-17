@@ -55,7 +55,7 @@ class MockError extends Response implements Error {
     message:any
 }
 
-fdescribe('Login dialog test', () => {
+describe('Login dialog test', () => {
     let fixture: ComponentFixture<LoginDialog>;
     let loginDialog: LoginDialog;
 
