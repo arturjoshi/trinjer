@@ -111,6 +111,30 @@ fdescribe('Registration dialog test', () => {
                 expect(registrationDialog.formErrors[field]).toEqual(registrationDialog.validationMessages[field].required);
             }
         })
+
+        it("Empty username", () => {
+            usernameControl.markAsDirty();
+            emailControl.setValue("test@email.com");
+            passwordControl.setValue("123123");
+            passwordConfirmationControl.setValue("123123");
+
+            usernameControl.markAsDirty();
+            emailControl.markAsDirty();
+            passwordControl.markAsDirty();
+            passwordConfirmationControl.markAsDirty();
+
+            fixture.detectChanges();
+
+            registrationDialog.registration();
+
+            for(let field in registrationDialog.formErrors){
+                if(field == "username")
+                    expect(registrationDialog.formErrors[field]).toEqual(registrationDialog.validationMessages[field].required);
+                else
+                    expect(registrationDialog.formErrors[field]).toEqual("");
+            }
+            
+        })
     });
     
     
