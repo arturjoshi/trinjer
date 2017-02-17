@@ -11,9 +11,10 @@ import {AuthenticateService} from "../login/authenticate.service";
 import {AccountService} from "../services/account.service";
 
 @Component({
+    moduleId: module.id,
     selector: 'registration',
-    templateUrl: 'app/registration/registration.template.html',
-    styleUrls: ['app/registration/registration.css'],
+    templateUrl: 'registration.template.html',
+    styleUrls: ['registration.css'],
     providers: [
         RegistrationService,
         AuthenticateService

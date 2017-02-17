@@ -104,12 +104,6 @@ describe('Login dialog test', () => {
             storage[key] = value;
         });
     });
-        
-    
-    it("Define user model in dialog", () => {
-        fixture.detectChanges();
-        expect(loginDialog.user).toBeDefined();
-    });
     
     describe("Form validation", () => {
         let usernameControl: AbstractControl;
