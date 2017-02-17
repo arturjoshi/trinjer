@@ -206,9 +206,6 @@ describe('Login dialog test', () => {
 
         it("No such user", fakeAsync(() => {
             mockBackend.connections.subscribe((connection: MockConnection) => {
-                expect(connection.request.url).toEqual(apiPath);
-                expect(connection.request.method).toEqual(RequestMethod.Post);
-
                 connection.mockError(new MockError(new ResponseOptions({
                     type: ResponseType.Error,
                     status: 500,
@@ -228,11 +225,36 @@ describe('Login dialog test', () => {
             fixture.detectChanges();
 
             fixture.whenStable().then(() => {
-                fixture.detectChanges();
                 expect(loginDialog.formErrors.username).toEqual(loginDialog.validationMessages.username.wrong);
                 expect(loginDialog.formErrors.password).toEqual("");     
             })
         }));
+
+        it("Bad credentials", fakeAsync(() => {
+            mockBackend.connections.subscribe((connection: MockConnection) => {
+                connection.mockError(new MockError(new ResponseOptions({
+                    type: ResponseType.Error,
+                    status: 500,
+                    body: "Bad credentials"
+                })))
+            });
+
+            usernameControl.setValue(account.username);
+            passwordControl.setValue(password);
+
+            fixture.detectChanges();
+
+            loginDialog.login();
+
+            tick(1000);
+
+            fixture.detectChanges();
+
+            fixture.whenStable().then(() => {
+                expect(loginDialog.formErrors.username).toEqual("");
+                expect(loginDialog.formErrors.password).toEqual(loginDialog.validationMessages.password.wrong);
+            })
+        }))
     });
 });
 
