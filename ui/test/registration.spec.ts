@@ -1,3 +1,4 @@
+import { AbstractControl } from '@angular/forms';
 import { MdSnackBar } from '@angular/material';
 import { BaseRequestOptions, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
@@ -84,7 +85,36 @@ fdescribe('Registration dialog test', () => {
         });
     })
     
-    it("Define model", () => {
-        expect(registrationDialog.user).toBeDefined();
+    
+    describe('Form validation', () => {
+        let usernameControl: AbstractControl;
+        let emailControl: AbstractControl;
+        let passwordControl: AbstractControl;
+        let passwordConfirmationControl: AbstractControl;
+
+        beforeEach(() => {
+            usernameControl = registrationDialog.registrationForm.controls['username'];
+            emailControl = registrationDialog.registrationForm.controls['email'];
+            passwordControl = registrationDialog.registrationForm.controls['password'];
+            passwordConfirmationControl = registrationDialog.registrationForm.controls['passwordConfirm']
+        });
+        
+        it("Empty form", () => {
+            usernameControl.markAsDirty();
+            emailControl.markAsDirty();
+            passwordControl.markAsDirty();
+            passwordConfirmationControl.markAsDirty();
+
+            registrationDialog.registration();
+
+            for(let field in registrationDialog.formErrors){
+                expect(registrationDialog.formErrors[field]).toEqual(registrationDialog.validationMessages[field].required);
+            }
+        })
+    });
+    
+    
+    xdescribe('Server error handling', () => {
+        
     });
 });

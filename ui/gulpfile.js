@@ -73,7 +73,7 @@ gulp.task('build-test', function(){
 });
 
 gulp.task('build-dev-full', function(){
-    runSequence('clean', ['build-ts', 'build-html', 'build-scss', 'copy-config'], 'build-test');
+    runSequence('clean', 'build-ts', 'build-html', 'build-scss', 'copy-config', 'build-test');
 });
 
 gulp.task('test', function(){
