@@ -59,20 +59,20 @@ public class IssueService {
 
     private Bug createBugFromDto(IssueDto issueDto, Account reporter, Project project, Sprint sprint) {
         Bug bug = new Bug();
-        issueDtoConverterFactory.getIssueDtoConverter().convertFromDto(issueDto, reporter, project, sprint, bug);
+        issueDtoConverterFactory.getIssueDtoConverter().convertIssueFromDto(issueDto, reporter, project, sprint, bug);
         Optional.ofNullable(issueDto.getStepsToReproduce()).ifPresent(bug::setStepsToReproduce);
         return bug;
     }
 
     private Task createTaskFromDto(IssueDto issueDto, Account reporter, Project project, Sprint sprint) {
         Task task = new Task();
-        issueDtoConverterFactory.getIssueDtoConverter().convertFromDto(issueDto, reporter, project, sprint, task);
+        issueDtoConverterFactory.getIssueDtoConverter().convertIssueFromDto(issueDto, reporter, project, sprint, task);
         return task;
     }
 
     private Improvement createImprovementFromDto(IssueDto issueDto, Account reporter, Project project, Sprint sprint) {
         Improvement improvement = new Improvement();
-        issueDtoConverterFactory.getIssueDtoConverter().convertFromDto(issueDto, reporter, project, sprint, improvement);
+        issueDtoConverterFactory.getIssueDtoConverter().convertIssueFromDto(issueDto, reporter, project, sprint, improvement);
         return improvement;
     }
 }

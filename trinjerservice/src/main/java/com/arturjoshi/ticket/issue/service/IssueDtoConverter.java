@@ -10,5 +10,5 @@ import com.arturjoshi.ticket.issue.dto.IssueDto;
  * Created by arturjoshi on 17-Feb-17.
  */
 public interface IssueDtoConverter<T extends AbstractIssue> {
-    T convertFromDto(IssueDto issueDto, Account reporter, Project project, Sprint sprint, T temp);
+    T convertIssueFromDto(IssueDto issueDto, Account reporter, Project project, Sprint sprint, T temp);
 }

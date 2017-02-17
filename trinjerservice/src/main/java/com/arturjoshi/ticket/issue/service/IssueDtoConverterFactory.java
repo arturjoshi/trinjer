@@ -23,18 +23,18 @@ public class IssueDtoConverterFactory {
     public <T extends AbstractIssue> IssueDtoConverter getIssueDtoConverter() {
         return new IssueDtoConverter<T>() {
             @Override
-            public T convertFromDto(IssueDto issueDto, Account reporter, Project project, Sprint sprint, T temp) {
-                Optional.ofNullable(issueDto.getSummary()).ifPresent(temp::setSummary);
-                Optional.ofNullable(issueDto.getDescription()).ifPresent(temp::setDescription);
-                Optional.ofNullable(issueDto.getPriority()).ifPresent(temp::setPriority);
-                Optional.ofNullable(issueDto.getStatus()).ifPresent(temp::setStatus);
-                Optional.ofNullable(issueDto.getResolution()).ifPresent(temp::setResolution);
+            public T convertIssueFromDto(IssueDto issueDto, Account reporter, Project project, Sprint sprint, T issue) {
+                Optional.ofNullable(issueDto.getSummary()).ifPresent(issue::setSummary);
+                Optional.ofNullable(issueDto.getDescription()).ifPresent(issue::setDescription);
+                Optional.ofNullable(issueDto.getPriority()).ifPresent(issue::setPriority);
+                Optional.ofNullable(issueDto.getStatus()).ifPresent(issue::setStatus);
+                Optional.ofNullable(issueDto.getResolution()).ifPresent(issue::setResolution);
                 Optional.ofNullable(issueDto.getAssigneeId()).ifPresent(assigneeId ->
-                        Optional.ofNullable(accountRepository.findOne(assigneeId)).ifPresent(temp::setAssignee));
-                Optional.ofNullable(reporter).ifPresent(temp::setReporter);
-                Optional.ofNullable(project).ifPresent(temp::setProject);
-                Optional.ofNullable(sprint).ifPresent(temp::setSprint);
-                return temp;
+                        Optional.ofNullable(accountRepository.findOne(assigneeId)).ifPresent(issue::setAssignee));
+                Optional.ofNullable(reporter).ifPresent(issue::setReporter);
+                Optional.ofNullable(project).ifPresent(issue::setProject);
+                Optional.ofNullable(sprint).ifPresent(issue::setSprint);
+                return issue;
             }
         };
     }
