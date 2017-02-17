@@ -10,7 +10,7 @@ import { RegistrationService } from './../src/app/registration/registration.serv
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule, MdDialogRef } from '@angular/material';
 import { RegistrationDialog } from './../src/app/registration/registration.component';
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, async, tick, fakeAsync } from '@angular/core/testing';
 
 fdescribe('Registration dialog test', () => {
     let fixture: ComponentFixture<RegistrationDialog>;
@@ -93,6 +93,18 @@ fdescribe('Registration dialog test', () => {
         let passwordConfirmationControl: AbstractControl;
 
         beforeEach(() => {
+            fixture = TestBed.createComponent(RegistrationDialog);
+            registrationDialog = fixture.componentInstance;
+
+            registrationDialog.user.email = "";
+            registrationDialog.user.password = "";
+            registrationDialog.user.username = "";
+            registrationDialog.user.username = "";
+
+            fixture.detectChanges();
+        })
+
+        beforeEach(() => {
             usernameControl = registrationDialog.registrationForm.controls['username'];
             emailControl = registrationDialog.registrationForm.controls['email'];
             passwordControl = registrationDialog.registrationForm.controls['password'];
@@ -107,32 +119,34 @@ fdescribe('Registration dialog test', () => {
 
             registrationDialog.registration();
 
+            //No need test any field becourse algoritm manipulate with array
             for(let field in registrationDialog.formErrors){
                 expect(registrationDialog.formErrors[field]).toEqual(registrationDialog.validationMessages[field].required);
             }
         })
 
-        it("Empty username", () => {
-            usernameControl.markAsDirty();
-            emailControl.setValue("test@email.com");
+        it("Passwords are not equal", () => {
             passwordControl.setValue("123123");
-            passwordConfirmationControl.setValue("123123");
-
-            usernameControl.markAsDirty();
-            emailControl.markAsDirty();
-            passwordControl.markAsDirty();
+            passwordControl.markAsDirty();                        
+            passwordConfirmationControl.setValue("123");
             passwordConfirmationControl.markAsDirty();
+            
+
+            fixture.detectChanges();
+            registrationDialog.registration();
+
+            fixture.whenStable().then(() => {
+                expect(registrationDialog.formErrors.passwordConfirm).toEqual(registrationDialog.validationMessages.passwordConfirm.incorrect);
+                expect(registrationDialog.formErrors.password).toEqual("")
+            })
+        });
+
+        it("Email validation", () => {
+            emailControl.setValue("email");
+            emailControl.markAsDirty();
 
             fixture.detectChanges();
 
-            registrationDialog.registration();
-
-            for(let field in registrationDialog.formErrors){
-                if(field == "username")
-                    expect(registrationDialog.formErrors[field]).toEqual(registrationDialog.validationMessages[field].required);
-                else
-                    expect(registrationDialog.formErrors[field]).toEqual("");
-            }
             
         })
     });

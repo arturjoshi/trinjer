@@ -113,7 +113,6 @@ export class RegistrationDialog{
     }
 
     private onFormChange(){
-        if(!this.registrationForm) return ;
         const form = this.registrationForm;
 
         for(const field in this.formErrors){
