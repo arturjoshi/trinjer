@@ -107,13 +107,13 @@ module.exports = function (config) {
 
         exclude: [],
         preprocessors: {
-            "dist/src/**/*.js": ['coverage'] 
+            // "dist/src/**/*.js": ['coverage'] 
         },
-        reporters: ['progress', 'kjhtml', 'coverage'],
-        coverageReporter: {
-            type : 'html',
-            dir : 'coverage/'
-        },
+        reporters: ['progress', 'kjhtml'],
+        // coverageReporter: {
+        //     type : 'html',
+        //     dir : 'coverage/'
+        // },
 
         port: 9876,
         colors: true,

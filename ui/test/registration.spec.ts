@@ -126,29 +126,38 @@ fdescribe('Registration dialog test', () => {
         })
 
         it("Passwords are not equal", () => {
+            passwordControl.markAsDirty();            
             passwordControl.setValue("123123");
-            passwordControl.markAsDirty();                        
-            passwordConfirmationControl.setValue("123");
             passwordConfirmationControl.markAsDirty();
-            
+            passwordConfirmationControl.setValue("123");
 
             fixture.detectChanges();
-            registrationDialog.registration();
 
             fixture.whenStable().then(() => {
-                expect(registrationDialog.formErrors.passwordConfirm).toEqual(registrationDialog.validationMessages.passwordConfirm.incorrect);
+                expect(registrationDialog.formErrors.passwordConfirm).toEqual(registrationDialog.validationMessages.passwordConfirm.incorrect + " ");
                 expect(registrationDialog.formErrors.password).toEqual("")
             })
         });
 
-        it("Email validation", () => {
-            emailControl.setValue("email");
-            emailControl.markAsDirty();
+        it("Change password when confirm equal", () => {
+            let password = "123123";
+            passwordControl.markAsDirty();
+            passwordControl.setValue(password);
+            passwordConfirmationControl.markAsDirty();
+            passwordConfirmationControl.setValue(password);
 
             fixture.detectChanges();
 
+            expect(registrationDialog.formErrors.password).toEqual("");
+            expect(registrationDialog.formErrors.passwordConfirm).toEqual("");
+
+            passwordControl.setValue(password +  "1");
+
+            fixture.detectChanges();
+
+            expect(registrationDialog.formErrors.password).toEqual(registrationDialog.validationMessages.password.incorrect + " ");
             
-        })
+        });
     });
     
     
