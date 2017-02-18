@@ -110,16 +110,16 @@ module.exports = function (config) {
             // "dist/src/**/*.js": ['coverage'] 
         },
         reporters: ['progress', 'kjhtml'], //To enable coverage report add 'coverage'
-        // coverageReporter: {
-        //     type : 'html',
-        //     dir : 'coverage/'
-        // },
+        coverageReporter: {
+            type : 'html',
+            dir : 'coverage/'
+        },
 
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['PhantomJS_custom'],
+        browsers: ['Chrome'],
         singleRun: false
     })
 };

@@ -29,7 +29,7 @@ class MdDialogRefMock{
     }
 }
 
-fdescribe('Registration dialog test', () => {
+describe('Registration dialog test', () => {
     let fixture: ComponentFixture<RegistrationDialog>;
     let registrationDialog: RegistrationDialog;
 
@@ -209,7 +209,7 @@ fdescribe('Registration dialog test', () => {
                 expect(message).toEqual("Registration");
                 expect(localStorage.getItem("token")).toEqual(token);
                 expect(localStorage.getItem("account")).toEqual(JSON.stringify(account));
-                isClosed = false;
+                isClosed = true;
             });
 
             for(let field in registrationDialog.registrationForm.controls){
@@ -226,7 +226,7 @@ fdescribe('Registration dialog test', () => {
 
             tick();
 
-            expect(isClosed).toBeFalsy();
+            expect(isClosed).toBeTruthy();
 
             mockBackend.connections.subscribe((mockConnection: MockConnection) => {
                 expect(mockConnection.request.method).toEqual(RequestMethod.Post);
