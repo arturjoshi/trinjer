@@ -16,7 +16,7 @@ public class IssueController {
     @Autowired
     private IssueService issueService;
 
-    @RequestMapping(method = RequestMethod.POST, value = "/api/{accountId}/project/{projectId}/sprint/{sprintId}")
+    @RequestMapping(method = RequestMethod.POST, value = "/{accountId}/project/{projectId}/sprint/{sprintId}/createIssue")
     public AbstractIssue createIssue(@RequestBody IssueDto issueDto, @PathVariable Long accountId,
                                      @PathVariable Long projectId, @PathVariable Long sprintId,
                                      @RequestParam String issueType) {

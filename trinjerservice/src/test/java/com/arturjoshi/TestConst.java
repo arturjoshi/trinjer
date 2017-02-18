@@ -2,6 +2,7 @@ package com.arturjoshi;
 
 import com.arturjoshi.ticket.TicketPriority;
 import com.arturjoshi.ticket.TicketStatus;
+import com.arturjoshi.ticket.issue.IssueResolution;
 
 /**
  * Created by ajoshi on 31-Jan-17.
@@ -28,4 +29,10 @@ public interface TestConst {
     TicketStatus STORY_STATUS = TicketStatus.TODO;
     Integer STORY_ESTIMATE = 1;
 
+    String ISSUE_SUMMARY = "issuesummary";
+    String ISSUE_DESCRIPTION = "issuedescription";
+    TicketPriority ISSUE_PRIORITY = TicketPriority.CRITICAL;
+    TicketStatus ISSUE_STATUS = TicketStatus.TODO;
+    IssueResolution ISSUE_RESOLUTION = IssueResolution.READY;
+    String BUG_STEPS_TO_REPRODUCE = "stepstoreproduce";
 }

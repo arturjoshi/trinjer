@@ -15,6 +15,8 @@ import com.arturjoshi.project.repository.ProjectAccountProfileRepository;
 import com.arturjoshi.project.repository.ProjectRepository;
 import com.arturjoshi.sprint.Sprint;
 import com.arturjoshi.sprint.repository.SprintRepository;
+import com.arturjoshi.ticket.issue.Bug;
+import com.arturjoshi.ticket.issue.dto.IssueDto;
 import com.arturjoshi.ticket.story.Story;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.After;
@@ -142,6 +144,22 @@ public abstract class AbstractTest implements TestConst {
         story.setStatus(STORY_STATUS);
         story.setEstimate(STORY_ESTIMATE);
         return story;
+    }
+
+    protected IssueDto getDefaultBug() {
+        IssueDto bug = getDefaultIssue();
+        bug.setStepsToReproduce(BUG_STEPS_TO_REPRODUCE);
+        return bug;
+    }
+
+    protected IssueDto getDefaultIssue() {
+        IssueDto bug = new IssueDto();
+        bug.setSummary(ISSUE_SUMMARY);
+        bug.setDescription(ISSUE_DESCRIPTION);
+        bug.setPriority(ISSUE_PRIORITY);
+        bug.setStatus(ISSUE_STATUS);
+        bug.setResolution(ISSUE_RESOLUTION);
+        return bug;
     }
 
     protected ProjectInvitationDto getInvitationDto(String email,
