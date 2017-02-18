@@ -1,7 +1,10 @@
+import { Response, ResponseOptions } from '@angular/http';
+import { AccountDTO } from './../src/app/models/account';
+import { RegistrationUser } from './../src/app/models/registration-user.model';
 import { AbstractControl } from '@angular/forms';
 import { MdSnackBar } from '@angular/material';
-import { BaseRequestOptions, Http } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
+import { BaseRequestOptions, Http, ResponseType, RequestMethod } from '@angular/http';
+import { MockBackend, MockConnection } from '@angular/http/testing';
 import { HttpUtils } from './../src/app/services/http-utils.service';
 import { AccountService } from './../src/app/services/account.service';
 import { TokenService } from './../src/app/services/token.service';
@@ -10,7 +13,21 @@ import { RegistrationService } from './../src/app/registration/registration.serv
 import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule, MdDialogRef } from '@angular/material';
 import { RegistrationDialog } from './../src/app/registration/registration.component';
-import { ComponentFixture, TestBed, async, tick, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, async, tick, fakeAsync, inject } from '@angular/core/testing';
+
+class MdDialogRefMock{
+    private callback: any;
+
+    close(result: string){
+        if(this.callback != null){
+            this.callback(result);
+        }
+    }
+
+    setCloseCallback(callback: any){
+        this.callback = callback;
+    }
+}
 
 fdescribe('Registration dialog test', () => {
     let fixture: ComponentFixture<RegistrationDialog>;
@@ -19,7 +36,7 @@ fdescribe('Registration dialog test', () => {
     let providers = {
         mdDialogRefProvider: {
             provide: MdDialogRef,
-            useValue: {}
+            useValue: new MdDialogRefMock()
         },
         mdSnackBarProvider: {
             provide: MdSnackBar,
@@ -128,6 +145,10 @@ fdescribe('Registration dialog test', () => {
         it("Passwords are not equal", () => {
             passwordControl.markAsDirty();            
             passwordControl.setValue("123123");
+
+            fixture.detectChanges();
+            expect(registrationDialog.formErrors.passwordConfirm).toEqual("");
+
             passwordConfirmationControl.markAsDirty();
             passwordConfirmationControl.setValue("123");
 
@@ -156,10 +177,72 @@ fdescribe('Registration dialog test', () => {
             fixture.detectChanges();
 
             expect(registrationDialog.formErrors.password).toEqual(registrationDialog.validationMessages.password.incorrect + " ");
-            
         });
     });
     
+    describe("Sucess registration", () => {
+        let mockBackend: MockBackend;
+
+        beforeEach(inject([MockBackend], (_mockBackend: MockBackend) => {
+            mockBackend = _mockBackend;
+        }));
+
+        it("Sucess registration and login", fakeAsync(() => {
+            let token = "testtoken";
+            let user = RegistrationUser.getNewRegistrationUser();
+            user.email = "test@email.com";
+            user.password = "123123";
+            user.passwordConfirm = "123123";
+            user.username = "testusername";
+            
+            let account = new AccountDTO();
+            account.id = 12;
+            account.email = user.email;
+            account.createdTime = new Date().toISOString();
+            account.username = user.username;
+            account.isConfirmed = false;
+            account.isTemp = false;
+
+            let isClosed = false;
+
+            providers.mdDialogRefProvider.useValue.setCloseCallback((message: string) => {
+                expect(message).toEqual("Registration");
+                expect(localStorage.getItem("token")).toEqual(token);
+                expect(localStorage.getItem("account")).toEqual(JSON.stringify(account));
+                isClosed = false;
+            });
+
+            for(let field in registrationDialog.registrationForm.controls){
+                registrationDialog.registrationForm.controls[field].setValue(user[field]);
+                registrationDialog.registrationForm.controls[field].markAsDirty();
+            }
+
+            fixture.detectChanges();
+            for(let error in registrationDialog.formErrors){
+                expect(registrationDialog.formErrors[error]).toEqual("");
+            }
+
+            registrationDialog.registration();
+
+            tick();
+
+            expect(isClosed).toBeFalsy();
+
+            mockBackend.connections.subscribe((mockConnection: MockConnection) => {
+                expect(mockConnection.request.method).toEqual(RequestMethod.Post);
+                expect(mockConnection.request.url).toEqual("http://localhost:8080/register/");
+                expect(mockConnection.request.getBody()).toEqual(user);
+
+                mockConnection.mockRespond(new Response(new ResponseOptions({
+                    status: 200,
+                    body: {
+                        account: account,
+                        token: token
+                    }
+                })));
+            })
+        }));
+    })
     
     xdescribe('Server error handling', () => {
         

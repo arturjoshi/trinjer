@@ -109,7 +109,7 @@ module.exports = function (config) {
         preprocessors: {
             // "dist/src/**/*.js": ['coverage'] 
         },
-        reporters: ['progress', 'kjhtml'],
+        reporters: ['progress', 'kjhtml'], //To enable coverage report add 'coverage'
         // coverageReporter: {
         //     type : 'html',
         //     dir : 'coverage/'
