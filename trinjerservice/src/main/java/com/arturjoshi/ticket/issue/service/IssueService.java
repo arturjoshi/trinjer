@@ -57,6 +57,23 @@ public class IssueService {
         return null;
     }
 
+    @PreAuthorize("@projectPermissionsEvaluator.isAllowedForProject(#accountId, #projectId, 'REPORTER')")
+    public AbstractIssue updateIssue(Long accountId, Long issueId, Long projectId, IssueDto issueDto, String issueType) {
+        if (issueType.equalsIgnoreCase(BUG)) {
+            Bug bug = (Bug) issueRepository.findOne(issueId);
+            return issueRepository.save(updateBugFromDto(issueDto, bug));
+        }
+        if (issueType.equalsIgnoreCase(TASK)) {
+            Task task = (Task) issueRepository.findOne(issueId);
+            return issueRepository.save(updateTaskFromDto(issueDto, task));
+        }
+        if (issueType.equalsIgnoreCase(IMPROVEMENT)) {
+            Improvement improvement = (Improvement) issueRepository.findOne(issueId);
+            return issueRepository.save(updateImprovementFromDto(issueDto, improvement));
+        }
+        return null;
+    }
+
     private Bug createBugFromDto(IssueDto issueDto, Account reporter, Project project, Sprint sprint) {
         Bug bug = new Bug();
         issueDtoConverterFactory.getIssueDtoConverter().convertIssueFromDto(issueDto, reporter, project, sprint, bug);
@@ -73,6 +90,25 @@ public class IssueService {
     private Improvement createImprovementFromDto(IssueDto issueDto, Account reporter, Project project, Sprint sprint) {
         Improvement improvement = new Improvement();
         issueDtoConverterFactory.getIssueDtoConverter().convertIssueFromDto(issueDto, reporter, project, sprint, improvement);
+        return improvement;
+    }
+
+    private Bug updateBugFromDto(IssueDto issueDto, Bug bug) {
+        issueDtoConverterFactory.getIssueDtoConverter().convertIssueFromDto(
+                issueDto, null, null, null, bug);
+        Optional.ofNullable(issueDto.getStepsToReproduce()).ifPresent(bug::setStepsToReproduce);
+        return bug;
+    }
+
+    private Task updateTaskFromDto(IssueDto issueDto, Task task) {
+        issueDtoConverterFactory.getIssueDtoConverter().convertIssueFromDto(
+                issueDto, null, null, null, task);
+        return task;
+    }
+
+    private Improvement updateImprovementFromDto(IssueDto issueDto, Improvement improvement) {
+        issueDtoConverterFactory.getIssueDtoConverter().convertIssueFromDto(
+                issueDto, null, null, null, improvement);
         return improvement;
     }
 }

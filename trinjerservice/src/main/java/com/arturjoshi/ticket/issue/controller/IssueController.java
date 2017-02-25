@@ -23,4 +23,11 @@ public class IssueController {
         return issueService.createIssue(accountId, projectId, sprintId, issueDto, issueType);
     }
 
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{accountId}/project/{projectId}/issue/{issueId}")
+    public AbstractIssue updateIssue(@RequestBody IssueDto issueDto, @PathVariable Long accountId,
+                                     @PathVariable Long projectId, @PathVariable Long issueId,
+                                     @RequestParam String issueType) {
+        return issueService.updateIssue(accountId, issueId, projectId, issueDto, issueType);
+    }
+
 }
