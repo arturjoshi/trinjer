@@ -3,10 +3,15 @@ package com.arturjoshi.project;
 import com.arturjoshi.account.Account;
 import com.arturjoshi.project.entities.ProjectAccountPermission;
 import com.arturjoshi.project.entities.ProjectAccountProfile;
+import com.arturjoshi.sprint.Sprint;
+import com.arturjoshi.ticket.issue.AbstractIssue;
+import com.arturjoshi.ticket.story.AbstractStory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -18,14 +23,18 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 @Entity
-@EqualsAndHashCode(exclude = {"members", "invitations", "projectAccountProfiles", "projectAccountPermissions"})
+@EqualsAndHashCode(of = {"name", "isVisible"})
 public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private Boolean isVisible = true;
 
     @ManyToOne
     private Account projectOwner;
@@ -36,13 +45,34 @@ public class Project {
 
     @ManyToMany
     @JsonIgnore
-    private Set<Account> invitations = new HashSet<>();
+    private Set<Account> outboxInvitations = new HashSet<>();
+
+    @ManyToMany
+    @JsonIgnore
+    private Set<Account> inboxInvitations = new HashSet<>();
 
     @OneToMany(mappedBy = "project")
+    @Cascade(CascadeType.DELETE)
     @JsonIgnore
     private Set<ProjectAccountProfile> projectAccountProfiles = new HashSet<>();
 
     @OneToMany(mappedBy = "project")
+    @Cascade(CascadeType.DELETE)
     @JsonIgnore
     private Set<ProjectAccountPermission> projectAccountPermissions = new HashSet<>();
+
+    @OneToMany(mappedBy = "project")
+    @Cascade(CascadeType.DELETE)
+    @JsonIgnore
+    private Set<Sprint> sprints = new HashSet<>();
+
+    @OneToMany(mappedBy = "project")
+    @Cascade(CascadeType.DELETE)
+    @JsonIgnore
+    private Set<AbstractStory> projectBacklog = new HashSet<>();
+
+    @OneToMany(mappedBy = "project")
+    @Cascade(CascadeType.DELETE)
+    @JsonIgnore
+    private Set<AbstractIssue> issues = new HashSet<>();
 }

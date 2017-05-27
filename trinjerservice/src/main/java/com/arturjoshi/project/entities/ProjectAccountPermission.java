@@ -4,6 +4,8 @@ import com.arturjoshi.account.Account;
 import com.arturjoshi.project.Project;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 
@@ -11,26 +13,27 @@ import javax.persistence.*;
  * Created by arturjoshi on 09-Jan-17.
  */
 @NoArgsConstructor
+@RequiredArgsConstructor
 @Data
 @Entity
 public class ProjectAccountPermission {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Project project;
+    private @NonNull Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Account account;
+    private @NonNull Account account;
 
     @Enumerated(EnumType.STRING)
-    private ProjectPermission projectPermission;
+    private @NonNull ProjectPermission projectPermission;
 
     public enum ProjectPermission {
-        OWNER,
-        ADMIN,
-        REPORTER
+        REPORTER,
+        MEMBER,
+        MASTER,
+        OWNER
     }
 }

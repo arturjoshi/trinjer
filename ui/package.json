@@ -1,0 +1,45 @@
+{
+  "name": "trinjer",
+  "version": "0.0.1",
+  "description": "Front end for trinjer",
+  "scripts": {
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "start": "concurrent \"npm run tsc:w\" \"npm run lite\" ",
+    "test": "tsc && concurrently \"tsc -w\" \"karma start karma.conf.js\"",
+    "test-once": "tsc && karma start karma.conf.js --single-run",
+    "lite": "lite-server"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@angular/common": "2.4.1",
+    "@angular/compiler": "2.4.1",
+    "@angular/core": "2.4.1",
+    "@angular/http": "2.4.1",
+    "@angular/platform-browser": "2.4.1",
+    "@angular/platform-browser-dynamic": "2.4.1",
+    "@angular/router": "3.4.1",
+    "@angular/upgrade": "2.4.1",
+    "@angular/forms": "2.4.1",
+    "bootstrap": "^3.3.7",
+    "core-js": "2.4.1",
+    "es6-shim": "0.35.2",
+    "reflect-metadata": "0.1.2",
+    "rxjs": "5.0.1",
+    "systemjs": "0.19.41",
+    "zone.js": "0.7.2"
+  },
+  "devDependencies": {
+    "@types/jasmine": "^2.5.40",
+    "@types/node": "6.0.46",
+    "concurrently": "^3.1.0",
+    "jasmine-core": "2.4.1",
+    "karma": "1.3.0",
+    "karma-chrome-launcher": "2.0.0",
+    "karma-jasmine": "1.0.2",
+    "karma-jasmine-html-reporter": "0.2.2",
+    "lite-server": "^2.2.2",
+    "typescript": "~2.0.10"
+  }
+}
